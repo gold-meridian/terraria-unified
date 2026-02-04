@@ -1,10 +1,12 @@
 --- src/TerrariaNetCore/Terraria/UI/ChestUI.cs
 +++ src/Unified/Terraria/UI/ChestUI.cs
-@@ -119,7 +_,7 @@
+@@ -119,7 +_,10 @@
  		Vector2 vector = new Vector2(504f, Main.instance.invBottom);
  		ChatManager.DrawColorCodedStringWithShadow(spritebatch, value, text, vector, color, 0f, Vector2.Zero, Vector2.One, -1f, 1.5f);
  		if (Main.editChest) {
--			vector.X += value.MeasureString(text).X;
++			/*
+ 			vector.X += value.MeasureString(text).X;
++			*/
 +			vector.X += ChatManager.GetStringSize(value, text, Vector2.One).X;
  			Main.instance.SetIMEPanelAnchor(vector + new Vector2(0f, 56f), 0f);
  			string compositionString = Platform.Get<IImeService>().CompositionString;
