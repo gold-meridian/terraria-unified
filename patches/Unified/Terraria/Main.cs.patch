@@ -3859,7 +3859,7 @@
  
  		num++;
 +
-+		if (DrawCraftingReachIcon(0, 24 * torchGodIcons, flag, 0)) {
++		if (DrawCraftingReachIcon(0, 24 * (totalDrawnIcons - 2), flag, 0)) {
 +			state = num;
 +		}
 +
