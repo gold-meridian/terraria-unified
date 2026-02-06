@@ -3324,7 +3324,7 @@
  		bool flag2 = false;
  		if (mouseX > pivotTopLeftX && (float)mouseX < (float)pivotTopLeftX + (float)rectangle.Width * num2 && mouseY > num && (float)mouseY < (float)num + (float)rectangle.Height * num2 && !PlayerInput.IgnoreMouseInterface) {
  			flag2 = true;
-@@ -36751,6 +_,48 @@
+@@ -36751,6 +_,43 @@
  		return flag2;
  	}
  
@@ -3346,12 +3346,7 @@
 +		if (mouseX > pivotTopLeftX && (float)mouseX < (float)pivotTopLeftX + (float)spriteFrame.Width * scale && mouseY > yPosition && (float)mouseY < (float)yPosition + (float)spriteFrame.Height * scale && !PlayerInput.IgnoreMouseInterface) {
 +			hovered = true;
 +			player[myPlayer].mouseInterface = true;
-+			string mousetxt = featureMode switch {
-+				1 => "Crafting reach on - outline",
-+				2 => "Crafting reach on - outline & fill",
-+				_ => "Crafting reach off"
-+			};
-+			MouseText(mousetxt, 0, 0);
++			MouseText(Language.GetTextValue("GameUI.CraftingReachPreview" + featureMode), 0, 0);
 +			mouseText = true;
 +			if (mouseLeft && mouseLeftRelease) {
 +				SoundEngine.PlaySound(7);
