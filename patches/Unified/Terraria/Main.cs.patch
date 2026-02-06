@@ -151,6 +151,17 @@
  	};
  	private static bool _cannotDrawAccessoriesHorizontally = false;
  	public static Microsoft.Xna.Framework.Color selColor = Microsoft.Xna.Framework.Color.White;
+@@ -2189,6 +_,10 @@
+ 	public static int ladyBugRainBoost = 0;
+ 	private static bool _canShowMeteorFall;
+ 	private static bool _isResizingAndRemakingTargets = false;
++	public static (int Current, int Max) craftingReachPreview_Outline = (0, 25);
++	public static (int Current, int Max) craftingReachPreview_Box = (0, 25);
++	public static float craftingReachPreview_OutlineAnim = 0f;
++	public static float craftingReachPreview_BoxAnim = 0f;
+ 
+ 	public static bool CanUpdateGameplay { get; private set; }
+ 
 @@ -2552,7 +_,7 @@
  		}
  	}
@@ -3313,6 +3324,55 @@
  		bool flag2 = false;
  		if (mouseX > pivotTopLeftX && (float)mouseX < (float)pivotTopLeftX + (float)rectangle.Width * num2 && mouseY > num && (float)mouseY < (float)num + (float)rectangle.Height * num2 && !PlayerInput.IgnoreMouseInterface) {
  			flag2 = true;
+@@ -36751,6 +_,48 @@
+ 		return flag2;
+ 	}
+ 
++	private bool DrawCraftingReachIcon(int pivotTopLeftX, int pivotTopLeftY, bool pushSideToolsUp, int gamepadPointOffset)
++	{
++		if (!playerInventory)
++			return false;
++
++		int yPosition = 92 + pivotTopLeftY;
++		_ = player[myPlayer];
++		if (pushSideToolsUp)
++			yPosition = 71 + pivotTopLeftY;
++
++		float scale = 0.8f;
++		int featureMode = Main.CraftingReachPreview;
++		Texture2D icon = TextureAssets.Extra[176].Value;
++		System.Drawing.Rectangle spriteFrame = icon.Frame(1, 1, 0);
++		bool hovered = false;
++		if (mouseX > pivotTopLeftX && (float)mouseX < (float)pivotTopLeftX + (float)spriteFrame.Width * scale && mouseY > yPosition && (float)mouseY < (float)yPosition + (float)spriteFrame.Height * scale && !PlayerInput.IgnoreMouseInterface) {
++			hovered = true;
++			player[myPlayer].mouseInterface = true;
++			string mousetxt = featureMode switch {
++				1 => "Crafting reach on - outline",
++				2 => "Crafting reach on - outline & fill",
++				_ => "Crafting reach off"
++			};
++			MouseText(mousetxt, 0, 0);
++			mouseText = true;
++			if (mouseLeft && mouseLeftRelease) {
++				SoundEngine.PlaySound(7);
++				SoundEngine.PlaySound(21);
++				Main.CraftingReachPreview = featureMode < 2 ? (featureMode + 1) : 0;
++			}
++		}
++
++		Vector2 vector = new Vector2(pivotTopLeftX + 3.5f, yPosition);
++		spriteBatch.Draw(icon, vector, spriteFrame, Microsoft.Xna.Framework.Color.White, 0f, default(Vector2), scale, SpriteEffects.None, 0f);
++		spriteBatch.Draw(icon, vector, spriteFrame, Microsoft.Xna.Framework.Color.White, 0f, default(Vector2), scale, SpriteEffects.None, 0f);
++		if (hovered)
++			spriteBatch.Draw(icon, vector, icon.Frame(1, 1, 0), OurFavoriteColor, 0f, default(Vector2), scale, SpriteEffects.None, 0f);
++
++		UILinkPointNavigator.SetPosition(6000 + gamepadPointOffset, vector + spriteFrame.Size() * 0.65f);
++		return hovered;
++	}
++
+ 	private bool DrawTorchBiomeSwapIcon(int pivotTopLeftX, int pivotTopLeftY, bool pushSideToolsUp, int gamepadPointOffset)
+ 	{
+ 		if (!playerInventory)
 @@ -36765,7 +_,7 @@
  		int num3 = 11;
  		bool flag = player[myPlayer].builderAccStatus[num3] == 0;
@@ -3572,6 +3632,26 @@
  		r.Y += r.Height + 4;
  		r.Height = 46;
  		UILinkPointNavigator.SetPosition(2813, r.Center.ToVector2());
+@@ -38614,7 +_,7 @@
+ 		if (_needToSetupDrawInterfaceLayers) {
+ 			_needToSetupDrawInterfaceLayers = false;
+ 			_gameInterfaceLayers = new List<GameInterfaceLayer>();
+-			_gameInterfaceLayers.AddRange(new GameInterfaceLayer[43] {
++			_gameInterfaceLayers.AddRange(new GameInterfaceLayer[44] {
+ 				new LegacyGameInterfaceLayer("Vanilla: Interface Logic 1", delegate {
+ 					DrawInterface_0_InterfaceLogic1();
+ 					return true;
+@@ -38643,6 +_,10 @@
+ 					DrawInterface_4_Ruler();
+ 					return true;
+ 				}),
++				new LegacyGameInterfaceLayer("Unified: Crafting Reach", delegate {
++					DrawInterface_4_1_CraftingReach();
++					return true;
++				}),
+ 				new LegacyGameInterfaceLayer("Vanilla: Gamepad Lock On", delegate {
+ 					DrawInterface_5_GamepadLockOn();
+ 					return true;
 @@ -39479,7 +_,7 @@
  			}
  
@@ -3590,6 +3670,75 @@
  		int num10 = num6;
  		int num11 = num7;
  		if (player[myPlayer].gravDir == -1f)
+@@ -40016,6 +_,68 @@
+ 		}
+ 	}
+ 
++	private static void DrawInterface_4_1_CraftingReach()
++	{
++		float anim = craftingReachPreview_BoxAnim;
++		Player player = LocalPlayer;
++		if (anim <= 0f || !playerInventory || player.spectating >= 0)
++			return;
++
++		Rectangle range = player.craftingReachRectangle;
++		Texture2D pixel = TextureAssets.MagicPixel.Value;
++
++		float r = 0.5f, g = 0.5f, b = 0.7f;
++		Color color = new Color(r, g, b) * (anim / 7f);
++		int thickness = 2;
++
++		int left = range.Left * 16;
++		int right = (range.Right + 1) * 16;
++		int top = range.Top * 16;
++		int bottom = (range.Bottom + 1) * 16;
++
++		float animWidth = (right - left) * anim;
++		float animHeight = (bottom - top) * (0.5f + anim * 0.5f);
++		float centerX = (left + right) * 0.5f;
++		float centerY = (top + bottom) * 0.5f;
++		float leftA = centerX - animWidth * 0.5f;
++		float rightA = centerX + animWidth * 0.5f;
++		float topA = centerY - animHeight * 0.5f;
++		float bottomA = centerY + animHeight * 0.5f;
++
++		Vector2 screenTL = new Vector2(leftA, topA) - screenPosition;
++		Vector2 screenBR = new Vector2(rightA, bottomA) - screenPosition;
++
++		// top
++		spriteBatch.Draw(pixel,
++			ReverseGravitySupport(new Vector2(screenTL.X + thickness, screenTL.Y), thickness),
++			new Rectangle(0, 0, (int)(screenBR.X - screenTL.X - thickness * 2), thickness),
++			color);
++
++		// bottom
++		spriteBatch.Draw(pixel,
++			ReverseGravitySupport(new Vector2(screenTL.X + thickness, screenBR.Y - thickness), thickness),
++			new Rectangle(0, 0, (int)(screenBR.X - screenTL.X - thickness * 2), thickness),
++			color);
++
++		// left
++		spriteBatch.Draw(pixel,
++			ReverseGravitySupport(new Vector2(screenTL.X, screenTL.Y), thickness),
++			new Rectangle(0, 0, thickness, (int)(screenBR.Y - screenTL.Y)),
++			color);
++
++		// right
++		spriteBatch.Draw(pixel,
++			ReverseGravitySupport(new Vector2(screenBR.X - thickness, screenTL.Y), thickness),
++			new Rectangle(0, 0, thickness, (int)(screenBR.Y - screenTL.Y)),
++			color);
++
++		// fill
++		spriteBatch.Draw(pixel,
++			ReverseGravitySupport(new Vector2(screenTL.X, screenTL.Y), thickness),
++			new Rectangle(0, 0, (int)(screenBR.X - screenTL.X), (int)(screenBR.Y - screenTL.Y)),
++			color);
++	}
++
+ 	private static void DrawInterface_3_LaserRuler()
+ 	{
+ 		if (!player[myPlayer].rulerGrid || player[myPlayer].builderAccStatus[1] != 0)
 @@ -40031,12 +_,12 @@
  		vec = vec.ToTileCoordinates().ToVector2() * 16f;
  		int num4 = (screenWidth + 100) / 16;
@@ -3705,6 +3854,19 @@
  			Microsoft.Xna.Framework.Color color = Microsoft.Xna.Framework.Color.White;
  			Microsoft.Xna.Framework.Color color2 = new Microsoft.Xna.Framework.Color(127, 127, 127);
  			Vector2 vector = start + new Vector2(0f, num * 24);
+@@ -41007,6 +_,12 @@
+ 			state = num;
+ 
+ 		num++;
++
++		if (DrawCraftingReachIcon(0, 24 * torchGodIcons, flag, 0)) {
++			state = num;
++		}
++
++		num++;
+ 		if (player.unlockedBiomeTorches) {
+ 			if (DrawTorchBiomeSwapIcon(0, 0, flag, 1))
+ 				state = num;
 @@ -41034,7 +_,7 @@
  
  		bool flag = false;

@@ -1,5 +1,13 @@
 --- src/TerrariaNetCore/Terraria/GameContent/Drawing/TileDrawing.cs
 +++ src/Unified/Terraria/GameContent/Drawing/TileDrawing.cs
+@@ -6,6 +_,7 @@
+ using Terraria.GameContent.Events;
+ using Terraria.GameContent.Liquid;
+ using Terraria.GameContent.Tile_Entities;
++using Terraria.GameContent.UI;
+ using Terraria.Graphics;
+ using Terraria.Graphics.Capture;
+ using Terraria.Graphics.Effects;
 @@ -426,8 +_,17 @@
  			TileType = -1
  		};
@@ -184,3 +192,20 @@
  	{
  		if (TileID.Sets.BasicChest[drawData.typeCache]) {
  			Point key = new Point(tileX, tileY);
+@@ -3951,6 +_,16 @@
+ 
+ 	private void GetTileOutlineInfo(int x, int y, ushort typeCache, ref Color tileLight, ref Texture2D highlightTexture, ref Color highlightColor)
+ 	{
++		float alpha = Main.craftingReachPreview_OutlineAnim;
++		if (alpha > 0f && Main.playerInventory && !Main.SmartCursorIsUsed) {
++			Player player = Main.LocalPlayer;
++			if (player.tilesWithinCraftingReach.Contains((x, y))) {
++				int num = (tileLight.R + tileLight.G + tileLight.B) / 3;
++				highlightTexture = TextureAssets.HighlightMask[typeCache].Value;
++				highlightColor = Colors.GetCraftingReachColor(num, alpha);
++			}
++		}
++
+ 		if (Main.InSmartCursorHighlightArea(x, y, out var actuallySelected)) {
+ 			int num = (tileLight.R + tileLight.G + tileLight.B) / 3;
+ 			if (num > 10) {
