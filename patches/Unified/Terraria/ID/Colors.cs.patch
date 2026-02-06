@@ -1,0 +1,14 @@
+--- src/TerrariaNetCore/Terraria/ID/Colors.cs
++++ src/Unified/Terraria/ID/Colors.cs
+@@ -89,4 +_,11 @@
+ 
+ 	public static Color AlphaDarken(Color input) => input * ((float)(int)Main.mouseTextColor / 255f);
+ 	public static Color GetSelectionGlowColor(bool isTileSelected, int averageTileLighting) => (!isTileSelected) ? new Color(averageTileLighting / 2, averageTileLighting / 2, averageTileLighting / 2, averageTileLighting) : new Color(averageTileLighting, averageTileLighting, averageTileLighting / 3, averageTileLighting);
++	public static Color GetCraftingReachColor(float averageTileLighting, float alpha)
++	{
++		int r = (int)((averageTileLighting / 3f) * alpha);
++		int g = (int)((averageTileLighting / 2f) * alpha);
++		int b = (int)((averageTileLighting / 1.4f) * alpha);
++		return new Color(r, g, b, 1);
++	}
+ }
