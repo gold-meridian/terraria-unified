@@ -1,0 +1,12 @@
+--- src/TerrariaNetCore/Terraria/Localization/Content/pl-PL/Main.json
++++ src/Unified/Terraria/Localization/Content/pl-PL/Main.json
+@@ -595,6 +_,9 @@
+ 		"WireModeNormal": "Wyświetlanie kabli: Normalne",
+ 		"RulerOn": "Linijka wł.",
+ 		"RulerOff": "Linijka wył.",
++		"CraftingReachPreview0": "Zasięg wytwarzania wył.",
++		"CraftingReachPreview1": "Zasięg wytwarzania - kontur",
++		"CraftingReachPreview2": "Zasięg wytwarzania - kontur & wypełnienie",
+ 		"MechanicalRulerOn": "Mechaniczna linijka wł.",
+ 		"MechanicalRulerOff": "Mechaniczna linijka wył.",
+ 		"PaintSprayerOn": "Rozpylacz farby wł.",
