@@ -1,4 +1,9 @@
 {
+	"GameUI": {
+		"CraftingReachPreview0": "Crafting reach off",
+		"CraftingReachPreview1": "Crafting reach - outline",
+		"CraftingReachPreview2": "Crafting reach - outline & fill"
+	},
 	"TitleLinks": {
 		"Patreon": "Patreon",
 		"KoFi": "Ko-Fi"
