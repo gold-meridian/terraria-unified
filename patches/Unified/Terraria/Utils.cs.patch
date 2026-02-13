@@ -9,13 +9,3 @@
  	public static Vector2 Size(this Rectangle r) => new Vector2(r.Width, r.Height);
  
  	public static float Distance(this Rectangle r, Vector2 point)
-@@ -2140,4 +_,9 @@
- 	}
- 
- 	public static string TrimLastCharacter(string s) => TrimUserString(s, s.Length - 1);
-+
-+	public static float Easing_QuadInOut(float t)
-+	{
-+		return t < 0.5f ? 2f * t * t : 1f - 2f * (1f - t) * (1f - t);
-+	}
- }

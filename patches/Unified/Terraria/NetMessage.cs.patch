@@ -4,7 +4,7 @@
  using Terraria.Map;
  using Terraria.Social;
  using Terraria.Testing;
-+using Terraria.Unified.Patches;
++using Terraria.Unified.Features;
  
  namespace Terraria;
  

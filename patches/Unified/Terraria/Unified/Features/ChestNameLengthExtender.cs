@@ -1,4 +1,4 @@
-﻿namespace Terraria.Unified.Patches;
+﻿namespace Terraria.Unified.Features;
 
 internal static class ChestNameLengthExtender
 {

@@ -1,5 +1,14 @@
 --- src/TerrariaNetCore/Terraria/Player.cs
 +++ src/Unified/Terraria/Player.cs
+@@ -40,7 +_,7 @@
+ 
+ namespace Terraria;
+ 
+-public class Player : Entity, IFixLoadedData
++public partial class Player : Entity, IFixLoadedData
+ {
+ 	public static class BuilderAccToggleIDs
+ 	{
 @@ -17682,7 +_,7 @@
  			Hurt(PlayerDeathReason.LegacyDefault(), attackDamage_ScaledByDifficulty, Main.npc[Main.wofNPCIndex].direction);
  		}
@@ -50,6 +59,109 @@
  
  			if (flag) {
  				outOfRange = true;
+@@ -20103,6 +_,7 @@
+ 
+ 			TrySyncingInput();
+ 			UpdateNearbyCraftingTiles();
++			UpdateCraftingReachAnimFrames();
+ 			HandleBeingInChestRange();
+ 			tileEntityAnchor.GetTileEntity()?.OnPlayerUpdate(this);
+ 		}
+@@ -28746,6 +_,8 @@
+ 
+ 	public void AdjTiles()
+ 	{
++		TilesWithinCraftingReach.Clear();
++
+ 		Array.Clear(adjTile, 0, adjTile.Length);
+ 		oldAdjWaterSource = adjWaterSource;
+ 		adjWaterSource = false;
+@@ -28756,13 +_,85 @@
+ 		alchemyTable = false;
+ 		Rectangle tileRegion = TileReachCheckSettings.Simple.GetTileRegion(this, ateArtisanBread ? 4 : 0);
+ 		tileRegion = WorldUtils.ClampToWorld(tileRegion);
++
++		CraftingReachRectangle = tileRegion;
++
+ 		for (int i = tileRegion.Left; i <= tileRegion.Right; i++) {
+ 			for (int j = tileRegion.Top; j <= tileRegion.Bottom; j++) {
+ 				Tile tile = Main.tile[i, j];
+ 				if (tile.active()) {
+ 					SetAdjTile(tile.type);
++					/*
+ 					if (TileID.Sets.CountsAsWaterForCrafting[tile.type])
+ 						adjWaterSource = true;
++					*/
++
++					var isACraftingStation = Recipe.TileUsedInRecipes[tile.type];
++					if (TileID.Sets.CountsAsWaterForCrafting[tile.type]) {
++						adjWaterSource = true;
++						isACraftingStation = true;
++					}
++
++					if (isACraftingStation) {
++						TilesWithinCraftingReach.Add(new Point16(i, j));
++
++						if (i == tileRegion.Left) {
++							for (int x = tileRegion.Left - 1; x >= tileRegion.Left - 3; x--) {
++								if (x < 0) {
++									break;
++								}
++
++								if (tile.type == Main.tile[x, j].type) {
++									TilesWithinCraftingReach.Add(new Point16(x, j));
++								}
++								else {
++									break;
++								}
++							}
++						}
++						else if (i == tileRegion.Right) {
++							for (int x = tileRegion.Right + 1; x <= tileRegion.Right + 3; x++) {
++								if (x >= Main.maxTilesX) {
++									break;
++								}
++
++								if (tile.type == Main.tile[x, j].type) {
++									TilesWithinCraftingReach.Add(new Point16(x, j));
++								}
++								else {
++									break;
++								}
++							}
++						}
++						else if (j == tileRegion.Top) {
++							for (int y = tileRegion.Top - 1; y >= tileRegion.Top - 3; y--) {
++								if (y < 0) {
++									break;
++								}
++
++								if (tile.type == Main.tile[i, y].type) {
++									TilesWithinCraftingReach.Add(new Point16(i, y));
++								}
++								else {
++									break;
++								}
++							}
++						}
++						else if (j == tileRegion.Bottom) {
++							for (int y = tileRegion.Bottom + 1; y <= tileRegion.Bottom + 3; y++) {
++								if (y >= Main.maxTilesY) {
++									break;
++								}
++
++								if (tile.type == Main.tile[i, y].type) {
++									TilesWithinCraftingReach.Add(new Point16(i, y));
++								}
++								else {
++									break;
++								}
++							}
++						}
++					}
+ 				}
+ 
+ 				if (tile.liquid > 200 && tile.liquidType() == 0)
 @@ -33897,8 +_,8 @@
  	public void HorsemansBlade_SpawnPumpkin(int npcIndex, int dmg, float kb)
  	{

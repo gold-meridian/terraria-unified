@@ -4,7 +4,7 @@
  using Terraria.GameInput;
  using Terraria.Localization;
  using Terraria.UI.Gamepad;
-+using Terraria.Unified.Patches;
++using Terraria.Unified.Features;
  
  namespace Terraria.UI;
  

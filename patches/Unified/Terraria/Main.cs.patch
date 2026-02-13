@@ -20,11 +20,12 @@
  using Microsoft.Win32;
  using Microsoft.Xna.Framework;
  using Microsoft.Xna.Framework.Graphics;
-@@ -75,6 +_,8 @@
+@@ -75,6 +_,9 @@
  using Terraria.UI;
  using Terraria.UI.Chat;
  using Terraria.UI.Gamepad;
 +using Terraria.Unified;
++using Terraria.Unified.Features;
 +using Terraria.Unified.Startup;
  using Terraria.Utilities;
  using Terraria.WorldBuilding;
@@ -3573,6 +3574,40 @@
  		r.Y += r.Height + 4;
  		r.Height = 46;
  		UILinkPointNavigator.SetPosition(2813, r.Center.ToVector2());
+@@ -38599,8 +_,11 @@
+ 	{
+ 		if (_needToSetupDrawInterfaceLayers) {
+ 			_needToSetupDrawInterfaceLayers = false;
++			/*
+ 			_gameInterfaceLayers = new List<GameInterfaceLayer>();
+ 			_gameInterfaceLayers.AddRange(new GameInterfaceLayer[43] {
++			*/
++			_gameInterfaceLayers = [
+ 				new LegacyGameInterfaceLayer("Vanilla: Interface Logic 1", delegate {
+ 					DrawInterface_0_InterfaceLogic1();
+ 					return true;
+@@ -38629,6 +_,10 @@
+ 					DrawInterface_4_Ruler();
+ 					return true;
+ 				}),
++				new LegacyGameInterfaceLayer("Unified: Crafting Reach", delegate {
++					DrawInterface_4_1_CraftingReach();
++					return true;
++				}),
+ 				new LegacyGameInterfaceLayer("Vanilla: Gamepad Lock On", delegate {
+ 					DrawInterface_5_GamepadLockOn();
+ 					return true;
+@@ -38761,7 +_,10 @@
+ 					DrawInterface_41_InterfaceLogic4();
+ 					return true;
+ 				}, InterfaceScaleType.UI)
++			];
++			/*
+ 			});
++			*/
+ 		}
+ 	}
+ 
 @@ -39465,7 +_,7 @@
  			}
  
@@ -3706,6 +3741,18 @@
  			Microsoft.Xna.Framework.Color color = Microsoft.Xna.Framework.Color.White;
  			Microsoft.Xna.Framework.Color color2 = new Microsoft.Xna.Framework.Color(127, 127, 127);
  			Vector2 vector = start + new Vector2(0f, num * 24);
+@@ -40993,6 +_,11 @@
+ 			state = num;
+ 
+ 		num++;
++		if (CraftingReachPreview.DrawCraftingReachIcon(0, 24 * (totalDrawnIcons - 2), flag, 0)) {
++			state = num;
++		}
++
++		num++;
+ 		if (player.unlockedBiomeTorches) {
+ 			if (DrawTorchBiomeSwapIcon(0, 0, flag, 1))
+ 				state = num;
 @@ -41020,7 +_,7 @@
  
  		bool flag = false;

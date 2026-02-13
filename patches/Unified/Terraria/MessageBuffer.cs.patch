@@ -4,7 +4,7 @@
  using Terraria.Net.Sockets;
  using Terraria.Testing;
  using Terraria.UI;
-+using Terraria.Unified.Patches;
++using Terraria.Unified.Features;
  
  namespace Terraria;
  
