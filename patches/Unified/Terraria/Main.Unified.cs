@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Terraria.DataStructures;
 using Terraria.GameContent;
+using Terraria.IO;
 using Terraria.Unified.Features;
 
 namespace Terraria;
@@ -14,6 +15,16 @@ partial class Main
 	public static bool Vsync { get; set; } = true;
 
 	internal static List<TitleLinkButton> UnifiedLinks { get; } = [];
+
+	private static void SaveUnifiedSettings(Preferences config)
+	{
+		config.Put("CraftingReachPreviewMode", (int)CraftingReachPreview.Mode);
+	}
+
+	private static void LoadUnifiedSettings(Preferences config)
+	{
+		CraftingReachPreview.Mode = (CraftingReachPreview.PreviewMode)config.Get<int>("CraftingReachPreviewMode", 0);
+	}
 
 	private static void DrawInterface_4_1_CraftingReach()
 	{

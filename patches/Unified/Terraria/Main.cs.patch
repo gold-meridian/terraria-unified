@@ -211,6 +211,16 @@
  
  		return false;
  	}
+@@ -3596,6 +_,9 @@
+ 		configuration.Put("UseScreenShake", UseScreenShake);
+ 		configuration.Put("PortraitPreference", DialoguePortraitPreference);
+ 		configuration.Put("SecretSeeds", SecretSeedsTracker.GetStringsToSave());
++
++		SaveUnifiedSettings(configuration);
++
+ 		if (Configuration.Save())
+ 			return PlayerInput.Save();
+ 
 @@ -3604,6 +_,10 @@
  
  	protected void CheckBunny()
@@ -237,6 +247,15 @@
  		if (!startFullscreen) {
  			if (PendingBorderlessState)
  				screenBorderlessPendingResizes = 1;
+@@ -3883,6 +_,8 @@
+ 			Console.WriteLine("Failed to parse configuration entry for secret seed list. {0}", arg);
+ 		}
+ 
++		LoadUnifiedSettings(configuration);
++
+ 		if (currentValue <= 162) {
+ 			bool currentValue9 = false;
+ 			uint currentValue10 = 0u;
 @@ -5426,7 +_,14 @@
  #if FNA
  			Console.WriteLine("SDL Video Driver: " + SDL3.SDL.SDL_GetCurrentVideoDriver());
