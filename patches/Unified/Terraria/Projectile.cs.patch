@@ -18,7 +18,7 @@
  		closeToMe = Utils.CenteredRectangle(base.Center, new Vector2(300f, 150f));
  	}
  
-@@ -41791,10 +_,12 @@
+@@ -41800,10 +_,12 @@
  		int num2 = 2;
  		int num3 = 0;
  		while (num3 <= num) {
@@ -33,7 +33,7 @@
  
  			if (WorldGen.ActiveAndWalkableTile(p.X, p.Y)) {
  				Vector2 vector = p.ToWorldCoordinates(8f, 0f);
-@@ -63747,7 +_,7 @@
+@@ -63756,7 +_,7 @@
  
  					if (type == 109) {
  						int num1109 = Player.FindClosest(position, width, height);

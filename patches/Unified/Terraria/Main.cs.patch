@@ -1,6 +1,6 @@
 --- src/TerrariaNetCore/Terraria/Main.cs
 +++ src/Unified/Terraria/Main.cs
-@@ -3,16 +_,17 @@
+@@ -3,10 +_,10 @@
  using System.Collections.Concurrent;
  using System.Collections.Generic;
  using System.Diagnostics;
@@ -12,14 +12,15 @@
  using System.Runtime.InteropServices;
  using System.Security.Cryptography;
  using System.Text;
- using System.Text.RegularExpressions;
+@@ -14,6 +_,7 @@
  using System.Threading;
  using System.Threading.Tasks;
+ using System.Windows.Forms;
 +using Microsoft.Extensions.DependencyInjection;
  using Microsoft.Win32;
  using Microsoft.Xna.Framework;
  using Microsoft.Xna.Framework.Graphics;
-@@ -74,6 +_,8 @@
+@@ -75,6 +_,8 @@
  using Terraria.UI;
  using Terraria.UI.Chat;
  using Terraria.UI.Gamepad;
@@ -28,7 +29,7 @@
  using Terraria.Utilities;
  using Terraria.WorldBuilding;
  
-@@ -92,7 +_,7 @@
+@@ -83,7 +_,7 @@
  #if SERVER
  public class Main : Terraria.Server.Game
  #else
@@ -37,7 +38,7 @@
  #endif
  {
  	public static class CurrentFrameFlags
-@@ -491,7 +_,14 @@
+@@ -483,7 +_,14 @@
  	public static int desiredWorldTilesUpdateRate = 1;
  	public const int MaxWorldViewSizeWidth = 1920;
  	public const int MaxWorldViewSizeHeight = 1200;
@@ -53,7 +54,7 @@
  	public static int maxScreenW = 1920;
  	public static int maxScreenH = 1200;
  	public static int minScreenW = 800;
-@@ -533,13 +_,23 @@
+@@ -525,13 +_,23 @@
  	public static int wofDrawAreaBottom;
  	public static int wofDrawFrameIndex;
  	public static int offScreenRange = 200;
@@ -77,7 +78,7 @@
  	private static bool backgroundTargetSwapPending;
  	public static RenderTarget2D skyTarget;
  	public static RenderTarget2D screenTarget;
-@@ -550,7 +_,7 @@
+@@ -542,7 +_,7 @@
  	public static bool loadMapLock;
  	public static bool loadMap;
  	public static bool mapReady;
@@ -86,7 +87,7 @@
  	public static int mapTimeMax = 30;
  	public static int mapTime = mapTimeMax;
  	public static bool clearMap;
-@@ -957,7 +_,10 @@
+@@ -948,7 +_,10 @@
  	public static HairstyleUnlocksHelper Hairstyles = new HairstyleUnlocksHelper();
  	public static bool tilesLoaded = false;
  	public static WorldMap Map;
@@ -97,16 +98,16 @@
  	public static Dust[] dust = new Dust[6001];
  	public static Star[] star = new Star[400];
  	public static WorldItem[] item = new WorldItem[401];
-@@ -1020,7 +_,7 @@
+@@ -1010,7 +_,7 @@
+ 	public static Item guideItem = new Item();
  	public static Item reforgeItem = new Item();
  	public static float inventoryScale = 0.75f;
- 	public static bool hasFocus;
 -	public static Microsoft.Xna.Framework.Point rulerLineDisplayValues = default(Microsoft.Xna.Framework.Point);
 +	public static System.Drawing.Point rulerLineDisplayValues = default(System.Drawing.Point);
  	public static bool PipsFastScroll;
  	public static bool PipsUseGrid;
  	public static PipPage PipsCurrentPage;
-@@ -1920,8 +_,8 @@
+@@ -1910,8 +_,8 @@
  	public static int SmartInteractNPC;
  	public static int SmartInteractProj;
  	public static bool SmartInteractPotionOfReturn;
@@ -117,7 +118,7 @@
  	public static int TileInteractionLX = -1;
  	public static int TileInteractionLY = -1;
  	public static int TileInteractionHX = -1;
-@@ -1976,7 +_,7 @@
+@@ -1966,7 +_,7 @@
  	private static bool shouldSetDefaultUIScale = true;
  	private static float newDefaultUIScale = 0f;
  	public static bool IsInTheMiddleOfLoadingSettings;
@@ -126,7 +127,7 @@
  	public static bool startFullscreen = false;
  	public static string oldStatusText = "";
  	public static string autoGenFileLocation = null;
-@@ -2114,15 +_,15 @@
+@@ -2104,15 +_,15 @@
  	private static Vector2 _itemIconCacheScreenPosition;
  	private static int _itemIconCacheSelectedItemID;
  	private static int _itemIconCacheTime;
@@ -151,18 +152,7 @@
  	};
  	private static bool _cannotDrawAccessoriesHorizontally = false;
  	public static Microsoft.Xna.Framework.Color selColor = Microsoft.Xna.Framework.Color.White;
-@@ -2189,6 +_,10 @@
- 	public static int ladyBugRainBoost = 0;
- 	private static bool _canShowMeteorFall;
- 	private static bool _isResizingAndRemakingTargets = false;
-+	public static (int Current, int Max) craftingReachPreview_Outline = (0, 25);
-+	public static (int Current, int Max) craftingReachPreview_Box = (0, 25);
-+	public static float craftingReachPreview_OutlineAnim = 0f;
-+	public static float craftingReachPreview_BoxAnim = 0f;
- 
- 	public static bool CanUpdateGameplay { get; private set; }
- 
-@@ -2552,7 +_,7 @@
+@@ -2542,7 +_,7 @@
  		}
  	}
  
@@ -171,7 +161,7 @@
  
  	public static bool ShouldPlayRainbowBoulderMusic => _rainbowBoulderMusicFramesCounter > 0;
  
-@@ -2665,7 +_,7 @@
+@@ -2655,7 +_,7 @@
  		return pos;
  	}
  
@@ -180,7 +170,7 @@
  	{
  		if (player[myPlayer].gravDir != -1f)
  			return pos;
-@@ -2674,7 +_,7 @@
+@@ -2664,7 +_,7 @@
  		return pos;
  	}
  
@@ -189,7 +179,7 @@
  	{
  		if (player[myPlayer].gravDir != -1f)
  			return box;
-@@ -3172,6 +_,7 @@
+@@ -3162,6 +_,7 @@
  		return true;
  	}
  
@@ -197,7 +187,7 @@
  	public static void SetGraphicsProfile(GraphicsProfile profile, bool forceSet)
  	{
  		if (_currentGraphicsProfile != profile || forceSet) {
-@@ -3210,6 +_,7 @@
+@@ -3200,6 +_,7 @@
  
  		instance.EnsureRenderTargetContent();
  	}
@@ -205,7 +195,7 @@
  
  	private static void TrySupporting8K()
  	{
-@@ -3380,12 +_,12 @@
+@@ -3370,12 +_,12 @@
  
  	public static bool InSmartCursorHighlightArea(int x, int y, out bool actuallySelected)
  	{
@@ -220,7 +210,7 @@
  
  		return false;
  	}
-@@ -3611,6 +_,10 @@
+@@ -3604,6 +_,10 @@
  
  	protected void CheckBunny()
  	{
@@ -231,7 +221,7 @@
  		try {
  			RegistryKey currentUser = Registry.CurrentUser;
  			currentUser = currentUser.CreateSubKey("Software\\Terraria");
-@@ -3682,7 +_,13 @@
+@@ -3675,7 +_,13 @@
  		int currentValue3 = graphics.PreferredBackBufferHeight;
  		configuration.Get("DisplayWidth", ref currentValue2);
  		configuration.Get("DisplayHeight", ref currentValue3);
@@ -246,7 +236,7 @@
  		if (!startFullscreen) {
  			if (PendingBorderlessState)
  				screenBorderlessPendingResizes = 1;
-@@ -5425,7 +_,14 @@
+@@ -5426,7 +_,14 @@
  #if FNA
  			Console.WriteLine("SDL Video Driver: " + SDL3.SDL.SDL_GetCurrentVideoDriver());
  #endif
@@ -261,7 +251,7 @@
  		}
  	}
  
-@@ -5553,7 +_,10 @@
+@@ -5554,7 +_,10 @@
  			return;
  		}
  
@@ -272,7 +262,7 @@
  		ClientInitialize();
  		base.Initialize();
  	}
-@@ -9700,7 +_,7 @@
+@@ -9707,7 +_,7 @@
  	{
  	}
  
@@ -281,7 +271,7 @@
  	{
  		FancyErrorPrinter.ShowFailedToLoadAssetError(e, assetPath);
  	}
-@@ -9761,6 +_,9 @@
+@@ -9768,6 +_,9 @@
  		AssetInitializer.LoadSplashAssets();
  		ChromaInitializer.Load();
  		_gameContentLoadProcess = LoadContent_Deferred();
@@ -291,7 +281,7 @@
  		if (Setting_AssetFileWatcherEnabled)
  			Assets.EnableAssetWatcher();
  	}
-@@ -9772,6 +_,7 @@
+@@ -9779,6 +_,7 @@
  		ScreenShaderRef = Assets.Request<Effect>("ScreenShader");
  	}
  
@@ -299,7 +289,7 @@
  	private void LoadContent_TryEnteringHiDef()
  	{
  		Configuration.Load();
-@@ -9786,6 +_,7 @@
+@@ -9793,6 +_,7 @@
  		else if (Program.IsFna)
  			SetGraphicsProfile(GraphicsProfile.HiDef, forceSet: true);
  	}
@@ -307,7 +297,7 @@
  
  	protected IEnumerator LoadContent_Deferred()
  	{
-@@ -10430,7 +_,7 @@
+@@ -10437,7 +_,7 @@
  		bool flag16 = false;
  		bool flag17 = false;
  		if (!showSplash) {
@@ -316,7 +306,7 @@
  			int num = 5000;
  			for (int i = 0; i < maxNPCs; i++) {
  				if (!npc[i].active)
-@@ -10554,7 +_,7 @@
+@@ -10561,7 +_,7 @@
  				if (num2 == 0)
  					continue;
  
@@ -325,7 +315,7 @@
  				if (rectangle.Intersects(value)) {
  					switch (num2) {
  						case 1:
-@@ -10626,7 +_,7 @@
+@@ -10633,7 +_,7 @@
  		float num4 = (float)((double)((screenPosition.Y + (float)(screenHeight / 2)) / 16f - (65f + 10f * num3)) / (worldSurface / 5.0));
  		int num5 = (int)(SceneMetrics.Center.X / 16f);
  		int num6 = (int)(SceneMetrics.Center.Y / 16f);
@@ -334,7 +324,7 @@
  		if (CreditsRollEvent.IsEventOngoing) {
  			newMusic = 89;
  		}
-@@ -10878,7 +_,7 @@
+@@ -10885,7 +_,7 @@
  			musicNoCrossFade[51] = true;
  
  		if (!showSplash) {
@@ -343,7 +333,7 @@
  			int num2 = 5000;
  			for (int j = 0; j < maxNPCs; j++) {
  				if (!npc[j].active)
-@@ -11021,7 +_,7 @@
+@@ -11028,7 +_,7 @@
  				if (num3 == 0)
  					continue;
  
@@ -352,7 +342,7 @@
  				if (rectangle.Intersects(value)) {
  					switch (num3) {
  						case 1:
-@@ -11171,7 +_,7 @@
+@@ -11178,7 +_,7 @@
  		float num5 = (float)((double)((screenPosition.Y + (float)(screenHeight / 2)) / 16f - (65f + 10f * num4)) / (worldSurface / 5.0));
  		int num6 = (int)(SceneMetrics.Center.X / 16f);
  		int num7 = (int)(SceneMetrics.Center.Y / 16f);
@@ -361,7 +351,7 @@
  		if (CreditsRollEvent.IsEventOngoing) {
  			newMusic = 89;
  		}
-@@ -11675,7 +_,7 @@
+@@ -11682,7 +_,7 @@
  		}
  	}
  
@@ -370,7 +360,7 @@
  	{
  		switch (Style) {
  			case 0: {
-@@ -14515,12 +_,18 @@
+@@ -14524,12 +_,18 @@
  			Chroma.Update(GlobalTimeWrappedHourly);
  			if (FrameSkipMode == FrameSkipMode.Off || FrameSkipMode == FrameSkipMode.Subtle) {
  				base.IsFixedTimeStep = ThrottleWhenInactive && !base.IsActive;
@@ -389,7 +379,7 @@
  
  			base.InactiveSleepTime = (ThrottleWhenInactive ? TimeSpan.FromMilliseconds(20.0) : TimeSpan.Zero);
  			if (showSplash)
-@@ -14932,7 +_,7 @@
+@@ -14916,7 +_,7 @@
  			PlayerInput.SetZoom_UI();
  			int num5 = (screenWidth - num4 - 280) / num2;
  			int num6 = (screenHeight - num3 - 20) / num2;
@@ -398,7 +388,7 @@
  				int num7 = Math.Sign(num);
  				while (num != 0) {
  					ScrollCraftingGrid(num, num5);
-@@ -14950,7 +_,7 @@
+@@ -14934,7 +_,7 @@
  			PlayerInput.SetZoom_UI();
  			_ = (screenWidth - num10 - 280) / num8;
  			_ = (screenHeight - num9 - 20) / num8;
@@ -407,7 +397,7 @@
  			if (lastChestDisplayRectangle.Contains(MouseScreen.ToPoint())) {
  				flag = false;
  				int num11 = Math.Sign(num);
-@@ -17286,7 +_,7 @@
+@@ -17270,7 +_,7 @@
  		if (settingsEnabled_OpaqueBoxBehindTooltips) {
  			int num8 = 14;
  			int num9 = 9;
@@ -416,7 +406,7 @@
  		}
  
  		for (int k = 0; k < mouseTextTooltipLine_Text.Length; k++) {
-@@ -18076,7 +_,7 @@
+@@ -18060,7 +_,7 @@
  
  	private void MouseText_DrawBuffTooltip(string buffString, ref int X, ref int Y, Vector2 mouseTextSize)
  	{
@@ -425,7 +415,7 @@
  		int num = 220;
  		int num2 = 72;
  		int num3 = -1;
-@@ -18538,13 +_,13 @@
+@@ -18522,13 +_,13 @@
  			if (flag) {
  				LoadGore(gore[i].type);
  				if (gore[i].Frame.ColumnCount > 1 || gore[i].Frame.RowCount > 1) {
@@ -441,7 +431,7 @@
  				}
  			}
  		}
-@@ -18565,7 +_,7 @@
+@@ -18549,7 +_,7 @@
  
  			LoadGore(gore[i].type);
  			if (gore[i].Frame.ColumnCount > 1 || gore[i].Frame.RowCount > 1) {
@@ -450,7 +440,7 @@
  				Vector2 vector = new Vector2(0f, 0f);
  				if (gore[i].type == 1217)
  					vector.Y += 4f;
-@@ -18575,7 +_,7 @@
+@@ -18559,7 +_,7 @@
  			}
  			else {
  				Microsoft.Xna.Framework.Color alpha2 = gore[i].GetAlpha(Lighting.GetColor((int)((double)gore[i].position.X + (double)TextureAssets.Gore[gore[i].type].Width() * 0.5) / 16, (int)(((double)gore[i].position.Y + (double)TextureAssets.Gore[gore[i].type].Height() * 0.5) / 16.0)));
@@ -459,7 +449,7 @@
  			}
  		}
  
-@@ -18641,21 +_,21 @@
+@@ -18625,21 +_,21 @@
  
  		if (num2 < 34) {
  			if (num2 < 36)
@@ -487,7 +477,7 @@
  		}
  	}
  
-@@ -18871,7 +_,7 @@
+@@ -18855,7 +_,7 @@
  	{
  		Texture2D value = TextureAssets.Extra[78].Value;
  		Vector2 origin = new Vector2(68f, 94f);
@@ -496,7 +486,7 @@
  		Vector2 position = worldPosition - screenPosition;
  		passedColor *= opacity;
  		spriteBatch.Draw(value, position, value2, passedColor, 0f, origin, scale, SpriteEffects.None, 0f);
-@@ -18884,7 +_,7 @@
+@@ -18868,7 +_,7 @@
  
  		TimeLogger.StartTimestamp fromTimestamp = TimeLogger.Start();
  		bool flag = false;
@@ -505,7 +495,7 @@
  		for (int num = maxNPCs - 1; num >= 0; num--) {
  			try {
  				if (npc[num].active && npc[num].type > 0 && npc[num].type < NPCID.Count && !npc[num].hide) {
-@@ -18927,7 +_,7 @@
+@@ -18911,7 +_,7 @@
  										num3 = x - vector.X;
  										num4 = num2 - vector.Y;
  										Microsoft.Xna.Framework.Color color = Lighting.GetColor((int)vector.X / 16, (int)(vector.Y / 16f));
@@ -514,7 +504,7 @@
  									}
  								}
  							}
-@@ -18955,7 +_,7 @@
+@@ -18939,7 +_,7 @@
  								num7 = npc[NPC.plantBoss].Center.X - vector2.X + npc[NPC.plantBoss].netOffset.X;
  								num8 = npc[NPC.plantBoss].Center.Y - vector2.Y + npc[NPC.plantBoss].netOffset.Y;
  								Microsoft.Xna.Framework.Color color2 = Lighting.GetColor((int)vector2.X / 16, (int)(vector2.Y / 16f));
@@ -523,7 +513,7 @@
  							}
  						}
  						else if (npc[num].type == 264 && npc[num].aiStyle == 53 && NPC.plantBoss >= 0) {
-@@ -18985,11 +_,11 @@
+@@ -18969,11 +_,11 @@
  								num13 = npc[num12].Center.X - vector3.X + npc[num12].netOffset.X;
  								num14 = npc[num12].Center.Y - vector3.Y + npc[num12].netOffset.Y;
  								Microsoft.Xna.Framework.Color color3 = Lighting.GetColor((int)vector3.X / 16, (int)(vector3.Y / 16f));
@@ -537,7 +527,7 @@
  							DrawNPCCheckAlt(npc[num]);
  							DrawNPC(num, behindTiles);
  						}
-@@ -19022,7 +_,7 @@
+@@ -19006,7 +_,7 @@
  	public void DrawNPCDirect_QueenSlimeWings(NPC rCurrentNPC, SpriteBatch mySpriteBatch, Vector2 screenPos, Vector2 drawCenter, Microsoft.Xna.Framework.Color originColor)
  	{
  		Texture2D value = TextureAssets.Extra[185].Value;
@@ -546,7 +536,7 @@
  		float scale = 0.8f;
  		for (int i = 0; i < 2; i++) {
  			float x = 1f;
-@@ -19107,11 +_,11 @@
+@@ -19091,11 +_,11 @@
  
  				if (!flag3) {
  					flag3 = true;
@@ -560,7 +550,7 @@
  				}
  			}
  		}
-@@ -19157,19 +_,19 @@
+@@ -19141,19 +_,19 @@
  
  				switch (type) {
  					case 56:
@@ -585,7 +575,7 @@
  						break;
  				}
  			}
-@@ -19180,7 +_,7 @@
+@@ -19164,7 +_,7 @@
  			Vector2 vector3 = new Vector2(rCurrentNPC.Center.X, rCurrentNPC.Center.Y + 80f);
  			int num10 = (int)rCurrentNPC.localAI[1];
  			Microsoft.Xna.Framework.Color color3 = ((!rCurrentNPC.IsABestiaryIconDummy) ? Lighting.GetColor((int)vector3.X / 16, (int)(vector3.Y / 16f)) : rCurrentNPC.GetBestiaryEntryColor());
@@ -594,7 +584,7 @@
  		}
  
  		if (type == 328) {
-@@ -19208,7 +_,7 @@
+@@ -19192,7 +_,7 @@
  
  				float rotation4 = (float)Math.Atan2(num12, num11) - 1.57f;
  				Microsoft.Xna.Framework.Color color4 = Lighting.GetColor((int)vector4.X / 16, (int)(vector4.Y / 16f));
@@ -603,7 +593,7 @@
  				if (i == 0) {
  					vector4.X += num11 * num13 / 2f;
  					vector4.Y += num12 * num13 / 2f;
-@@ -19242,9 +_,9 @@
+@@ -19226,9 +_,9 @@
  				float rotation5 = (float)Math.Atan2(num15, num14) - 1.57f;
  				Microsoft.Xna.Framework.Color color5 = Lighting.GetColor((int)vector5.X / 16, (int)(vector5.Y / 16f));
  				if (rCurrentNPC.localAI[3] == 1f)
@@ -615,7 +605,7 @@
  
  				if (j == 0) {
  					vector5.X += num14 * num16 / 2f;
-@@ -19292,7 +_,7 @@
+@@ -19276,7 +_,7 @@
  					num19 += 8f;
  
  				Microsoft.Xna.Framework.Color color6 = Lighting.GetColor((int)vector6.X / 16, (int)(vector6.Y / 16f));
@@ -624,7 +614,7 @@
  			}
  		}
  
-@@ -19321,7 +_,7 @@
+@@ -19305,7 +_,7 @@
  
  				float rotation7 = (float)Math.Atan2(num22, num21) - 1.57f;
  				Microsoft.Xna.Framework.Color color7 = Lighting.GetColor((int)vector7.X / 16, (int)(vector7.Y / 16f));
@@ -633,7 +623,7 @@
  				if (k == 0) {
  					vector7.X += num21 * num23 / 2f;
  					vector7.Y += num22 * num23 / 2f;
-@@ -19394,10 +_,10 @@
+@@ -19378,10 +_,10 @@
  				num35 = rCurrentNPC.ai[1] - vector8.X;
  				num36 = rCurrentNPC.ai[2] - vector8.Y;
  				Microsoft.Xna.Framework.Color color9 = Lighting.GetColor((int)vector8.X / 16, (int)(vector8.Y / 16f));
@@ -646,7 +636,7 @@
  		}
  
  		Microsoft.Xna.Framework.Color npcColor = Lighting.GetColor((int)((double)rCurrentNPC.position.X + (double)rCurrentNPC.width * 0.5) / 16, (int)(((double)rCurrentNPC.position.Y + (double)rCurrentNPC.height * 0.5) / 16.0));
-@@ -19460,7 +_,7 @@
+@@ -19444,7 +_,7 @@
  			if (rCurrentNPC.frame.Y == 480)
  				zero.Y -= 6f;
  
@@ -655,7 +645,7 @@
  		}
  
  		if (type == 71) {
-@@ -19483,7 +_,7 @@
+@@ -19467,7 +_,7 @@
  		}
  
  		if (type == 69)
@@ -664,7 +654,7 @@
  
  		if (NPCID.Sets.SlimeCanContainItems[type] && rCurrentNPC.ai[1] > 0f)
  			DrawNPC_SlimeItem(rCurrentNPC, type, npcColor, 0f);
-@@ -19648,7 +_,7 @@
+@@ -19632,7 +_,7 @@
  						case 551: {
  							Texture2D value3 = TextureAssets.Npc[type].Value;
  							Vector2 vector9 = rCurrentNPC.Center - screenPos;
@@ -673,7 +663,7 @@
  							_ = frame.Size() / 2f;
  							SpriteEffects spriteEffects2 = spriteEffects ^ SpriteEffects.FlipHorizontally;
  							float rotation8 = rCurrentNPC.rotation;
-@@ -19665,7 +_,7 @@
+@@ -19649,7 +_,7 @@
  							if ((spriteEffects2 & SpriteEffects.FlipHorizontally) != 0)
  								spinningpoint2.X *= -1f;
  
@@ -682,7 +672,7 @@
  							Vector2 origin = new Vector2(16f, 176f);
  							if ((spriteEffects2 & SpriteEffects.FlipHorizontally) != 0)
  								origin.X = (float)value5.Width - origin.X;
-@@ -19677,7 +_,7 @@
+@@ -19661,7 +_,7 @@
  							if ((spriteEffects2 & SpriteEffects.FlipHorizontally) != 0)
  								spinningpoint.X *= -1f;
  
@@ -691,7 +681,7 @@
  							Vector2 origin2 = new Vector2(215f, 170f);
  							if ((spriteEffects2 & SpriteEffects.FlipHorizontally) != 0)
  								origin2.X = (float)value7.Width - origin2.X;
-@@ -19727,7 +_,7 @@
+@@ -19711,7 +_,7 @@
  								for (int num80 = 0; num80 < 3; num80++) {
  									int x = num77 * 36 + num79 * 18;
  									int y2 = num78 * 54 + num80 * 18;
@@ -700,7 +690,7 @@
  									Vector2 origin8 = new Vector2(1f - (float)num79, 1.5f - (float)num80) * 16f;
  									mySpriteBatch.Draw(value18, position10, value19, alpha2, rotation9, origin8, 1f, effects, 0f);
  								}
-@@ -19741,7 +_,7 @@
+@@ -19725,7 +_,7 @@
  							position14.Y += 2f;
  							int num89 = npcFrameCount[rCurrentNPC.type];
  							int num90 = rCurrentNPC.frame.Y / rCurrentNPC.frame.Height;
@@ -709,7 +699,7 @@
  							rectangle8.Inflate(0, -2);
  							Vector2 origin10 = rectangle8.Size() * new Vector2(0.5f, 1f);
  							Microsoft.Xna.Framework.Color color21 = Microsoft.Xna.Framework.Color.Lerp(Microsoft.Xna.Framework.Color.White, npcColor, 0.5f);
-@@ -19749,7 +_,7 @@
+@@ -19733,7 +_,7 @@
  								DrawNPCDirect_QueenSlimeWings(rCurrentNPC, mySpriteBatch, screenPos, rCurrentNPC.Center, color21);
  
  							Texture2D value24 = TextureAssets.Extra[186].Value;
@@ -718,7 +708,7 @@
  							Vector2 origin11 = rectangle9.Size() * new Vector2(0.5f, 0.5f);
  							Vector2 vector20 = new Vector2(rCurrentNPC.Center.X, rCurrentNPC.Center.Y);
  							float num91 = 0f;
-@@ -19900,7 +_,7 @@
+@@ -19884,7 +_,7 @@
  						case 577: {
  							Texture2D value13 = TextureAssets.Npc[type].Value;
  							Vector2 vector16 = rCurrentNPC.Bottom - screenPos;
@@ -727,7 +717,7 @@
  							Vector2 origin5 = rectangle4.Size() * new Vector2(0.5f, 1f);
  							origin5.Y -= 4f;
  							int num67 = 94;
-@@ -19943,7 +_,7 @@
+@@ -19927,7 +_,7 @@
  						case 696: {
  							Texture2D value16 = TextureAssets.Npc[type].Value;
  							Vector2 vector17 = rCurrentNPC.Bottom - screenPos;
@@ -736,7 +726,7 @@
  							Vector2 origin6 = rectangle5.Size() * new Vector2(0.5f, 1f);
  							origin6.Y -= 4f;
  							Microsoft.Xna.Framework.Color newColor2 = npcColor;
-@@ -19970,8 +_,8 @@
+@@ -19954,8 +_,8 @@
  						case 594: {
  							Texture2D value11 = TextureAssets.Npc[type].Value;
  							Vector2 position7 = rCurrentNPC.Top - screenPos;
@@ -747,7 +737,7 @@
  							Vector2 origin4 = rectangle3.Size() * new Vector2(0.5f, 0f);
  							Microsoft.Xna.Framework.Color color16 = npcColor;
  							float scale3 = 1f;
-@@ -19991,7 +_,7 @@
+@@ -19975,7 +_,7 @@
  						case 686: {
  							Texture2D value17 = TextureAssets.Npc[type].Value;
  							Vector2 position9 = rCurrentNPC.Top - screenPos;
@@ -756,7 +746,7 @@
  							Vector2 origin7 = rectangle6.Size() * new Vector2(0.5f, 0f);
  							Microsoft.Xna.Framework.Color newColor3 = npcColor;
  							mySpriteBatch.Draw(value17, position9, rectangle6, rCurrentNPC.GetAlpha(newColor3), rCurrentNPC.rotation, origin7, rCurrentNPC.scale, spriteEffects, 0f);
-@@ -20001,7 +_,7 @@
+@@ -19985,7 +_,7 @@
  						case 565: {
  							Texture2D value20 = TextureAssets.Npc[type].Value;
  							Vector2 vector19 = rCurrentNPC.Bottom - screenPos;
@@ -765,7 +755,7 @@
  							Vector2 origin9 = rectangle7.Size() * new Vector2(0.5f, 1f);
  							origin9.Y -= 10f;
  							int num81 = 52;
-@@ -20079,7 +_,7 @@
+@@ -20063,7 +_,7 @@
  						case 548: {
  							Texture2D value9 = TextureAssets.Npc[type].Value;
  							Vector2 vector15 = rCurrentNPC.Bottom - screenPos;
@@ -774,7 +764,7 @@
  							Vector2 origin3 = rectangle2.Size() / 2f;
  							origin3.Y += 30f;
  							origin3.Y += 8f;
-@@ -20214,7 +_,7 @@
+@@ -20198,7 +_,7 @@
  						case 549: {
  							Texture2D value77 = TextureAssets.Npc[type].Value;
  							Vector2 vector66 = rCurrentNPC.Center - screenPos;
@@ -783,7 +773,7 @@
  							Vector2 origin24 = new Vector2(70f, 127f);
  							origin24.Y += 8f;
  							Vector2 scale6 = new Vector2(rCurrentNPC.scale);
-@@ -20373,7 +_,7 @@
+@@ -20357,7 +_,7 @@
  									num266 = 1f - rCurrentNPC.ai[3] / 30f;
  
  								Terraria.Graphics.Effects.Filters.Scene[key].GetShader().UseIntensity(1f + num266).UseProgress(0f);
@@ -792,7 +782,7 @@
  								GameShaders.Misc["ForceField"].UseColor(new Vector3(1f + num266 * 0.5f));
  								GameShaders.Misc["ForceField"].Apply(value75);
  								value75.Draw(mySpriteBatch);
-@@ -20386,7 +_,7 @@
+@@ -20370,7 +_,7 @@
  								float num267 = rCurrentNPC.ai[3] / 120f;
  								float num268 = Math.Min(rCurrentNPC.ai[3] / 30f, 1f);
  								Terraria.Graphics.Effects.Filters.Scene[key].GetShader().UseIntensity(Math.Min(5f, 15f * num267) + 1f).UseProgress(num267);
@@ -801,7 +791,7 @@
  								GameShaders.Misc["ForceField"].UseColor(new Vector3(2f));
  								GameShaders.Misc["ForceField"].Apply(value76);
  								value76.Draw(mySpriteBatch);
-@@ -20659,7 +_,7 @@
+@@ -20643,7 +_,7 @@
  							int num243 = rCurrentNPC.frame.Y / (TextureAssets.Npc[type].Height() / npcFrameCount[type]);
  							Texture2D value69 = TextureAssets.Npc[type].Value;
  							Texture2D value70 = TextureAssets.Extra[30].Value;
@@ -810,7 +800,7 @@
  							rectangle12.Height /= 2;
  							if (num243 >= 4)
  								rectangle12.Y += rectangle12.Height;
-@@ -20782,7 +_,7 @@
+@@ -20766,7 +_,7 @@
  							switch (type) {
  								case 491: {
  									Texture2D value42 = TextureAssets.Npc[rCurrentNPC.type].Value;
@@ -819,7 +809,7 @@
  									Vector2 origin17 = frame3.OriginFlip(new Vector2(208f, 460f), spriteEffects);
  									Vector2 vector36 = rCurrentNPC.Center - screenPos;
  									Vector2 vector37 = new Vector2(((spriteEffects & SpriteEffects.FlipHorizontally) == 0) ? 1 : (-1), 1f);
-@@ -20853,7 +_,7 @@
+@@ -20837,7 +_,7 @@
  									Vector2 origin13 = new Vector2(0f, 278f);
  									Vector2 vector24 = new Vector2(0f, 76f);
  									Vector2 center2 = rCurrentNPC.Center;
@@ -828,7 +818,7 @@
  									Microsoft.Xna.Framework.Color alpha5 = rCurrentNPC.GetAlpha(Microsoft.Xna.Framework.Color.Lerp(Lighting.GetColor(point.X, point.Y), Microsoft.Xna.Framework.Color.White, 0.3f));
  									for (int num99 = 0; num99 < 2; num99++) {
  										bool flag9 = num99 == 0;
-@@ -20905,7 +_,7 @@
+@@ -20889,7 +_,7 @@
  									Vector2 vector40 = new Vector2(60f, 30f);
  									float num119 = 340f;
  									Vector2 center3 = npc[(int)rCurrentNPC.ai[3]].Center;
@@ -837,7 +827,7 @@
  									Microsoft.Xna.Framework.Color alpha9 = rCurrentNPC.GetAlpha(Microsoft.Xna.Framework.Color.Lerp(Lighting.GetColor(point4.X, point4.Y), Microsoft.Xna.Framework.Color.White, 0.3f));
  									bool flag10 = rCurrentNPC.ai[2] == 0f;
  									Vector2 vector41 = new Vector2((!flag10) ? 1 : (-1), 1f);
-@@ -20922,7 +_,7 @@
+@@ -20906,7 +_,7 @@
  									Vector2 vector43 = new Vector2(30f, 66f);
  									Vector2 vector44 = new Vector2(1f * (0f - vector41.X), 3f);
  									Texture2D value47 = TextureAssets.Extra[26].Value;
@@ -846,7 +836,7 @@
  									value48.Height /= 4;
  									Vector2 vector45 = center3 + vector38 * vector41;
  									Vector2 vector46 = rCurrentNPC.Center + vector39;
-@@ -20959,19 +_,19 @@
+@@ -20943,19 +_,19 @@
  									Vector2 vector30 = new Vector2(0f, 0f);
  									Texture2D value36 = TextureAssets.Extra[25].Value;
  									Vector2 vector31 = new Vector2(0f, 214f).RotatedBy(rCurrentNPC.rotation);
@@ -870,7 +860,7 @@
  									Microsoft.Xna.Framework.Color alpha6 = rCurrentNPC.GetAlpha(Microsoft.Xna.Framework.Color.Lerp(Lighting.GetColor(point2.X, point2.Y), Microsoft.Xna.Framework.Color.White, 0.3f));
  									if (rCurrentNPC.ai[0] < 0f) {
  										int num107 = (int)rCurrentNPC.ai[1];
-@@ -20996,7 +_,7 @@
+@@ -20980,7 +_,7 @@
  									Vector2 origin16 = new Vector2(40f, 40f);
  									Vector2 vector34 = new Vector2(30f, 30f);
  									_ = rCurrentNPC.Center;
@@ -879,7 +869,7 @@
  									Microsoft.Xna.Framework.Color alpha7 = rCurrentNPC.GetAlpha(Microsoft.Xna.Framework.Color.Lerp(Lighting.GetColor(point3.X, point3.Y), Microsoft.Xna.Framework.Color.White, 0.3f));
  									mySpriteBatch.Draw(value40, rCurrentNPC.Center - screenPos, rCurrentNPC.frame, alpha7, rCurrentNPC.rotation, origin16, 1f, spriteEffects, 0f);
  									Vector2 vector35 = Utils.Vector2FromElipse(rCurrentNPC.localAI[0].ToRotationVector2(), vector34 * rCurrentNPC.localAI[1]);
-@@ -21020,7 +_,7 @@
+@@ -21004,7 +_,7 @@
  										spinningpoint3 = npc[num108].velocity;
  									}
  
@@ -888,7 +878,7 @@
  									mySpriteBatch.Draw(TextureAssets.Npc[type].Value, new Vector2(position16.X - screenPos.X + (float)(rCurrentNPC.width / 2) - (float)TextureAssets.Npc[type].Width() * rCurrentNPC.scale / 2f + halfSize.X * rCurrentNPC.scale, position16.Y - screenPos.Y + (float)rCurrentNPC.height - (float)TextureAssets.Npc[type].Height() * rCurrentNPC.scale / (float)npcFrameCount[type] + 4f + halfSize.Y * rCurrentNPC.scale + num47 + num46 + rCurrentNPC.gfxOffY), frame2, rCurrentNPC.GetAlpha(npcColor), rCurrentNPC.rotation, halfSize, rCurrentNPC.scale, spriteEffects, 0f);
  									if (rCurrentNPC.color != default(Microsoft.Xna.Framework.Color))
  										mySpriteBatch.Draw(TextureAssets.Npc[type].Value, new Vector2(position16.X - screenPos.X + (float)(rCurrentNPC.width / 2) - (float)TextureAssets.Npc[type].Width() * rCurrentNPC.scale / 2f + halfSize.X * rCurrentNPC.scale, position16.Y - screenPos.Y + (float)rCurrentNPC.height - (float)TextureAssets.Npc[type].Height() * rCurrentNPC.scale / (float)npcFrameCount[type] + 4f + halfSize.Y * rCurrentNPC.scale + num47 + num46 + rCurrentNPC.gfxOffY), frame2, rCurrentNPC.GetColor(npcColor), rCurrentNPC.rotation, halfSize, rCurrentNPC.scale, spriteEffects, 0f);
-@@ -21057,7 +_,7 @@
+@@ -21041,7 +_,7 @@
  									value31 = TextureAssets.GlowMask[100].Value;
  									mySpriteBatch.Draw(value31, new Vector2(rCurrentNPC.position.X - screenPos.X + (float)(rCurrentNPC.width / 2) - (float)TextureAssets.Npc[type].Width() * rCurrentNPC.scale / 2f + halfSize.X * rCurrentNPC.scale, rCurrentNPC.position.Y - screenPos.Y + (float)rCurrentNPC.height - (float)TextureAssets.Npc[type].Height() * rCurrentNPC.scale / (float)npcFrameCount[type] + 4f + halfSize.Y * rCurrentNPC.scale + num47 + num46 + rCurrentNPC.gfxOffY), rCurrentNPC.frame, new Microsoft.Xna.Framework.Color(127 - rCurrentNPC.alpha / 2, 127 - rCurrentNPC.alpha / 2, 127 - rCurrentNPC.alpha / 2, 0), rCurrentNPC.rotation, halfSize, rCurrentNPC.scale, spriteEffects, 0f);
  									value31 = TextureAssets.Extra[20].Value;
@@ -897,7 +887,7 @@
  									Vector2 position15 = new Vector2(rCurrentNPC.position.X - screenPos.X + (float)(rCurrentNPC.width / 2) - (float)value31.Width * rCurrentNPC.scale / 2f + halfSize.X * rCurrentNPC.scale, rCurrentNPC.position.Y - screenPos.Y + (float)rCurrentNPC.height - (float)TextureAssets.Npc[type].Height() * rCurrentNPC.scale / (float)npcFrameCount[type] + 4f + halfSize.Y * rCurrentNPC.scale + num47 + num46 + rCurrentNPC.gfxOffY + 18f + 6f);
  									mySpriteBatch.Draw(value31, position15, value32, rCurrentNPC.GetAlpha(npcColor), rCurrentNPC.rotation, halfSize, rCurrentNPC.scale, spriteEffects, 0f);
  									value31 = TextureAssets.GlowMask[101].Value;
-@@ -21116,7 +_,7 @@
+@@ -21100,7 +_,7 @@
  									white3.G = (byte)(255 * (10 - num126) / 20);
  									white3.B = (byte)(255 * (10 - num126) / 20);
  									white3.A = 0;
@@ -906,7 +896,7 @@
  									int num127 = (num125 - 3 - num126) % 3;
  									if (num127 < 0)
  										num127 += 3;
-@@ -21151,7 +_,7 @@
+@@ -21135,7 +_,7 @@
  									if (num132 < 0)
  										num132 += 4;
  
@@ -915,7 +905,7 @@
  									mySpriteBatch.Draw(value49, new Vector2(rCurrentNPC.oldPos[num131].X - screenPos.X + (float)(rCurrentNPC.width / 2) - (float)TextureAssets.Npc[type].Width() * rCurrentNPC.scale / 2f + halfSize.X * rCurrentNPC.scale, rCurrentNPC.oldPos[num131].Y - screenPos.Y + (float)rCurrentNPC.height - (float)TextureAssets.Npc[type].Height() * rCurrentNPC.scale / (float)npcFrameCount[type] + 4f + halfSize.Y * rCurrentNPC.scale + num47), value51, value50, rCurrentNPC.oldRot[num131] + num129, origin20, MathHelper.Lerp(0.1f, 1.2f, (10f - (float)num131) / 10f), spriteEffects, 0f);
  								}
  							}
-@@ -21167,7 +_,7 @@
+@@ -21151,7 +_,7 @@
  									white4.B = (byte)(255 * (10 - num135) / 20);
  									white4.A = (byte)(255 * (10 - num135) / 20);
  									white4 = Microsoft.Xna.Framework.Color.Lerp(white4, Microsoft.Xna.Framework.Color.Transparent, (float)num135 / 6f);
@@ -924,7 +914,7 @@
  									int num136 = (num134 - 4 - num135) % 4;
  									if (num136 < 0)
  										num136 += 4;
-@@ -21180,12 +_,12 @@
+@@ -21164,12 +_,12 @@
  							if (rCurrentNPC.type == 390 && rCurrentNPC.IsABestiaryIconDummy) {
  								LoadNPC(391);
  								Texture2D value52 = TextureAssets.Npc[391].Value;
@@ -939,7 +929,7 @@
  							if (type == 182 || type == 289)
  								frame6.Height -= 2;
  
-@@ -21322,7 +_,7 @@
+@@ -21306,7 +_,7 @@
  									case 681: {
  										if (rCurrentNPC.IsAPortraitDummy) {
  											Matrix uIScaleMatrix = UIScaleMatrix;
@@ -948,7 +938,7 @@
  											mySpriteBatch.End();
  											mySpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, ScissorState, null, uIScaleMatrix);
  											mySpriteBatch.GraphicsDevice.ScissorRectangle = scissorRectangle;
-@@ -21339,7 +_,7 @@
+@@ -21323,7 +_,7 @@
  										pixelShader.CurrentTechnique.Passes[0].Apply();
  										if (rCurrentNPC.IsAPortraitDummy) {
  											Matrix uIScaleMatrix2 = UIScaleMatrix;
@@ -957,7 +947,7 @@
  											mySpriteBatch.End();
  											mySpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, ScissorState, null, uIScaleMatrix2);
  											mySpriteBatch.GraphicsDevice.ScissorRectangle = scissorRectangle2;
-@@ -21441,7 +_,7 @@
+@@ -21425,7 +_,7 @@
  							}
  
  							if (rCurrentNPC.confused)
@@ -966,7 +956,7 @@
  
  							if (type == 247 || type == 248) {
  								Vector2 vector56 = new Vector2(rCurrentNPC.position.X - screenPos.X + (float)(rCurrentNPC.width / 2) - (float)TextureAssets.Npc[type].Width() * rCurrentNPC.scale / 2f + halfSize.X * rCurrentNPC.scale, rCurrentNPC.position.Y - screenPos.Y + (float)rCurrentNPC.height - (float)TextureAssets.Npc[type].Height() * rCurrentNPC.scale / (float)npcFrameCount[type] + 4f + halfSize.Y * rCurrentNPC.scale + num47 + num46 + rCurrentNPC.gfxOffY);
-@@ -21527,7 +_,7 @@
+@@ -21511,7 +_,7 @@
  											num175 *= num177;
  											num176 *= num177;
  											Microsoft.Xna.Framework.Color color28 = Lighting.GetColor((int)vector58.X / 16, (int)(vector58.Y / 16f));
@@ -975,7 +965,7 @@
  											vector58.X += num175;
  											vector58.Y += num176;
  											num175 = x2 - vector58.X;
-@@ -21619,27 +_,27 @@
+@@ -21603,27 +_,27 @@
  								Microsoft.Xna.Framework.Color color35 = new Microsoft.Xna.Framework.Color(mouseTextColor, mouseTextColor, mouseTextColor, 0);
  								if (rCurrentNPC.frame.Y < 222) {
  									if (!getGoodWorld)
@@ -1009,7 +999,7 @@
  								_ = Microsoft.Xna.Framework.Color.White;
  								value58.Y += value58.Height * 2 * num186 + frame6.Y;
  								mySpriteBatch.Draw(value57, new Vector2(rCurrentNPC.position.X - screenPos.X + (float)(rCurrentNPC.width / 2) - (float)TextureAssets.Npc[type].Width() * rCurrentNPC.scale / 2f + halfSize.X * rCurrentNPC.scale, rCurrentNPC.position.Y - screenPos.Y + (float)rCurrentNPC.height - (float)TextureAssets.Npc[type].Height() * rCurrentNPC.scale / (float)npcFrameCount[type] + 4f + halfSize.Y * rCurrentNPC.scale + num47 + num46 + rCurrentNPC.gfxOffY), value58, color36, rCurrentNPC.rotation, halfSize, rCurrentNPC.scale, spriteEffects, 0f);
-@@ -21659,7 +_,7 @@
+@@ -21643,7 +_,7 @@
  								Vector2 origin21 = Vector2.Zero;
  								int num187 = TextureAssets.Npc[type].Height() / npcFrameCount[type];
  								int num188 = rCurrentNPC.frame.Y / num187;
@@ -1018,7 +1008,7 @@
  								switch (num188) {
  									case 0:
  										zero4 += new Vector2(8f, 32f);
-@@ -21734,7 +_,7 @@
+@@ -21718,7 +_,7 @@
  								Vector2 origin22 = Vector2.Zero;
  								int num190 = TextureAssets.Npc[type].Height() / npcFrameCount[type];
  								int num191 = rCurrentNPC.frame.Y / num190;
@@ -1027,7 +1017,7 @@
  								switch (num191) {
  									case 0:
  										zero5 += new Vector2(8f, 30f);
-@@ -21880,7 +_,7 @@
+@@ -21864,7 +_,7 @@
  									color40.G = (byte)(0.5 * (double)(int)color40.G * (double)(10 - num197) / 20.0);
  									color40.B = (byte)(0.5 * (double)(int)color40.B * (double)(10 - num197) / 20.0);
  									color40.A = (byte)(0.5 * (double)(int)color40.A * (double)(10 - num197) / 20.0);
@@ -1036,7 +1026,7 @@
  									int num198 = TextureAssets.Npc[type].Height() / npcFrameCount[type];
  									frame7.Y -= num198 * num197;
  									while (frame7.Y < 0) {
-@@ -21899,7 +_,7 @@
+@@ -21883,7 +_,7 @@
  									color41.G = (byte)(0.5 * (double)(int)color41.G * (double)(10 - num199) / 20.0);
  									color41.B = (byte)(0.5 * (double)(int)color41.B * (double)(10 - num199) / 20.0);
  									color41.A = (byte)(0.5 * (double)(int)color41.A * (double)(10 - num199) / 20.0);
@@ -1045,7 +1035,7 @@
  									int num200 = TextureAssets.Npc[type].Height() / npcFrameCount[type];
  									frame8.Y -= num200 * num199;
  									while (frame8.Y < 0) {
-@@ -22340,7 +_,7 @@
+@@ -22324,7 +_,7 @@
  							num300 = num310;
  							Vector2 vector71 = rCurrentNPC.scale * new Vector2(1f, 0.5f + num310 * 0.75f);
  							Texture2D value82 = TextureAssets.Extra[59].Value;
@@ -1054,7 +1044,7 @@
  							Vector2 origin26 = rectangle13.Size() * new Vector2(0.5f, 0.5f);
  							for (int num311 = 0; num311 < num299; num311++) {
  								Microsoft.Xna.Framework.Color white8 = Microsoft.Xna.Framework.Color.White;
-@@ -22490,7 +_,7 @@
+@@ -22474,7 +_,7 @@
  				if ((type == 566 || type == 567) && rCurrentNPC.localAI[3] >= 115f) {
  					int frameY = (int)(GlobalTimeWrappedHourly % 0.5f / 0.5f * 4f);
  					Texture2D value86 = TextureAssets.Extra[80].Value;
@@ -1063,7 +1053,7 @@
  					Vector2 vector73 = new Vector2(rCurrentNPC.spriteDirection * 8, -26f) * rCurrentNPC.scale;
  					int num328 = rCurrentNPC.frame.Y / rCurrentNPC.frame.Height;
  					int num329 = 0;
-@@ -22541,7 +_,7 @@
+@@ -22525,7 +_,7 @@
  	{
  		Texture2D value = TextureAssets.Npc[typeCache].Value;
  		Vector2 vector = rCurrentNPC.Bottom - screenPos;
@@ -1072,7 +1062,7 @@
  		Vector2 origin = rectangle.Size() * new Vector2(0.5f, 1f);
  		origin.Y -= 4f;
  		int num = 106;
-@@ -22619,7 +_,7 @@
+@@ -22603,7 +_,7 @@
  
  	private static void DrawNPCDirect_DeerclopsLeg(SpriteBatch mySpriteBatch, NPC rCurrentNPC, ref Vector2 screenPos, int typeCache, ref Microsoft.Xna.Framework.Color npcColor, ref Vector2 halfSize, SpriteEffects npcSpriteEffect)
  	{
@@ -1081,7 +1071,7 @@
  		int num = 0;
  		int num2 = 0;
  		mySpriteBatch.Draw(TextureAssets.Npc[typeCache].Value, new Vector2(rCurrentNPC.position.X - screenPos.X + (float)(rCurrentNPC.width / 2) - (float)TextureAssets.Npc[typeCache].Width() * rCurrentNPC.scale / 2f + halfSize.X * rCurrentNPC.scale, rCurrentNPC.position.Y - screenPos.Y + (float)rCurrentNPC.height - (float)TextureAssets.Npc[typeCache].Height() * rCurrentNPC.scale / (float)npcFrameCount[typeCache] + 4f + halfSize.Y * rCurrentNPC.scale + (float)num2 + (float)num + rCurrentNPC.gfxOffY), sourceRectangle, rCurrentNPC.GetAlpha(npcColor), rCurrentNPC.rotation, halfSize, rCurrentNPC.scale, npcSpriteEffect, 0f);
-@@ -22635,10 +_,10 @@
+@@ -22619,10 +_,10 @@
  		Microsoft.Xna.Framework.Color color = hslToRgb(num2, 1f, 0.65f);
  		color.A /= 2;
  		float rotation = rCurrentNPC.rotation;
@@ -1094,7 +1084,7 @@
  		Microsoft.Xna.Framework.Color color2 = new Microsoft.Xna.Framework.Color(255, 255, 255, 0) * 1f;
  		int num3 = rCurrentNPC.oldPos.Length;
  		int num4 = num3 - 1 - 5;
-@@ -22668,17 +_,17 @@
+@@ -22652,17 +_,17 @@
  		}
  
  		mySpriteBatch.Draw(value, vector, value2, color2, rotation, origin, scale, npcSpriteEffect, 0f);
@@ -1115,7 +1105,7 @@
  		Microsoft.Xna.Framework.Color color5 = Microsoft.Xna.Framework.Color.Lerp(color, new Microsoft.Xna.Framework.Color(255, 255, 255, 0), 0.5f) * num16;
  		mySpriteBatch.Draw(value, vector, value5, color5, rotation, origin, scale * num17, SpriteEffects.None, 0f);
  	}
-@@ -22690,14 +_,14 @@
+@@ -22674,14 +_,14 @@
  		bool flag = rCurrentNPC.AI_120_HallowBoss_IsInPhase2();
  		int num = (int)rCurrentNPC.ai[0];
  		Texture2D value2 = TextureAssets.Extra[159].Value;
@@ -1133,7 +1123,7 @@
  		Vector2 origin = rectangle2.Size() / 2f;
  		Vector2 origin2 = rectangle3.Size() / 2f;
  		int num2 = 0;
-@@ -22784,7 +_,7 @@
+@@ -22768,7 +_,7 @@
  				mySpriteBatch.Draw(value5, position, rectangle, color2, rCurrentNPC.rotation, rectangle.Size() / 2f, rCurrentNPC.scale * 2f, npcSpriteEffect, 0f);
  				if (flag) {
  					Texture2D value6 = TextureAssets.Extra[187].Value;
@@ -1142,7 +1132,7 @@
  					mySpriteBatch.Draw(value6, position, value7, color2, rCurrentNPC.rotation, halfSize, rCurrentNPC.scale, npcSpriteEffect, 0f);
  				}
  
-@@ -22828,7 +_,7 @@
+@@ -22812,7 +_,7 @@
  		color3 *= num4 * rCurrentNPC.Opacity;
  		if (flag) {
  			Texture2D value9 = TextureAssets.Extra[187].Value;
@@ -1151,7 +1141,7 @@
  			mySpriteBatch.Draw(value9, vector, value10, color, rCurrentNPC.rotation, halfSize, rCurrentNPC.scale, npcSpriteEffect, 0f);
  			for (float num15 = 0f; num15 < 1f; num15 += 0.25f) {
  				Vector2 vector4 = rCurrentNPC.rotation.ToRotationVector2().RotatedBy(num15 * ((float)Math.PI * 2f) + (float)Math.PI / 4f) * MathHelper.Lerp(2f, 8f, num14);
-@@ -23084,7 +_,7 @@
+@@ -23068,7 +_,7 @@
  		spriteBatch.Draw(itemTexture, new Vector2(rCurrentNPC.Center.X - screenPosition.X + num8, rCurrentNPC.Center.Y - screenPosition.Y + rCurrentNPC.gfxOffY + num9), rectangle, npcColor, num11, rectangle.Size() / 2f, num2, effects, 0f);
  	}
  
@@ -1160,7 +1150,7 @@
  	{
  		instance.LoadItem(item);
  		itemTexture = TextureAssets.Item[item].Value;
-@@ -23119,7 +_,7 @@
+@@ -23103,7 +_,7 @@
  					break;
  			}
  
@@ -1169,7 +1159,7 @@
  			rectangle.Width -= 2;
  			rectangle.Height -= 2;
  			int num3 = 0;
-@@ -23422,7 +_,7 @@
+@@ -23406,7 +_,7 @@
  				if (n.IsShimmerVariant)
  					value3 = TextureAssets.Extra[264].Value;
  
@@ -1178,7 +1168,7 @@
  				spriteBatch.Draw(value3, new Vector2(n.position.X - screenPosition.X + (float)(n.width / 2) - (float)TextureAssets.Npc[n.type].Width() * n.scale / 2f + halfSize.X * n.scale, n.position.Y - screenPosition.Y + (float)n.height - (float)TextureAssets.Npc[n.type].Height() * n.scale / (float)npcFrameCount[n.type] + 4f + halfSize.Y * n.scale + addHeight + addY + n.gfxOffY), value4, n.GetAlpha(npcColor), n.rotation, halfSize, n.scale, npcSpriteEffect, 0f);
  			}
  			else if (n.type == 368 && n.frame.Y / (TextureAssets.Npc[n.type].Height() / npcFrameCount[n.type]) >= 21) {
-@@ -23430,7 +_,7 @@
+@@ -23414,7 +_,7 @@
  				if (n.IsShimmerVariant)
  					value5 = TextureAssets.Extra[265].Value;
  
@@ -1187,7 +1177,7 @@
  				spriteBatch.Draw(value5, new Vector2(n.position.X - screenPosition.X + (float)(n.width / 2) - (float)TextureAssets.Npc[n.type].Width() * n.scale / 2f + halfSize.X * n.scale, n.position.Y - screenPosition.Y + (float)n.height - (float)TextureAssets.Npc[n.type].Height() * n.scale / (float)npcFrameCount[n.type] + 4f + halfSize.Y * n.scale + addHeight + addY + n.gfxOffY), value6, n.GetAlpha(npcColor), n.rotation, halfSize, n.scale, npcSpriteEffect, 0f);
  			}
  		}
-@@ -23438,7 +_,7 @@
+@@ -23422,7 +_,7 @@
  		if (NPCID.Sets.AttackType[n.type] == 2 && (n.ai[0] == 14f || (n.ai[0] == 24f && n.frameCounter < 240.0)) && !beforeDraw) {
  			Texture2D value7 = TextureAssets.Extra[51].Value;
  			Vector2 vector5 = n.Bottom + new Vector2(0f, n.gfxOffY + 4f);
@@ -1196,7 +1186,7 @@
  			Vector2 origin3 = rectangle2.Size() * new Vector2(0.5f, 1f);
  			spriteBatch.Draw(value7, new Vector2((int)(vector5.X - screenPosition.X), (int)(vector5.Y - screenPosition.Y)), rectangle2, n.GetMagicAuraColor(), 0f, origin3, n.scale, npcSpriteEffect ^ SpriteEffects.FlipHorizontally, 0f);
  		}
-@@ -23493,7 +_,7 @@
+@@ -23477,7 +_,7 @@
  			int num16 = 32;
  			float num17 = 0.15f;
  			Vector2 zero2 = Vector2.Zero;
@@ -1205,7 +1195,7 @@
  			int num18 = (int)n.ai[2];
  			if (num18 >= 0 && num18 < 255) {
  				Player player = Main.player[num18];
-@@ -23593,11 +_,11 @@
+@@ -23577,11 +_,11 @@
  		Vector2 position = proj.Center - screenPosition;
  		LoadProjectile(proj.type);
  		Asset<Texture2D> asset = TextureAssets.Projectile[proj.type];
@@ -1219,7 +1209,7 @@
  		Vector2 origin = vector + new Vector2(0f, 0f);
  		spriteBatch.Draw(asset.Value, position, value, Microsoft.Xna.Framework.Color.White * 0.3f * num, proj.rotation, origin, new Vector2(1f, 6f) * vector2, SpriteEffects.None, 0f);
  		spriteBatch.Draw(asset.Value, position, value, Microsoft.Xna.Framework.Color.White * 0.3f * num, proj.rotation, origin, new Vector2(2f, 2f) * vector2, SpriteEffects.None, 0f);
-@@ -23617,7 +_,7 @@
+@@ -23601,7 +_,7 @@
  	{
  		Vector2 vector = proj.Center - screenPosition;
  		Asset<Texture2D> asset = TextureAssets.Projectile[proj.type];
@@ -1228,7 +1218,7 @@
  		Vector2 origin = rectangle.Size() / 2f;
  		float num = proj.scale * 1.1f;
  		SpriteEffects effects = ((!(proj.ai[0] >= 0f)) ? SpriteEffects.FlipVertically : SpriteEffects.None);
-@@ -23646,7 +_,7 @@
+@@ -23630,7 +_,7 @@
  	{
  		Vector2 vector = proj.Center - screenPosition;
  		Asset<Texture2D> asset = TextureAssets.Projectile[proj.type];
@@ -1237,7 +1227,7 @@
  		Vector2 origin = rectangle.Size() / 2f;
  		float num = proj.scale * 1.1f;
  		SpriteEffects effects = ((!(proj.ai[0] >= 0f)) ? SpriteEffects.FlipVertically : SpriteEffects.None);
-@@ -23674,7 +_,7 @@
+@@ -23658,7 +_,7 @@
  	{
  		Vector2 vector = proj.Center - screenPosition;
  		Asset<Texture2D> asset = TextureAssets.Projectile[proj.type];
@@ -1246,7 +1236,7 @@
  		Vector2 origin = rectangle.Size() / 2f;
  		float num = proj.scale * 1.1f;
  		SpriteEffects effects = ((!(proj.ai[0] >= 0f)) ? SpriteEffects.FlipVertically : SpriteEffects.None);
-@@ -23713,7 +_,7 @@
+@@ -23697,7 +_,7 @@
  	{
  		Vector2 vector = proj.Center - screenPosition;
  		Asset<Texture2D> asset = TextureAssets.Projectile[proj.type];
@@ -1255,7 +1245,7 @@
  		Vector2 origin = rectangle.Size() / 2f;
  		float num = proj.scale * 1.1f;
  		SpriteEffects effects = ((!(proj.ai[0] >= 0f)) ? SpriteEffects.FlipVertically : SpriteEffects.None);
-@@ -23752,7 +_,7 @@
+@@ -23736,7 +_,7 @@
  	{
  		Vector2 vector = proj.Center - screenPosition;
  		Asset<Texture2D> asset = TextureAssets.Projectile[proj.type];
@@ -1264,7 +1254,7 @@
  		Vector2 origin = rectangle.Size() / 2f;
  		float num = proj.scale * 1.1f;
  		SpriteEffects effects = ((!(proj.ai[0] >= 0f)) ? SpriteEffects.FlipVertically : SpriteEffects.None);
-@@ -23792,7 +_,7 @@
+@@ -23776,7 +_,7 @@
  	private void DrawProj_TrueNightsEdge(Projectile proj)
  	{
  		Asset<Texture2D> asset = TextureAssets.Projectile[proj.type];
@@ -1273,7 +1263,7 @@
  		Vector2 origin = rectangle.Size() / 2f;
  		float num = proj.scale * 1.1f;
  		SpriteEffects effects = ((!(proj.ai[0] >= 0f)) ? SpriteEffects.FlipVertically : SpriteEffects.None);
-@@ -23847,7 +_,7 @@
+@@ -23831,7 +_,7 @@
  	{
  		Vector2 vector = proj.Center - screenPosition;
  		Asset<Texture2D> asset = TextureAssets.Projectile[proj.type];
@@ -1282,7 +1272,7 @@
  		Vector2 origin = rectangle.Size() / 2f;
  		float num = proj.scale * 1.1f;
  		SpriteEffects effects = ((!(proj.ai[0] >= 0f)) ? SpriteEffects.FlipVertically : SpriteEffects.None);
-@@ -23887,7 +_,7 @@
+@@ -23871,7 +_,7 @@
  	{
  		Vector2 vector = proj.Center - screenPosition;
  		Asset<Texture2D> asset = TextureAssets.Projectile[proj.type];
@@ -1291,7 +1281,7 @@
  		Vector2 origin = rectangle.Size() / 2f;
  		float scale = proj.scale;
  		SpriteEffects spriteEffects = ((!(proj.ai[0] >= 0f)) ? SpriteEffects.FlipVertically : SpriteEffects.None);
-@@ -23944,7 +_,7 @@
+@@ -23928,7 +_,7 @@
  	public void DrawProj(int i)
  	{
  		int num = ProjectileID.Sets.DrawScreenCheckFluff[projectile[i].type];
@@ -1300,7 +1290,7 @@
  			Projectile proj = projectile[i];
  			DrawProjDirect(proj);
  		}
-@@ -23962,7 +_,7 @@
+@@ -23946,7 +_,7 @@
  	{
  		Vector2 vector = proj.Size / 2f;
  		Texture2D value = TextureAssets.MagicPixel.Value;
@@ -1309,7 +1299,7 @@
  		Vector2[] oldPos = proj.oldPos;
  		float[] oldRot = proj.oldRot;
  		int num = oldPos.Length;
-@@ -24102,7 +_,7 @@
+@@ -24086,7 +_,7 @@
  				if (player.stringColor != 29)
  					white = Lighting.GetColor((int)pos.X / 16, (int)(pos.Y / 16f), white);
  
@@ -1318,7 +1308,7 @@
  			}
  
  			if (proj.ai[0] == -3f)
-@@ -24259,8 +_,8 @@
+@@ -24243,8 +_,8 @@
  		if (proj.type == 923) {
  			Vector2 position2 = proj.Center - screenPosition;
  			Texture2D value2 = TextureAssets.Projectile[proj.type].Value;
@@ -1329,7 +1319,7 @@
  			Vector2 origin2 = rectangle.Size() * new Vector2(0.03f, 0.5f);
  			float num22 = 180f;
  			float num23 = proj.ai[0] / ((float)Math.PI * 2f) + proj.localAI[0] / num22;
-@@ -24290,7 +_,7 @@
+@@ -24274,7 +_,7 @@
  		if (proj.type == 950) {
  			Vector2 position3 = proj.Center - screenPosition;
  			Texture2D value6 = TextureAssets.Projectile[proj.type].Value;
@@ -1338,7 +1328,7 @@
  			Vector2 origin3 = rectangle2.Size() * new Vector2(0.5f, 0.5f);
  			Microsoft.Xna.Framework.Color color6 = new Microsoft.Xna.Framework.Color(255, 255, 255, 0) * proj.Opacity;
  			float hue = ((proj.ai[2] == 1f) ? 0.96f : 0.92f);
-@@ -24322,7 +_,7 @@
+@@ -24306,7 +_,7 @@
  
  		if (proj.type == 871) {
  			Texture2D value7 = TextureAssets.Projectile[proj.type].Value;
@@ -1347,7 +1337,7 @@
  			Vector2 origin4 = rectangle3.Size() / 2f;
  			Microsoft.Xna.Framework.Color color8 = Microsoft.Xna.Framework.Color.White * proj.Opacity;
  			SpriteEffects effects = SpriteEffects.None;
-@@ -24405,7 +_,7 @@
+@@ -24389,7 +_,7 @@
  				num31 = mountedCenter.X - vector2.X;
  				num32 = mountedCenter.Y - vector2.Y;
  				Microsoft.Xna.Framework.Color color10 = Lighting.GetColor((int)vector2.X / 16, (int)(vector2.Y / 16f));
@@ -1356,7 +1346,7 @@
  			}
  		}
  		else if (proj.type == 73) {
-@@ -24434,7 +_,7 @@
+@@ -24418,7 +_,7 @@
  				num35 = mountedCenter.X - vector3.X;
  				num36 = mountedCenter.Y - vector3.Y;
  				Microsoft.Xna.Framework.Color color11 = Lighting.GetColor((int)vector3.X / 16, (int)(vector3.Y / 16f));
@@ -1365,7 +1355,7 @@
  			}
  		}
  		else if (proj.type == 186) {
-@@ -24443,7 +_,7 @@
+@@ -24427,7 +_,7 @@
  			float num39 = (float)TextureAssets.Chain17.Height() - num38;
  			if (num38 > 0f && proj.ai[1] > 0f) {
  				Microsoft.Xna.Framework.Color color12 = Lighting.GetColor((int)proj.position.X / 16, (int)proj.position.Y / 16);
@@ -1374,7 +1364,7 @@
  			}
  		}
  		else if (proj.type == 74) {
-@@ -24472,7 +_,7 @@
+@@ -24456,7 +_,7 @@
  				num40 = mountedCenter.X - vector5.X;
  				num41 = mountedCenter.Y - vector5.Y;
  				Microsoft.Xna.Framework.Color color13 = Lighting.GetColor((int)vector5.X / 16, (int)(vector5.Y / 16f));
@@ -1383,7 +1373,7 @@
  			}
  		}
  		else if (proj.type == 171) {
-@@ -24519,7 +_,7 @@
+@@ -24503,7 +_,7 @@
  				vector6.Y = array[num53].Y;
  				float rotation4 = array2[num53];
  				Microsoft.Xna.Framework.Color color14 = Lighting.GetColor((int)vector6.X / 16, (int)(vector6.Y / 16f));
@@ -1392,7 +1382,7 @@
  			}
  		}
  		else if (proj.type == 475) {
-@@ -24568,9 +_,9 @@
+@@ -24552,9 +_,9 @@
  				float rotation5 = array4[num65];
  				Microsoft.Xna.Framework.Color color15 = Lighting.GetColor((int)vector7.X / 16, (int)(vector7.Y / 16f));
  				if (num64 % 2 == 0)
@@ -1404,7 +1394,7 @@
  
  				num64++;
  			}
-@@ -24625,7 +_,7 @@
+@@ -24609,7 +_,7 @@
  					num78 = 6;
  
  				num78 += num76 % 2;
@@ -1413,7 +1403,7 @@
  				num76++;
  			}
  		}
-@@ -24655,7 +_,7 @@
+@@ -24639,7 +_,7 @@
  				num79 = mountedCenter.X - vector9.X;
  				num80 = mountedCenter.Y - vector9.Y;
  				Microsoft.Xna.Framework.Color color17 = Lighting.GetColor((int)vector9.X / 16, (int)(vector9.Y / 16f));
@@ -1422,7 +1412,7 @@
  			}
  		}
  		else if (proj.type >= 230 && proj.type <= 235) {
-@@ -24685,7 +_,7 @@
+@@ -24669,7 +_,7 @@
  				num83 = mountedCenter.X - vector10.X;
  				num84 = mountedCenter.Y - vector10.Y;
  				Microsoft.Xna.Framework.Color color18 = Lighting.GetColor((int)vector10.X / 16, (int)(vector10.Y / 16f));
@@ -1431,7 +1421,7 @@
  			}
  		}
  		else if (proj.type == 753) {
-@@ -24814,7 +_,7 @@
+@@ -24798,7 +_,7 @@
  				num95 = player.position.X + (float)(player.width / 2) - vector14.X;
  				num96 = player.position.Y + (float)(player.height / 2) - vector14.Y;
  				Microsoft.Xna.Framework.Color color22 = Lighting.GetColor((int)vector14.X / 16, (int)(vector14.Y / 16f));
@@ -1440,7 +1430,7 @@
  			}
  		}
  		else if (proj.type == 322) {
-@@ -24843,7 +_,7 @@
+@@ -24827,7 +_,7 @@
  				num99 = mountedCenter.X - vector15.X;
  				num100 = mountedCenter.Y - vector15.Y;
  				Microsoft.Xna.Framework.Color color23 = Lighting.GetColor((int)vector15.X / 16, (int)(vector15.Y / 16f));
@@ -1449,7 +1439,7 @@
  			}
  		}
  		else if (proj.type == 315) {
-@@ -24872,7 +_,7 @@
+@@ -24856,7 +_,7 @@
  				num102 = mountedCenter.X - vector16.X;
  				num103 = mountedCenter.Y - vector16.Y;
  				Microsoft.Xna.Framework.Color color24 = Lighting.GetColor((int)vector16.X / 16, (int)(vector16.Y / 16f));
@@ -1458,7 +1448,7 @@
  			}
  		}
  		else if (proj.type == 331) {
-@@ -24901,7 +_,7 @@
+@@ -24885,7 +_,7 @@
  				num105 = mountedCenter.X - vector17.X;
  				num106 = mountedCenter.Y - vector17.Y;
  				Microsoft.Xna.Framework.Color color25 = Lighting.GetColor((int)vector17.X / 16, (int)(vector17.Y / 16f));
@@ -1467,7 +1457,7 @@
  			}
  		}
  		else if (proj.type == 332) {
-@@ -24945,8 +_,8 @@
+@@ -24929,8 +_,8 @@
  				num109 = mountedCenter.X - vector18.X;
  				num110 = mountedCenter.Y - vector18.Y;
  				Microsoft.Xna.Framework.Color color26 = Lighting.GetColor((int)vector18.X / 16, (int)(vector18.Y / 16f));
@@ -1478,7 +1468,7 @@
  				num108++;
  				if (num108 > 3)
  					num108 = 0;
-@@ -24984,14 +_,14 @@
+@@ -24968,14 +_,14 @@
  				value11 = TextureAssets.Chains[16].Value;
  
  			Vector2 center = proj.Center;
@@ -1495,7 +1485,7 @@
  				origin5.Y /= 4f;
  				num112 /= 4f;
  			}
-@@ -25114,7 +_,7 @@
+@@ -25098,7 +_,7 @@
  				num119 = mountedCenter.X - vector24.X;
  				num120 = mountedCenter.Y - vector24.Y;
  				Microsoft.Xna.Framework.Color color29 = Lighting.GetColor((int)vector24.X / 16, (int)(vector24.Y / 16f));
@@ -1504,7 +1494,7 @@
  			}
  		}
  		else if (proj.type == 262) {
-@@ -25158,7 +_,7 @@
+@@ -25142,7 +_,7 @@
  				x2 = mountedCenter.X - vector25.X;
  				y2 = mountedCenter.Y - vector25.Y;
  				Microsoft.Xna.Framework.Color color30 = Lighting.GetColor((int)vector25.X / 16, (int)(vector25.Y / 16f));
@@ -1513,7 +1503,7 @@
  			}
  		}
  		else if (proj.type == 273) {
-@@ -25202,7 +_,7 @@
+@@ -25186,7 +_,7 @@
  				x4 = mountedCenter.X - vector26.X;
  				y4 = mountedCenter.Y - vector26.Y;
  				Microsoft.Xna.Framework.Color color31 = Lighting.GetColor((int)vector26.X / 16, (int)(vector26.Y / 16f));
@@ -1522,7 +1512,7 @@
  			}
  		}
  		else if (proj.type == 481) {
-@@ -25286,7 +_,7 @@
+@@ -25270,7 +_,7 @@
  				}
  
  				Microsoft.Xna.Framework.Color color32 = Lighting.GetColor((int)origin6.X / 16, (int)(origin6.Y / 16f));
@@ -1531,7 +1521,7 @@
  			}
  		}
  		else if (proj.type == 271) {
-@@ -25330,7 +_,7 @@
+@@ -25314,7 +_,7 @@
  				x8 = mountedCenter.X - vector27.X;
  				y8 = mountedCenter.Y - vector27.Y;
  				Microsoft.Xna.Framework.Color color33 = Lighting.GetColor((int)vector27.X / 16, (int)(vector27.Y / 16f));
@@ -1540,7 +1530,7 @@
  			}
  		}
  		else if (proj.aiStyle == 13) {
-@@ -25427,7 +_,7 @@
+@@ -25411,7 +_,7 @@
  				}
  
  				Microsoft.Xna.Framework.Color color34 = Lighting.GetColor((int)vector28.X / 16, (int)(vector28.Y / 16f));
@@ -1549,7 +1539,7 @@
  			}
  		}
  		else if (proj.aiStyle == 15) {
-@@ -25905,7 +_,7 @@
+@@ -25889,7 +_,7 @@
  				alpha.A = (byte)((float)(int)alpha.A * num149);
  				int num150 = TextureAssets.Projectile[proj.type].Height() / projFrames[proj.type];
  				int y9 = num150 * proj.frame;
@@ -1558,7 +1548,7 @@
  			}
  		}
  
-@@ -25913,7 +_,7 @@
+@@ -25897,7 +_,7 @@
  			Texture2D value12 = TextureAssets.Projectile[proj.type].Value;
  			int num151 = TextureAssets.Projectile[proj.type].Height() / projFrames[proj.type];
  			int y10 = num151 * proj.frame;
@@ -1567,7 +1557,7 @@
  			Vector2 origin7 = rectangle4.Size() / 2f;
  			Vector2 zero = Vector2.Zero;
  			float num152 = 0f;
-@@ -25983,7 +_,7 @@
+@@ -25967,7 +_,7 @@
  			float value13 = 1f;
  			float num157 = 15f;
  			float num158 = 0f;
@@ -1576,7 +1566,7 @@
  			UnifiedRandom unifiedRandom = null;
  			if (proj.type == 1055) {
  				num155 = 1;
-@@ -26059,7 +_,7 @@
+@@ -26043,7 +_,7 @@
  				num154 = 0;
  				num155 = -3;
  				value13 = 1.3f;
@@ -1585,7 +1575,7 @@
  				value14 = rectangle4;
  				origin7 = rectangle4.Size() / 2f;
  			}
-@@ -26197,7 +_,7 @@
+@@ -26181,7 +_,7 @@
  				num154 = 3;
  				num155 = 1;
  				value13 = 8f;
@@ -1594,7 +1584,7 @@
  				value14 = rectangle4;
  				origin7 = rectangle4.Size() / 2f;
  			}
-@@ -26524,7 +_,7 @@
+@@ -26508,7 +_,7 @@
  			if (proj.type == 864) {
  				Microsoft.Xna.Framework.Color floatingDaggerMinionGlowColor = proj.GetFloatingDaggerMinionGlowColor();
  				floatingDaggerMinionGlowColor.A /= 4;
@@ -1603,7 +1593,7 @@
  				value16.Y += value16.Height;
  				for (int num172 = 0; num172 < 4; num172++) {
  					EntitySpriteDraw(value12, proj.Center - screenPosition + new Vector2(0f, proj.gfxOffY) + proj.rotation.ToRotationVector2().RotatedBy((float)Math.PI / 2f * (float)num172) * 2f, value16, floatingDaggerMinionGlowColor, proj.rotation, origin7, proj.scale, dir);
-@@ -26746,7 +_,7 @@
+@@ -26730,7 +_,7 @@
  
  			if (proj.type == 754) {
  				Texture2D value19 = TextureAssets.Projectile[proj.type].Value;
@@ -1612,7 +1602,7 @@
  				rectangle5.Width -= 2;
  				rectangle5.Height -= 2;
  				Vector2 origin9 = new Vector2(rectangle5.Width / 2, 0f);
-@@ -26767,7 +_,7 @@
+@@ -26751,7 +_,7 @@
  				for (float num194 = y11; num194 < num193; num194 += (float)rectangle5.Height) {
  					Vector2 vector36 = top;
  					vector36.Y = num194;
@@ -1621,7 +1611,7 @@
  					float num195 = num193 - num194;
  					if (num195 < (float)value20.Height)
  						value20.Height = (int)num195;
-@@ -26789,11 +_,11 @@
+@@ -26773,11 +_,11 @@
  
  			if (proj.type == 12 || proj.type == 728 || proj.type == 955) {
  				Texture2D value21 = TextureAssets.Projectile[proj.type].Value;
@@ -1635,7 +1625,7 @@
  				Vector2 origin11 = new Vector2((float)value23.Width / 2f, 10f);
  				Vector2 vector37 = new Vector2(0f, proj.gfxOffY);
  				Vector2 spinningpoint = new Vector2(0f, -10f);
-@@ -26843,7 +_,7 @@
+@@ -26827,7 +_,7 @@
  
  			if (proj.type == 756) {
  				Texture2D value24 = TextureAssets.Projectile[proj.type].Value;
@@ -1644,7 +1634,7 @@
  				Vector2 origin12 = new Vector2(16f, value25.Height / 2);
  				Microsoft.Xna.Framework.Color alpha4 = proj.GetAlpha(projectileColor);
  				Vector2 scale2 = new Vector2(proj.scale);
-@@ -26859,7 +_,7 @@
+@@ -26843,7 +_,7 @@
  
  			if (proj.type == 961) {
  				Texture2D value26 = TextureAssets.Projectile[proj.type].Value;
@@ -1653,7 +1643,7 @@
  				Vector2 origin13 = new Vector2(16f, value27.Height / 2);
  				Microsoft.Xna.Framework.Color alpha5 = proj.GetAlpha(projectileColor);
  				Vector2 vector42 = new Vector2(proj.scale);
-@@ -26881,7 +_,7 @@
+@@ -26865,7 +_,7 @@
  
  			if (proj.type == 1041) {
  				Texture2D value28 = TextureAssets.Projectile[proj.type].Value;
@@ -1662,7 +1652,7 @@
  				Vector2 origin14 = new Vector2(16f, value29.Height / 2);
  				Microsoft.Xna.Framework.Color alpha6 = proj.GetAlpha(projectileColor);
  				Vector2 scale3 = new Vector2(proj.scale);
-@@ -26898,11 +_,11 @@
+@@ -26882,11 +_,11 @@
  
  			if (proj.type == 723 || proj.type == 726 || proj.type == 725 || proj.type == 724 || proj.type == 9) {
  				Texture2D value30 = TextureAssets.Projectile[proj.type].Value;
@@ -1676,7 +1666,7 @@
  				Vector2 origin16 = new Vector2((float)value32.Width / 2f, 10f);
  				_ = Microsoft.Xna.Framework.Color.White * 0.2f;
  				Vector2 vector46 = new Vector2(0f, proj.gfxOffY);
-@@ -26995,7 +_,7 @@
+@@ -26979,7 +_,7 @@
  					int num215 = 424 + Math.Max(0, Math.Min(2, (int)proj.ai[0]));
  					instance.LoadProjectile(num215);
  					value30 = TextureAssets.Projectile[num215].Value;
@@ -1685,7 +1675,7 @@
  					origin15 = rectangle7.Size() / 2f;
  					num204 = 0.9f;
  					num205 = 0f;
-@@ -27099,7 +_,7 @@
+@@ -27083,7 +_,7 @@
  			}
  
  			if (proj.type == 440 || proj.type == 449 || proj.type == 606) {
@@ -1694,7 +1684,7 @@
  				if (proj.getRect().Intersects(value47)) {
  					Vector2 vector51 = new Vector2(proj.position.X - screenPosition.X + num145 + (float)num144, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY);
  					float num224 = 100f;
-@@ -27159,7 +_,7 @@
+@@ -27143,7 +_,7 @@
  						num234 *= num234;
  						num234 *= 0.8f;
  						Vector2 position8 = Vector2.SmoothStep(center2, value49, num232);
@@ -1703,7 +1693,7 @@
  						EntitySpriteDraw(value48, position8, rectangle8, transparent, proj.rotation + (float)Math.PI * 2f * (num232 + GlobalTimeWrappedHourly * 1.2f) * 0.2f + (float)num233 * ((float)Math.PI * 2f / 5f), rectangle8.Size() / 2f, num234, SpriteEffects.None);
  					}
  				}
-@@ -27172,8 +_,8 @@
+@@ -27156,8 +_,8 @@
  					return;
  
  				Player player4 = player;
@@ -1714,7 +1704,7 @@
  				Microsoft.Xna.Framework.Color color67 = new Microsoft.Xna.Framework.Color(255, 255, 255, 0);
  				Microsoft.Xna.Framework.Color color68 = new Microsoft.Xna.Framework.Color(127, 127, 127, 0);
  				int num235 = 1;
-@@ -27206,7 +_,7 @@
+@@ -27190,7 +_,7 @@
  				color68.A = 0;
  				if (point == point2) {
  					Vector2 position9 = point2.ToVector2() * 16f - screenPosition;
@@ -1723,7 +1713,7 @@
  					if (flag30)
  						EntitySpriteDraw(TextureAssets.WireUi[11].Value, position9, null, color67, 0f, Vector2.Zero, 1f, SpriteEffects.None);
  
-@@ -27220,7 +_,7 @@
+@@ -27204,7 +_,7 @@
  					int num237 = point2.Y - point.Y;
  					int num238 = Math.Sign(num237);
  					Vector2 position10 = point.ToVector2() * 16f - screenPosition;
@@ -1732,7 +1722,7 @@
  					if (flag30)
  						EntitySpriteDraw(TextureAssets.WireUi[11].Value, position10, null, color67, 0f, Vector2.Zero, 1f, SpriteEffects.None);
  
-@@ -27240,7 +_,7 @@
+@@ -27224,7 +_,7 @@
  					}
  
  					position10 = point2.ToVector2() * 16f - screenPosition;
@@ -1741,7 +1731,7 @@
  					if (flag30)
  						EntitySpriteDraw(TextureAssets.WireUi[11].Value, position10, null, color67, 0f, Vector2.Zero, 1f, SpriteEffects.None);
  
-@@ -27254,7 +_,7 @@
+@@ -27238,7 +_,7 @@
  					int num240 = point2.X - point.X;
  					int num241 = Math.Sign(num240);
  					Vector2 position11 = point.ToVector2() * 16f - screenPosition;
@@ -1750,7 +1740,7 @@
  					if (flag30)
  						EntitySpriteDraw(TextureAssets.WireUi[11].Value, position11, null, color67, 0f, Vector2.Zero, 1f, SpriteEffects.None);
  
-@@ -27274,7 +_,7 @@
+@@ -27258,7 +_,7 @@
  					}
  
  					position11 = point2.ToVector2() * 16f - screenPosition;
@@ -1759,7 +1749,7 @@
  					if (flag30)
  						EntitySpriteDraw(TextureAssets.WireUi[11].Value, position11, null, color67, 0f, Vector2.Zero, 1f, SpriteEffects.None);
  
-@@ -27288,7 +_,7 @@
+@@ -27272,7 +_,7 @@
  				Math.Abs(point.Y - point2.Y);
  				int num243 = Math.Sign(point2.X - point.X);
  				int num244 = Math.Sign(point2.Y - point.Y);
@@ -1768,7 +1758,7 @@
  				bool flag31 = false;
  				bool flag32 = player4.direction == 1;
  				int num245;
-@@ -27308,7 +_,7 @@
+@@ -27292,7 +_,7 @@
  				}
  
  				Vector2 position12 = point.ToVector2() * 16f - screenPosition;
@@ -1777,7 +1767,7 @@
  				if (!flag32)
  					value53.X = ((num247 > 0) ? 36 : 144);
  				else
-@@ -27360,7 +_,7 @@
+@@ -27344,7 +_,7 @@
  				}
  
  				position12 = p.ToVector2() * 16f - screenPosition;
@@ -1786,7 +1776,7 @@
  				if (!flag32) {
  					value53.X += ((num243 > 0) ? 144 : 36);
  					value53.X += ((num244 * num235 > 0) ? 72 : 18);
-@@ -27403,7 +_,7 @@
+@@ -27387,7 +_,7 @@
  				}
  
  				position12 = point2.ToVector2() * 16f - screenPosition;
@@ -1795,7 +1785,7 @@
  				if (!flag32)
  					value53.X += ((num244 * num235 > 0) ? 18 : 72);
  				else
-@@ -27434,7 +_,7 @@
+@@ -27418,7 +_,7 @@
  				int num251 = (int)(proj.ai[0] / 6f);
  				Vector2 spinningpoint3 = new Vector2(0f, 0f - num250);
  				for (int num252 = 0; (float)num252 < 10f; num252++) {
@@ -1804,7 +1794,7 @@
  					float num253 = rotation24 + (float)Math.PI / 5f * (float)num252;
  					Vector2 vector54 = spinningpoint3.RotatedBy(num253) / 3f + proj.Center;
  					Microsoft.Xna.Framework.Color alpha8 = proj.GetAlpha(Lighting.GetColor(vector54.ToTileCoordinates()));
-@@ -27443,7 +_,7 @@
+@@ -27427,7 +_,7 @@
  				}
  
  				for (int num254 = 0; (float)num254 < 20f; num254++) {
@@ -1813,7 +1803,7 @@
  					float num255 = 0f - rotation24 + (float)Math.PI / 10f * (float)num254;
  					num255 *= 2f;
  					Vector2 vector55 = spinningpoint3.RotatedBy(num255) + proj.Center;
-@@ -27476,7 +_,7 @@
+@@ -27460,7 +_,7 @@
  				EntitySpriteDraw(value57, position14, null, projectileColor * num257, rotation25, value57.Size() / 2f, 0.65f, effects2);
  				Microsoft.Xna.Framework.Color color69 = new Microsoft.Xna.Framework.Color(255, 189, 163, 127) * num257;
  				Microsoft.Xna.Framework.Color color70 = new Microsoft.Xna.Framework.Color(255, 21, 21, 127) * num257;
@@ -1822,7 +1812,7 @@
  				Vector2 origin18 = rectangle11.Bottom();
  				EntitySpriteDraw(value56, position14, rectangle11, color69, proj.rotation, origin18, scale5, dir);
  				rectangle11 = value56.Frame(2, 1, 1);
-@@ -27487,7 +_,7 @@
+@@ -27471,7 +_,7 @@
  			if (proj.type == 688 || proj.type == 689 || proj.type == 690) {
  				Texture2D value58 = TextureAssets.Projectile[proj.type].Value;
  				Vector2 position15 = proj.Top + Vector2.UnitY * proj.gfxOffY - screenPosition;
@@ -1831,7 +1821,7 @@
  				Vector2 origin19 = rectangle12.Size() * new Vector2(0.5f, 0f);
  				Microsoft.Xna.Framework.Color color71 = Microsoft.Xna.Framework.Color.Lerp(proj.GetAlpha(projectileColor), Microsoft.Xna.Framework.Color.White, 0.5f);
  				Microsoft.Xna.Framework.Color color72 = color71;
-@@ -27527,7 +_,7 @@
+@@ -27511,7 +_,7 @@
  			if (proj.type == 694 || proj.type == 695 || proj.type == 696) {
  				Texture2D value59 = TextureAssets.Projectile[proj.type].Value;
  				Vector2 position17 = proj.Bottom + Vector2.UnitY * proj.gfxOffY - screenPosition;
@@ -1840,7 +1830,7 @@
  				Vector2 origin20 = rectangle13.Size() * new Vector2(0.5f, 1f);
  				origin20.Y -= 8f;
  				int type = proj.type;
-@@ -27553,10 +_,10 @@
+@@ -27537,10 +_,10 @@
  					newColor = proj.GetAlpha(newColor);
  					newColor *= (float)(num259 - num261) / 15f;
  					_ = proj.oldPos[num261] - screenPosition + new Vector2(num145 + (float)num144, (float)(proj.height / 2) + proj.gfxOffY);
@@ -1853,7 +1843,7 @@
  				return;
  			}
  
-@@ -27573,11 +_,11 @@
+@@ -27557,11 +_,11 @@
  					newColor2 = proj.GetAlpha(newColor2);
  					newColor2 *= (float)(num263 - num265) / 15f;
  					_ = proj.oldPos[num265] - screenPosition + new Vector2(num145 + (float)num144, (float)(proj.height / 2) + proj.gfxOffY);
@@ -1868,7 +1858,7 @@
  				return;
  			}
  
-@@ -27585,7 +_,7 @@
+@@ -27569,7 +_,7 @@
  				Texture2D value64 = TextureAssets.Projectile[proj.type].Value;
  				int num266 = TextureAssets.Projectile[proj.type].Height() / projFrames[proj.type];
  				int y14 = num266 * proj.frame;
@@ -1877,7 +1867,7 @@
  				return;
  			}
  
-@@ -27639,21 +_,21 @@
+@@ -27623,21 +_,21 @@
  					value65 = TextureAssets.Item[3930].Value;
  				}
  
@@ -1904,7 +1894,7 @@
  					if (proj.localAI[0] > 0f) {
  						int frameY = 6 - (int)(proj.localAI[0] / 1f);
  						value65 = TextureAssets.Extra[65].Value;
-@@ -27663,13 +_,13 @@
+@@ -27647,13 +_,13 @@
  				else if (proj.type == 600) {
  					Microsoft.Xna.Framework.Color portalColor = PortalHelper.GetPortalColor(proj.owner, (int)proj.ai[1]);
  					portalColor.A = 70;
@@ -1920,7 +1910,7 @@
  					if (proj.ai[0] > 180f && Main.projectile[(int)proj.ai[1]].type == 461)
  						DrawProj((int)proj.ai[1]);
  				}
-@@ -27679,7 +_,7 @@
+@@ -27663,7 +_,7 @@
  						num271 = 4f;
  
  					for (float num272 = 0f; num272 < 4f; num272 += 1f) {
@@ -1929,7 +1919,7 @@
  					}
  				}
  
-@@ -27691,8 +_,8 @@
+@@ -27675,8 +_,8 @@
  				int num273 = TextureAssets.Projectile[proj.type].Height() / projFrames[proj.type];
  				int y16 = num273 * proj.frame;
  				Vector2 position18 = proj.position + new Vector2(proj.width, proj.height) / 2f + Vector2.UnitY * proj.gfxOffY - screenPosition;
@@ -1940,7 +1930,7 @@
  				return;
  			}
  
-@@ -27703,7 +_,7 @@
+@@ -27687,7 +_,7 @@
  				int y17 = num274 * proj.frame;
  				int num275 = value68.Height / projFrames[proj.type];
  				int num276 = num275 * proj.frame;
@@ -1949,7 +1939,7 @@
  				Vector2 vector57 = proj.position + new Vector2(proj.width, 0f) / 2f + Vector2.UnitY * proj.gfxOffY - screenPosition;
  				EntitySpriteDraw(TextureAssets.Extra[4].Value, vector57, value69, proj.GetAlpha(projectileColor), proj.rotation, new Vector2(value68.Width / 2, 0f), proj.scale, dir);
  				int num277 = proj.height - num274 - 14;
-@@ -27714,7 +_,7 @@
+@@ -27698,7 +_,7 @@
  					if (num276 == num275 * 3)
  						num276 = num275 * 2;
  
@@ -1958,7 +1948,7 @@
  				}
  
  				value69.Width = value67.Width;
-@@ -27738,7 +_,7 @@
+@@ -27722,7 +_,7 @@
  				center3 += proj.velocity * proj.scale * value70.Height / 2f;
  				if (num278 > 0f) {
  					float num279 = 0f;
@@ -1967,7 +1957,7 @@
  					while (num279 + 1f < num278) {
  						if (num278 - num279 < (float)value73.Height)
  							value73.Height = (int)(num278 - num279);
-@@ -27763,12 +_,12 @@
+@@ -27747,12 +_,12 @@
  				Texture2D value74 = TextureAssets.Projectile[proj.type].Value;
  				float num280 = proj.localAI[1];
  				Microsoft.Xna.Framework.Color color76 = new Microsoft.Xna.Framework.Color(255, 255, 255, 0) * 0.9f;
@@ -1982,7 +1972,7 @@
  				if (num280 > 0f) {
  					float num281 = 0f;
  					while (num281 + 1f < num280) {
-@@ -27781,7 +_,7 @@
+@@ -27765,7 +_,7 @@
  					}
  				}
  
@@ -1991,7 +1981,7 @@
  				return;
  			}
  
-@@ -27837,13 +_,13 @@
+@@ -27821,13 +_,13 @@
  				float num284 = proj.velocity.Length() + 16f;
  				bool flag33 = num284 < 100f;
  				Vector2 vector63 = Vector2.Normalize(proj.velocity);
@@ -2007,7 +1997,7 @@
  				if (num284 > 0f) {
  					float num285 = 0f;
  					while (num285 + 1f < num284) {
-@@ -27859,7 +_,7 @@
+@@ -27843,7 +_,7 @@
  				Vector2 vector65 = vector64;
  				vector64 = proj.Center.Floor();
  				vector64 += vector63 * proj.scale * 24f;
@@ -2016,7 +2006,7 @@
  				int num286 = 18;
  				if (flag33)
  					num286 = 9;
-@@ -27881,7 +_,7 @@
+@@ -27865,7 +_,7 @@
  					}
  				}
  
@@ -2025,7 +2015,7 @@
  				return;
  			}
  
-@@ -27895,13 +_,13 @@
+@@ -27879,13 +_,13 @@
  				float toMax = 1.5f;
  				float num293 = Utils.Remap(fromValue2, 0f, 1f, 0.25f, toMax);
  				Microsoft.Xna.Framework.Color color78 = new Microsoft.Xna.Framework.Color(255, 255, 255, 0) * 0.9f;
@@ -2041,7 +2031,7 @@
  				if (num292 > 0f) {
  					float num294 = 0f;
  					while (num294 + 1f < num292) {
-@@ -27914,7 +_,7 @@
+@@ -27898,7 +_,7 @@
  					}
  				}
  
@@ -2050,7 +2040,7 @@
  				return;
  			}
  
-@@ -27926,7 +_,7 @@
+@@ -27910,7 +_,7 @@
  				Vector2 value82 = npc[(int)Math.Abs(proj.ai[0]) - 1].Center - proj.Center + vector68;
  				float num295 = value82.Length();
  				Vector2 vector69 = Vector2.Normalize(value82);
@@ -2059,7 +2049,7 @@
  				rectangle17.Height /= 4;
  				rectangle17.Y += proj.frame * rectangle17.Height;
  				EntitySpriteDraw(color: proj.GetAlpha(Microsoft.Xna.Framework.Color.Lerp(projectileColor, Microsoft.Xna.Framework.Color.White, 0.3f)), texture: value79, position: proj.Center - screenPosition, sourceRectangle: rectangle17, rotation: proj.rotation, origin: rectangle17.Size() / 2f, scale: proj.scale, effects: SpriteEffects.None);
-@@ -27935,12 +_,12 @@
+@@ -27919,12 +_,12 @@
  				center4 += vector69 * proj.scale * rectangle17.Height / 2f;
  				if (num295 > 0f) {
  					float num296 = 0f;
@@ -2074,7 +2064,7 @@
  						Microsoft.Xna.Framework.Color color79 = Lighting.GetColor(point3.X, point3.Y);
  						color79 = Microsoft.Xna.Framework.Color.Lerp(color79, Microsoft.Xna.Framework.Color.White, 0.3f);
  						EntitySpriteDraw(value80, center4 - screenPosition, rectangle18, proj.GetAlpha(color79), proj.rotation, rectangle18.Bottom(), proj.scale, SpriteEffects.None);
-@@ -27949,10 +_,10 @@
+@@ -27933,10 +_,10 @@
  					}
  				}
  
@@ -2087,7 +2077,7 @@
  				if (num295 < 0f)
  					value83.Height += (int)num295;
  
-@@ -27972,8 +_,8 @@
+@@ -27956,8 +_,8 @@
  				int num301 = TextureAssets.Projectile[proj.type].Height() / projFrames[proj.type];
  				int y18 = num301 * proj.frame;
  				Vector2 position19 = proj.position + new Vector2(proj.width, proj.height) / 2f + Vector2.UnitY * proj.gfxOffY - screenPosition;
@@ -2098,7 +2088,7 @@
  				return;
  			}
  
-@@ -27989,7 +_,7 @@
+@@ -27973,7 +_,7 @@
  				if (num305 > num302 - 60f)
  					num306 = MathHelper.Lerp(1f, 0f, (num305 - (num302 - 60f)) / 60f);
  
@@ -2107,7 +2097,7 @@
  				Collision.ExpandVertically(point5.X, point5.Y, out var topY, out var bottomY, (int)num303, (int)num304);
  				topY++;
  				bottomY--;
-@@ -28001,7 +_,7 @@
+@@ -27985,7 +_,7 @@
  				vector71.X = vector71.Y * num307;
  				new Vector2(value85.X - vector71.X / 2f, value85.Y);
  				Texture2D value87 = TextureAssets.Projectile[proj.type].Value;
@@ -2116,7 +2106,7 @@
  				Vector2 origin21 = rectangle19.Size() / 2f;
  				float num308 = -(float)Math.PI / 50f * num305;
  				Vector2 spinningpoint4 = Vector2.UnitY.RotatedBy(num305 * 0.1f);
-@@ -28047,7 +_,7 @@
+@@ -28031,7 +_,7 @@
  				vector73.X = vector73.Y * num318;
  				new Vector2(top2.X - vector73.X / 2f, top2.Y);
  				Texture2D value89 = TextureAssets.Projectile[proj.type].Value;
@@ -2125,7 +2115,7 @@
  				Vector2 origin22 = rectangle20.Size() / 2f;
  				float num319 = -(float)Math.PI / 20f * num316 * (float)((!(proj.velocity.X > 0f)) ? 1 : (-1));
  				SpriteEffects effects3 = ((proj.velocity.X > 0f) ? SpriteEffects.FlipVertically : SpriteEffects.None);
-@@ -28111,7 +_,7 @@
+@@ -28095,7 +_,7 @@
  				Vector2 origin23 = new Vector2(value91.Width, value91.Height) / 2f;
  				float num327 = proj.rotation;
  				Vector2 vector76 = Vector2.One * proj.scale;
@@ -2134,7 +2124,7 @@
  				if (proj.type == 1056)
  					vector75.Y += 2f;
  
-@@ -28301,7 +_,7 @@
+@@ -28285,7 +_,7 @@
  								if (num345 < 0)
  									num345 += 4;
  
@@ -2143,7 +2133,7 @@
  								EntitySpriteDraw(value96, vector86 - screenPosition, value97, white5, proj.velocity.ToRotation() + num343, origin27, MathHelper.Lerp(0.1f, 0.8f, (10f - (float)num344) / 10f) * num337, SpriteEffects.None);
  							}
  						}
-@@ -28410,7 +_,7 @@
+@@ -28394,7 +_,7 @@
  
  				if (proj.type == 464 && proj.ai[1] != 1f) {
  					value91 = TextureAssets.Extra[35].Value;
@@ -2152,7 +2142,7 @@
  					origin23 = rectangle21.Size() / 2f;
  					Vector2 vector89 = new Vector2(0f, -720f).RotatedBy(proj.velocity.ToRotation());
  					float num353 = proj.ai[0] % 45f / 45f;
-@@ -28431,8 +_,8 @@
+@@ -28415,8 +_,8 @@
  				}
  				else if (proj.type == 1023) {
  					Texture2D value100 = TextureAssets.GlowMask[356].Value;
@@ -2163,7 +2153,7 @@
  				}
  				else if (proj.type == 616) {
  					value91 = TextureAssets.GlowMask[193].Value;
-@@ -28449,7 +_,7 @@
+@@ -28433,7 +_,7 @@
  				else if (proj.type == 707 || proj.type == 708) {
  					float num356 = 0.5f;
  					value91 = TextureAssets.GlowMask[232].Value;
@@ -2172,7 +2162,7 @@
  					if (proj.type == 708) {
  						value101 = value91.Frame(1, 3, 0, player.itemAnimation % 9 / 3);
  						num356 = 0.75f;
-@@ -28507,7 +_,7 @@
+@@ -28491,7 +_,7 @@
  			if (proj.type == 465 || proj.type == 467 || proj.type == 468 || proj.type == 500 || proj.type == 518 || proj.type == 535 || proj.type == 539 || proj.type == 575 || proj.type == 574 || proj.type == 589 || proj.type == 590 || proj.type == 593 || proj.type == 602 || proj.type == 596 || proj.type == 612 || proj.type == 953 || proj.type == 613 || proj.type == 614 || proj.type == 623 || proj.type == 625 || proj.type == 626 || proj.type == 627 || proj.type == 628 || proj.type == 634 || proj.type == 635 || proj.type == 643 || proj.type == 644 || proj.type == 645 || proj.type == 650 || proj.type == 652 || proj.type == 658 || proj.type == 659 || proj.type == 663 || proj.type == 665 || proj.type == 667 || proj.type == 677 || proj.type == 678 || proj.type == 679 || proj.type == 691 || proj.type == 692 || proj.type == 693 || proj.type == 702 || proj.type == 703 || proj.type == 701 || proj.type == 712 || proj.type == 715 || proj.type == 716 || proj.type == 717 || proj.type == 718 || proj.type == 758 || proj.type == 759 || proj.type == 764 || proj.type == 779 || proj.type == 783 || proj.type == 773 || proj.type == 820 || proj.type == 831 || proj.type == 970 || proj.type == 836 || proj.type == 851 || proj.type == 855 || proj.type == 856 || proj.type == 857 || proj.type == 861 || proj.type == 862 || proj.type == 863 || proj.type == 866 || proj.type == 870 || proj.type == 882 || proj.type == 885 || proj.type == 889 || proj.type == 895 || proj.type == 896 || proj.type == 898 || proj.type == 903 || proj.type == 904 || proj.type == 905 || proj.type == 906 || proj.type == 908 || proj.type == 910 || proj.type == 911 || proj.type == 951 || proj.type == 957 || proj.type == 962 || proj.type == 963 || proj.type == 967 || proj.type == 968 || proj.type == 978 || proj.type == 995 || proj.type == 886 || proj.type == 892 || proj.type == 1024 || proj.type == 1044 || proj.type == 1038 || proj.type == 1050 || proj.type == 1086 || proj.type == 1087 || proj.type == 1088 || proj.type == 1092 || proj.type == 1098 || proj.type == 1105 || proj.type == 1094) {
  				Vector2 vector91 = proj.position + new Vector2(proj.width, proj.height) / 2f + Vector2.UnitY * proj.gfxOffY - screenPosition;
  				Texture2D texture2D4 = TextureAssets.Projectile[proj.type].Value;
@@ -2181,7 +2171,7 @@
  				if (proj.type == 963)
  					rectangle23 = texture2D4.Frame(4, projFrames[proj.type], 0, proj.frame);
  
-@@ -28536,7 +_,7 @@
+@@ -28520,7 +_,7 @@
  					int num364 = 9;
  					int num365 = proj.frame / num364;
  					int num366 = proj.frame % num364;
@@ -2190,7 +2180,7 @@
  					if (proj.ai[0] >= 1000f)
  						dir ^= SpriteEffects.FlipHorizontally;
  
-@@ -28759,7 +_,7 @@
+@@ -28743,7 +_,7 @@
  					Microsoft.Xna.Framework.Color celeb2Color = proj.GetCeleb2Color();
  					celeb2Color.A = 127;
  					celeb2Color *= 0.8f;
@@ -2199,7 +2189,7 @@
  					value104.X += value104.Width * 2;
  					for (int num387 = proj.oldPos.Length - 1; num387 > 0; num387--) {
  						Vector2 vector94 = proj.oldPos[num387] + vector93;
-@@ -28974,7 +_,7 @@
+@@ -28958,7 +_,7 @@
  							int num396 = 7 + num394;
  							float num397 = 100f;
  							bool flag38 = num396 == 8;
@@ -2208,7 +2198,7 @@
  							Vector2 value112 = vector91;
  							Vector2 vector98 = vector91;
  							SpriteEffects effects4 = SpriteEffects.None;
-@@ -29055,7 +_,7 @@
+@@ -29039,7 +_,7 @@
  							num405 = 2 - num405;
  
  						num405 += 7;
@@ -2217,7 +2207,7 @@
  						Vector2 position26 = vector91 + new Vector2(num404, 0f);
  						Vector2 vector100 = (GlobalTimeWrappedHourly * 2f).ToRotationVector2() * 4f;
  						vector100 += proj.velocity * -1.5f;
-@@ -29226,7 +_,7 @@
+@@ -29210,7 +_,7 @@
  				if (proj.type != 1094)
  					return;
  
@@ -2226,7 +2216,7 @@
  				int num422 = 414;
  				if (proj.ai[0] >= 1000f)
  					num422 = rectangle23.Height + 2;
-@@ -29245,7 +_,7 @@
+@@ -29229,7 +_,7 @@
  					Microsoft.Xna.Framework.Color value119 = new Microsoft.Xna.Framework.Color(255, 255, 255, 127);
  					value119 = Microsoft.Xna.Framework.Color.Lerp(value119, new Microsoft.Xna.Framework.Color(100, 210, 255, 127), Utils.Remap(proj.Opacity, 0f, 0.7f, 0f, 1f));
  					value119 *= Utils.Remap(proj.Opacity, 0f, 0.7f, 0f, 1f) * Utils.Remap(proj.Opacity, 0.7f, 1f, 1f, 0f);
@@ -2235,7 +2225,7 @@
  					value120.Offset(0, num422);
  					EntitySpriteDraw(texture2D4, vector91, value120, value119, proj.rotation, origin31, proj.scale, dir);
  				}
-@@ -29367,7 +_,7 @@
+@@ -29351,7 +_,7 @@
  						}
  
  						Vector2 vector114 = new Vector2(array7[num433].X, 0f).RotatedBy(num430) * 4f;
@@ -2244,7 +2234,7 @@
  					}
  				}
  
-@@ -29392,7 +_,7 @@
+@@ -29376,7 +_,7 @@
  						}
  
  						Vector2 vector115 = new Vector2(array7[num434].X, 0f).RotatedBy(num430) * 4f;
@@ -2253,7 +2243,7 @@
  					}
  				}
  
-@@ -29413,15 +_,15 @@
+@@ -29397,15 +_,15 @@
  				if (proj.type == 1093)
  					num438 = 5;
  
@@ -2272,7 +2262,7 @@
  				}
  
  				if (proj.type != 1093)
-@@ -29441,14 +_,14 @@
+@@ -29425,14 +_,14 @@
  					Microsoft.Xna.Framework.Color value126 = new Microsoft.Xna.Framework.Color(255, 255, 255, 127);
  					value126 = Microsoft.Xna.Framework.Color.Lerp(value126, new Microsoft.Xna.Framework.Color(100, 210, 255, 127), Utils.Remap(proj.Opacity, 0f, 0.7f, 0f, 1f));
  					value126 *= Utils.Remap(proj.Opacity, 0f, 0.7f, 0f, 1f) * Utils.Remap(proj.Opacity, 0.7f, 1f, 1f, 0f);
@@ -2289,7 +2279,7 @@
  					int num441 = 4;
  					int num442 = -4;
  					if (proj.spriteDirection == 1)
-@@ -29486,10 +_,10 @@
+@@ -29470,10 +_,10 @@
  					newColor3 *= (float)(num445 - num447) / 15f;
  					Microsoft.Xna.Framework.Color alpha12 = proj.GetAlpha(projectileColor);
  					_ = proj.oldPos[num447] - screenPosition + new Vector2(num145 + (float)num144, (float)(proj.height / 2) + proj.gfxOffY);
@@ -2302,7 +2292,7 @@
  				return;
  			}
  
-@@ -29514,10 +_,10 @@
+@@ -29498,10 +_,10 @@
  					newColor4 = proj.GetAlpha(newColor4);
  					newColor4 *= (float)(num449 - num451) / 15f;
  					Vector2 position27 = proj.oldPos[num451] - screenPosition + new Vector2(num145 + (float)num144, (float)(proj.height / 2) + proj.gfxOffY);
@@ -2315,7 +2305,7 @@
  				return;
  			}
  
-@@ -29550,7 +_,7 @@
+@@ -29534,7 +_,7 @@
  							}
  
  							int num458 = num457;
@@ -2324,7 +2314,7 @@
  							Vector2 origin36 = new Vector2((float)value133.Width / 2f, (float)value133.Height + (float)(num143 - 22));
  							float num459;
  							switch (num456) {
-@@ -29573,7 +_,7 @@
+@@ -29557,7 +_,7 @@
  						}
  					}
  
@@ -2333,7 +2323,7 @@
  					return;
  				}
  
-@@ -29582,7 +_,7 @@
+@@ -29566,7 +_,7 @@
  					int g = player.shirtColor.G;
  					int b = player.shirtColor.B;
  					projectileColor = Lighting.GetColor(oldColor: new Microsoft.Xna.Framework.Color((byte)r, (byte)g, (byte)b), x: (int)((double)proj.position.X + (double)proj.width * 0.5) / 16, y: (int)(((double)proj.position.Y + (double)proj.height * 0.5) / 16.0));
@@ -2342,7 +2332,7 @@
  					return;
  				}
  
-@@ -29594,18 +_,18 @@
+@@ -29578,18 +_,18 @@
  					float num462 = MathHelper.Min(60f, proj.ai[0]) / 2f;
  					for (float num463 = 0.9f; num463 > 0f; num463 -= 0.25f) {
  						Vector2 vector117 = num463 * (proj.velocity * 0.33f) * num462;
@@ -2364,7 +2354,7 @@
  				if (proj.type == 966) {
  					Vector2 vector119 = new Vector2(0f, -30f);
  					vector119.Y += -1f + (float)(Math.Cos((float)(int)mouseTextColor / 255f * ((float)Math.PI * 2f) * 2f) * 2.0);
-@@ -29627,24 +_,24 @@
+@@ -29611,24 +_,24 @@
  					}
  
  					vector120 += (vector122 - vector121).SafeNormalize(Vector2.Zero) * num465;
@@ -2394,7 +2384,7 @@
  				}
  
  				if (proj.type == 595) {
-@@ -29653,13 +_,13 @@
+@@ -29637,13 +_,13 @@
  						for (float num469 = 0f; num469 <= 1f; num469 += 0.2f) {
  							Microsoft.Xna.Framework.Color underShirtColor = player7.underShirtColor;
  							underShirtColor.A = (byte)(120f * (1f - num469 * 0.5f));
@@ -2410,7 +2400,7 @@
  
  				if (proj.type != 525 && proj.type != 960)
  					return;
-@@ -29675,7 +_,7 @@
+@@ -29659,7 +_,7 @@
  						num472 = 244;
  
  					Microsoft.Xna.Framework.Color selectionGlowColor = Colors.GetSelectionGlowColor(num470 == 2, num471);
@@ -2419,7 +2409,7 @@
  				}
  
  				return;
-@@ -29688,22 +_,22 @@
+@@ -29672,22 +_,22 @@
  			}
  
  			if (proj.type == 157 || proj.type == 378) {
@@ -2446,7 +2436,7 @@
  				return;
  			}
  
-@@ -29730,9 +_,9 @@
+@@ -29714,9 +_,9 @@
  				red *= proj.localAI[0];
  				white8 *= proj.localAI[0];
  				float num474 = (float)Math.Sqrt(proj.damage / 50);
@@ -2459,7 +2449,7 @@
  				return;
  			}
  
-@@ -29745,7 +_,7 @@
+@@ -29729,7 +_,7 @@
  					alpha15.B = (byte)((float)(int)alpha15.B * num476);
  					alpha15.A = (byte)((float)(int)alpha15.A * num476);
  					float num477 = (float)(9 - num475) / 9f;
@@ -2468,7 +2458,7 @@
  				}
  			}
  
-@@ -29758,7 +_,7 @@
+@@ -29742,7 +_,7 @@
  					alpha16.B = (byte)((float)(int)alpha16.B * num479);
  					alpha16.A = (byte)((float)(int)alpha16.A * num479);
  					float num480 = (float)(9 - num478) / 9f;
@@ -2477,7 +2467,7 @@
  				}
  			}
  
-@@ -29793,7 +_,7 @@
+@@ -29777,7 +_,7 @@
  					alpha17.G = (byte)((float)(int)alpha17.G * num484);
  					alpha17.B = (byte)((float)(int)alpha17.B * num484);
  					alpha17.A = (byte)((float)(int)alpha17.A * num484);
@@ -2486,7 +2476,7 @@
  				}
  			}
  
-@@ -29819,7 +_,7 @@
+@@ -29803,7 +_,7 @@
  					alpha18.G = (byte)((float)(int)alpha18.G * num488);
  					alpha18.B = (byte)((float)(int)alpha18.B * num488);
  					alpha18.A = (byte)((float)(int)alpha18.A * num488);
@@ -2495,7 +2485,7 @@
  				}
  			}
  
-@@ -29849,21 +_,21 @@
+@@ -29833,21 +_,21 @@
  
  					instance.LoadItem(num489);
  					Texture2D value135 = TextureAssets.Item[num489].Value;
@@ -2520,7 +2510,7 @@
  					}
  				}
  			}
-@@ -29875,29 +_,29 @@
+@@ -29859,29 +_,29 @@
  						dir = SpriteEffects.None;
  				}
  
@@ -2556,7 +2546,7 @@
  					}
  				}
  			}
-@@ -29905,7 +_,7 @@
+@@ -29889,7 +_,7 @@
  			if (proj.type == 106) {
  				Texture2D value138 = TextureAssets.LightDisc.Value;
  				Vector2 position29 = new Vector2(proj.position.X - screenPosition.X + num145 + (float)num144, proj.position.Y - screenPosition.Y + (float)(proj.height / 2));
@@ -2565,7 +2555,7 @@
  				EntitySpriteDraw(value138, position29, value139, new Microsoft.Xna.Framework.Color(200, 200, 200, 0), proj.rotation, new Vector2(num145, proj.height / 2 + num143), proj.scale, dir);
  			}
  
-@@ -29913,7 +_,7 @@
+@@ -29897,7 +_,7 @@
  				ulong seed5 = TileFrameSeed;
  				for (int num493 = 0; num493 < 4; num493++) {
  					Vector2 vector127 = new Vector2(Utils.RandomInt(ref seed5, -2, 3), Utils.RandomInt(ref seed5, -2, 3));
@@ -2574,7 +2564,7 @@
  				}
  			}
  
-@@ -29939,7 +_,7 @@
+@@ -29923,7 +_,7 @@
  					alpha19.G = (byte)((float)(int)alpha19.G * num497);
  					alpha19.B = (byte)((float)(int)alpha19.B * num497);
  					alpha19.A = (byte)((float)(int)alpha19.A * num497);
@@ -2583,7 +2573,7 @@
  				}
  			}
  			else if (proj.type == 604) {
-@@ -29972,7 +_,7 @@
+@@ -29956,7 +_,7 @@
  					alpha20.A = (byte)((float)(int)alpha20.A * num502 / 2f);
  					float scale18 = proj.scale;
  					scale18 -= (float)num499 * 0.1f;
@@ -2592,7 +2582,7 @@
  				}
  			}
  			else {
-@@ -30000,7 +_,7 @@
+@@ -29984,7 +_,7 @@
  					alpha21.G = (byte)((float)(int)alpha21.G * num506);
  					alpha21.B = (byte)((float)(int)alpha21.B * num506);
  					alpha21.A = (byte)((float)(int)alpha21.A * num506);
@@ -2601,7 +2591,7 @@
  				}
  			}
  		}
-@@ -30036,7 +_,7 @@
+@@ -30020,7 +_,7 @@
  		float num10 = Math.Min(proj.localAI[0], 20f);
  		float num11 = Utils.Remap(proj.localAI[0], 0f, fromMax, 0f, 1f);
  		float num12 = Utils.Remap(num11, 0.2f, 0.5f, 0.25f, 1f);
@@ -2610,7 +2600,7 @@
  		if (!(num11 < 1f))
  			return;
  
-@@ -30098,7 +_,7 @@
+@@ -30082,7 +_,7 @@
  		float num10 = Math.Min(proj.localAI[0], 20f);
  		float num11 = Utils.Remap(proj.localAI[0], 0f, fromMax, 0f, 1f);
  		float num12 = Utils.Remap(num11, 0.2f, 0.5f, 0.25f, 1f) * 0.5f;
@@ -2619,7 +2609,7 @@
  		if (!(num11 < 1f))
  			return;
  
-@@ -30147,8 +_,8 @@
+@@ -30131,8 +_,8 @@
  		dir = SpriteEffects.None;
  		float num = (float)Math.Atan2(proj.velocity.Y, proj.velocity.X) + 2.355f;
  		Asset<Texture2D> asset = TextureAssets.Projectile[proj.type];
@@ -2630,7 +2620,7 @@
  		Vector2 vector = Vector2.Zero;
  		if (theOwner.direction > 0) {
  			dir = SpriteEffects.FlipHorizontally;
-@@ -30241,7 +_,7 @@
+@@ -30225,7 +_,7 @@
  	{
  		Vector2 playerArmPosition = GetPlayerArmPosition(proj, theOwner);
  		Asset<Texture2D> asset = null;
@@ -2639,7 +2629,7 @@
  		float num = 0f;
  		switch (proj.type) {
  			default:
-@@ -30350,27 +_,27 @@
+@@ -30334,27 +_,27 @@
  				num2 = mountedCenter.Y - vector.Y;
  				Microsoft.Xna.Framework.Color color = Lighting.GetColor((int)vector.X / 16, (int)(vector.Y / 16f));
  				if (proj.type == 25) {
@@ -2674,7 +2664,7 @@
  				}
  			}
  
-@@ -30626,7 +_,7 @@
+@@ -30610,7 +_,7 @@
  			if (theOwner.stringColor == 29)
  				color = stringColor;
  
@@ -2683,7 +2673,7 @@
  		}
  	}
  
-@@ -30922,7 +_,7 @@
+@@ -30906,7 +_,7 @@
  		List<Vector2> list = new List<Vector2>();
  		Projectile.FillWhipControlPoints(proj, list, theOwner);
  		Texture2D value = TextureAssets.FishingLine.Value;
@@ -2692,7 +2682,7 @@
  		Vector2 origin = new Vector2(value2.Width / 2, 2f);
  		Microsoft.Xna.Framework.Color color = Microsoft.Xna.Framework.Color.White;
  		bool flag = false;
-@@ -31078,7 +_,7 @@
+@@ -31062,7 +_,7 @@
  	{
  		int num = 5;
  		Texture2D value = TextureAssets.Projectile[proj.type].Value;
@@ -2701,7 +2691,7 @@
  		int height = rectangle.Height;
  		rectangle.Height -= 2;
  		Vector2 vector = rectangle.Size() / 2f;
-@@ -31121,7 +_,7 @@
+@@ -31105,7 +_,7 @@
  	public static Vector2 DrawWhip_GenericWhip(Projectile proj, List<Vector2> controlPoints, int segmentCount, float startWidth = 1f, float endWidth = 1f)
  	{
  		Texture2D value = TextureAssets.Projectile[proj.type].Value;
@@ -2710,7 +2700,7 @@
  		int height = rectangle.Height;
  		rectangle.Height -= 2;
  		Vector2 vector = rectangle.Size() / 2f;
-@@ -31171,7 +_,7 @@
+@@ -31155,7 +_,7 @@
  	public static Vector2 DrawWhip_FlowerWhip(Projectile proj, List<Vector2> controlPoints, int segmentCount, float startWidth = 1f, float endWidth = 1f)
  	{
  		Texture2D value = TextureAssets.Projectile[proj.type].Value;
@@ -2719,7 +2709,7 @@
  		int height = rectangle.Height;
  		rectangle.Height -= 2;
  		Vector2 vector = rectangle.Size() / 2f;
-@@ -31222,7 +_,7 @@
+@@ -31206,7 +_,7 @@
  	public static Vector2 DrawWhip_Constellation(Projectile proj, List<Vector2> controlPoints, int segmentCount, float startWidth = 1f, float endWidth = 1f)
  	{
  		Texture2D value = TextureAssets.Projectile[proj.type].Value;
@@ -2728,7 +2718,7 @@
  		int height = rectangle.Height;
  		rectangle.Height -= 2;
  		Vector2 vector = rectangle.Size() / 2f;
-@@ -31288,7 +_,7 @@
+@@ -31272,7 +_,7 @@
  	{
  		int verticalFrames = 7;
  		Texture2D value = TextureAssets.Projectile[proj.type].Value;
@@ -2737,7 +2727,7 @@
  		int height = rectangle.Height;
  		rectangle.Height -= 2;
  		Vector2 vector = rectangle.Size() / 2f;
-@@ -31318,7 +_,7 @@
+@@ -31302,7 +_,7 @@
  				Vector2 scale = new Vector2(1f, 1.25f);
  				Microsoft.Xna.Framework.Color color = Lighting.GetColor(vector3.ToTileCoordinates());
  				Microsoft.Xna.Framework.Color color2 = new Microsoft.Xna.Framework.Color(255, 255, 255, 0) * 0.5f;
@@ -2746,7 +2736,7 @@
  				rectangle2.X += rectangle2.Width * 2;
  				if (flag) {
  					color2 = hslToRgb((proj.ai[2] / 15f + (float)timeForVisualEffects % 60f / 60f) % 1f, 1f, 0.5f);
-@@ -31338,7 +_,7 @@
+@@ -31322,7 +_,7 @@
  	{
  		int num = 6;
  		Texture2D value = TextureAssets.Projectile[proj.type].Value;
@@ -2755,7 +2745,7 @@
  		int height = rectangle.Height;
  		rectangle.Height -= 2;
  		Vector2 vector = rectangle.Size() / 2f;
-@@ -31385,7 +_,7 @@
+@@ -31369,7 +_,7 @@
  			spriteEffects ^= SpriteEffects.FlipHorizontally;
  
  		Texture2D value = TextureAssets.Projectile[proj.type].Value;
@@ -2764,7 +2754,7 @@
  		int height = rectangle.Height;
  		rectangle.Height -= 2;
  		Vector2 vector = rectangle.Size() / 2f;
-@@ -31437,7 +_,7 @@
+@@ -31421,7 +_,7 @@
  	public static Vector2 DrawWhip_BoneWhip(Projectile proj, List<Vector2> controlPoints)
  	{
  		Texture2D value = TextureAssets.Projectile[proj.type].Value;
@@ -2773,7 +2763,7 @@
  		int height = rectangle.Height;
  		rectangle.Height -= 2;
  		Vector2 vector = rectangle.Size() / 2f;
-@@ -31474,7 +_,7 @@
+@@ -31458,7 +_,7 @@
  	public static Vector2 DrawWhip_CoolWhip(Projectile proj, List<Vector2> controlPoints)
  	{
  		Texture2D value = TextureAssets.Projectile[proj.type].Value;
@@ -2782,7 +2772,7 @@
  		int height = rectangle.Height;
  		rectangle.Height -= 2;
  		Vector2 vector = rectangle.Size() / 2f;
-@@ -31525,7 +_,7 @@
+@@ -31509,7 +_,7 @@
  	public static Vector2 DrawWhip_FireWhip(Projectile proj, List<Vector2> controlPoints)
  	{
  		Texture2D value = TextureAssets.Projectile[proj.type].Value;
@@ -2791,7 +2781,7 @@
  		int height = rectangle.Height;
  		rectangle.Height -= 2;
  		Vector2 vector = rectangle.Size() / 2f;
-@@ -31576,7 +_,7 @@
+@@ -31560,7 +_,7 @@
  	public static Vector2 DrawWhip_RainbowWhip(Projectile proj, Player theOwner, List<Vector2> controlPoints)
  	{
  		Texture2D value = TextureAssets.Projectile[proj.type].Value;
@@ -2800,7 +2790,7 @@
  		int height = rectangle.Height;
  		rectangle.Height -= 2;
  		Vector2 vector = rectangle.Size() / 2f;
-@@ -31628,7 +_,7 @@
+@@ -31612,7 +_,7 @@
  	public static Vector2 DrawWhip_ThornWhip(Projectile proj, List<Vector2> controlPoints)
  	{
  		Texture2D value = TextureAssets.Projectile[proj.type].Value;
@@ -2809,7 +2799,7 @@
  		int height = rectangle.Height;
  		rectangle.Height -= 2;
  		Vector2 vector = rectangle.Size() / 2f;
-@@ -31668,7 +_,7 @@
+@@ -31652,7 +_,7 @@
  	public static Vector2 DrawWhip_WhipSword(Projectile proj, List<Vector2> controlPoints)
  	{
  		Texture2D value = TextureAssets.Projectile[proj.type].Value;
@@ -2818,7 +2808,7 @@
  		int height = rectangle.Height;
  		rectangle.Height -= 2;
  		Vector2 vector = rectangle.Size() / 2f;
-@@ -31723,7 +_,7 @@
+@@ -31707,7 +_,7 @@
  			spriteEffects ^= SpriteEffects.FlipHorizontally;
  
  		Texture2D value = TextureAssets.Projectile[proj.type].Value;
@@ -2827,7 +2817,7 @@
  		int height = rectangle.Height;
  		rectangle.Height -= 2;
  		Vector2 vector = rectangle.Size() / 2f;
-@@ -31779,7 +_,7 @@
+@@ -31763,7 +_,7 @@
  			spriteEffects ^= SpriteEffects.FlipHorizontally;
  
  		Texture2D value = TextureAssets.Projectile[proj.type].Value;
@@ -2836,7 +2826,7 @@
  		int height = rectangle.Height;
  		rectangle.Height -= 2;
  		Vector2 vector = rectangle.Size() / 2f;
-@@ -31835,7 +_,7 @@
+@@ -31819,7 +_,7 @@
  			spriteEffects ^= SpriteEffects.FlipHorizontally;
  
  		Texture2D value = TextureAssets.Projectile[proj.type].Value;
@@ -2845,7 +2835,7 @@
  		int height = rectangle.Height;
  		rectangle.Height -= 2;
  		Vector2 vector = rectangle.Size() / 2f;
-@@ -31888,7 +_,7 @@
+@@ -31872,7 +_,7 @@
  	{
  		Texture2D value = TextureAssets.Projectile[proj.type].Value;
  		SpriteEffects effects = ((proj.spriteDirection != 1) ? SpriteEffects.FlipHorizontally : SpriteEffects.None);
@@ -2854,7 +2844,7 @@
  		Vector2 origin = rectangle.Size() / 2f;
  		Vector2 vector = proj.Center - screenPosition;
  		Microsoft.Xna.Framework.Color alpha = proj.GetAlpha(Lighting.GetColor(proj.Center.ToTileCoordinates()));
-@@ -31928,7 +_,7 @@
+@@ -31912,7 +_,7 @@
  		}
  
  		SpriteEffects effects = ((proj.spriteDirection != 1) ? SpriteEffects.FlipHorizontally : SpriteEffects.None);
@@ -2863,7 +2853,7 @@
  		Vector2 origin = rectangle.Size() / 2f;
  		Vector2 position = proj.Center - screenPosition;
  		Microsoft.Xna.Framework.Color alpha = proj.GetAlpha(Lighting.GetColor(proj.Center.ToTileCoordinates()));
-@@ -31943,7 +_,7 @@
+@@ -31927,7 +_,7 @@
  			else if (proj.type == 893 && i != 2 && i != 5)
  				frameY = 2;
  
@@ -2872,7 +2862,7 @@
  			Vector2 vector2 = proj.oldPos[i * 10] + proj.Size / 2f;
  			float num5 = (vector - vector2).ToRotation();
  			vector2 = vector - new Vector2(num2, 0f).RotatedBy(num5, Vector2.Zero);
-@@ -32162,15 +_,15 @@
+@@ -32146,15 +_,15 @@
  		}
  
  		SpriteEffects effects = ((proj.spriteDirection != 1) ? SpriteEffects.FlipHorizontally : SpriteEffects.None);
@@ -2891,7 +2881,7 @@
  		int width = rectangle2.Width;
  		rectangle2.Width -= 2;
  		Vector2 origin3 = rectangle2.Size() / 2f;
-@@ -32354,7 +_,7 @@
+@@ -32338,7 +_,7 @@
  			}
  
  			if (flag) {
@@ -2900,7 +2890,7 @@
  				for (int num43 = list.Count - 2; num43 >= 0; num43--) {
  					Vector2 vector8 = list[num43];
  					Vector2 v = list[num43 + 1] - vector8;
-@@ -32459,9 +_,9 @@
+@@ -32443,9 +_,9 @@
  
  		Vector2 vector2 = proj.Center + vector;
  		Texture2D value = TextureAssets.Projectile[proj.type].Value;
@@ -2912,7 +2902,7 @@
  		Vector2 origin2 = new Vector2((float)value3.Width / 2f, 10f);
  		_ = Microsoft.Xna.Framework.Color.Cyan * 0.5f * num2;
  		Vector2 vector3 = new Vector2(0f, proj.gfxOffY);
-@@ -32504,7 +_,7 @@
+@@ -32488,7 +_,7 @@
  			Vector2 position = proj.Center - screenPosition;
  			instance.LoadItem(75);
  			Texture2D value4 = TextureAssets.Item[75].Value;
@@ -2921,25 +2911,25 @@
  			EntitySpriteDraw(origin: rectangle.Size() / 2f, texture: value4, position: position, sourceRectangle: rectangle, color: color, rotation: rotation, scale: proj.scale, effects: SpriteEffects.None);
  		}
  	}
-@@ -32516,7 +_,7 @@
+@@ -32500,7 +_,7 @@
  
  		bool flag = !SmartCursorIsUsed && !PlayerInput.UsingGamepad;
  		Player localPlayer = LocalPlayer;
 -		Microsoft.Xna.Framework.Point point = proj.Center.ToTileCoordinates();
 +		System.Drawing.Point point = proj.Center.ToTileCoordinates();
  		Vector2 compareSpot = localPlayer.Center;
- 		if (!localPlayer.IsProjectileInteractibleAndInInteractionRange(proj, ref compareSpot))
+ 		if (!localPlayer.IsProjectileInteractableAndInInteractionRange(proj, ref compareSpot))
  			return 0;
-@@ -32582,7 +_,7 @@
+@@ -32566,7 +_,7 @@
  
  		bool flag = !SmartCursorIsUsed && !PlayerInput.UsingGamepad;
  		Player localPlayer = LocalPlayer;
 -		Microsoft.Xna.Framework.Point point = proj.Center.ToTileCoordinates();
 +		System.Drawing.Point point = proj.Center.ToTileCoordinates();
  		Vector2 compareSpot = localPlayer.Center;
- 		if (!localPlayer.IsProjectileInteractibleAndInInteractionRange(proj, ref compareSpot))
+ 		if (!localPlayer.IsProjectileInteractableAndInInteractionRange(proj, ref compareSpot))
  			return 0;
-@@ -32654,7 +_,7 @@
+@@ -32638,7 +_,7 @@
  			return 0;
  
  		Vector2 v = ReverseGravitySupport(MouseScreen) + screenPosition;
@@ -2948,7 +2938,7 @@
  		if (proj.type == 1094)
  			hitbox.Inflate(6, 6);
  
-@@ -32744,12 +_,12 @@
+@@ -32728,12 +_,12 @@
  		CurrentDrawnEntityShader = intendedShader;
  	}
  
@@ -2963,7 +2953,7 @@
  	{
  		if (CurrentDrawnEntityShader > 0) {
  			DrawData value = new DrawData(texture, position, sourceRectangle, color, rotation, origin, scale, effects, worthless);
-@@ -33092,7 +_,7 @@
+@@ -33076,7 +_,7 @@
  			for (int j = 0; (float)j < num8; j += 16) {
  				int x = (int)(num6 + (float)(TextureAssets.Wof.Width() / 2)) / 16;
  				int y = (i + j) / 16;
@@ -2972,7 +2962,7 @@
  			}
  		}
  	}
-@@ -33142,7 +_,7 @@
+@@ -33126,7 +_,7 @@
  			num3 = num - vector.X;
  			num4 = y - vector.Y;
  			Microsoft.Xna.Framework.Color color = Lighting.GetColor((int)vector.X / 16, (int)(vector.Y / 16f));
@@ -2981,7 +2971,7 @@
  		}
  	}
  
-@@ -33170,7 +_,7 @@
+@@ -33154,7 +_,7 @@
  			num3 = num - vector.X;
  			num4 = num2 - vector.Y;
  			Microsoft.Xna.Framework.Color color = Lighting.GetColor((int)vector.X / 16, (int)(vector.Y / 16f));
@@ -2990,7 +2980,7 @@
  		}
  	}
  
-@@ -33184,7 +_,7 @@
+@@ -33168,7 +_,7 @@
  		return result;
  	}
  
@@ -2999,7 +2989,7 @@
  	{
  		LoadItem(item.type);
  		if (ItemID.Sets.AnimatesAsSoul[item.type] || ItemID.Sets.NebulaPickup[item.type]) {
-@@ -33403,12 +_,12 @@
+@@ -33387,12 +_,12 @@
  		}
  
  		if (ItemID.Sets.TrapSigned[item.type])
@@ -3014,16 +3004,16 @@
  			spriteBatch.Draw(value, vector3 + spinningpoint.RotatedBy(num - (float)Math.PI / 2f) * item.scale, rectangle, currentColor, num, rectangle.Size() / 2f, 1f, SpriteEffects.None, 0f);
  		}
  	}
-@@ -33427,7 +_,7 @@
+@@ -33411,7 +_,7 @@
  	{
  		TimeLogger.StartTimestamp fromTimestamp = TimeLogger.Start();
- 		bool flag = base.IsActive || netMode == 1 || DebugOptions.noPause;
+ 		bool allowRain = FocusHelper.AllowRain;
 -		Microsoft.Xna.Framework.Rectangle value = new Microsoft.Xna.Framework.Rectangle(0, 0, 2, 40);
 +		System.Drawing.Rectangle value = new System.Drawing.Rectangle(0, 0, 2, 40);
  		Texture2D value2 = TextureAssets.Rain.Value;
  		Vector2 zero = Vector2.Zero;
  		for (int i = 0; i < maxRain; i++) {
-@@ -33450,9 +_,9 @@
+@@ -33434,9 +_,9 @@
  	internal void DrawDust()
  	{
  		TimeLogger.StartTimestamp fromTimestamp = TimeLogger.Start();
@@ -3036,7 +3026,7 @@
  		ArmorShaderData armorShaderData = null;
  		spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null, Transform);
  		for (int i = 0; i < maxDustToDraw; i++) {
-@@ -33463,7 +_,7 @@
+@@ -33447,7 +_,7 @@
  			if ((dust.type >= 130 && dust.type <= 134) || (dust.type >= 219 && dust.type <= 223) || dust.type == 226 || dust.type == 278)
  				rectangle = rectangle2;
  
@@ -3045,7 +3035,7 @@
  				float scale = dust.GetVisualScale();
  				if (dust.shader != armorShaderData) {
  					spriteBatch.End();
-@@ -34311,7 +_,7 @@
+@@ -34295,7 +_,7 @@
  			if (item.color != default(Microsoft.Xna.Framework.Color))
  				spriteBatch.Draw(itemTexture, bottomRight, rectangle, item.GetColor(item.color), 0f, rectangle.Size(), num, SpriteEffects.None, 0f);
  
@@ -3054,7 +3044,7 @@
  				return;
  
  			cursorOverride = 2;
-@@ -34332,12 +_,12 @@
+@@ -34316,12 +_,12 @@
  			bottomRight -= Vector2.One * 12f;
  			Texture2D value = TextureAssets.EquipPage[5].Value;
  			float num2 = 1f;
@@ -3069,7 +3059,7 @@
  				spriteBatch.Draw(TextureAssets.EquipPage[7].Value, bottomRight, null, OurFavoriteColor, 0f, rectangle2.Size() + new Vector2(2f), num2, SpriteEffects.None, 0f);
  				if (mouseLeftRelease && mouseLeft) {
  					CloseNPCChatOrSign(quiet: true);
-@@ -34766,7 +_,7 @@
+@@ -34752,7 +_,7 @@
  		int num2 = 56;
  		Vector2 vector = npcChatTopLeft + new Vector2(-num2 - 6, num2 + 6);
  		Asset<Texture2D> npcPortraitBackground = TextureAssets.NpcPortraitBackground;
@@ -3078,7 +3068,7 @@
  		Vector2 scale = new Vector2(1f, 1f);
  		int num3 = num % 120;
  		int num4 = num / 120;
-@@ -34836,9 +_,9 @@
+@@ -34822,9 +_,9 @@
  			portraitDummy.IsABestiaryIconDummy = true;
  			portraitDummy.IsAPortraitDummy = true;
  			spriteBatch.End();
@@ -3090,7 +3080,7 @@
  			scissorRectangle2.Y -= 50;
  			scissorRectangle2.Height += 50;
  			spriteBatch.GraphicsDevice.ScissorRectangle = scissorRectangle2;
-@@ -35180,7 +_,7 @@
+@@ -35166,7 +_,7 @@
  			num11 += (float)num7;
  			SpriteEffects effects = SpriteEffects.None;
  			Texture2D value = TextureAssets.HouseBanner.Value;
@@ -3099,7 +3089,7 @@
  			if (num2 > 0)
  				value2.X += value2.Width * num2;
  
-@@ -35203,7 +_,7 @@
+@@ -35189,7 +_,7 @@
  			if (num12 > 24f)
  				scale = 24f / num12;
  
@@ -3108,7 +3098,7 @@
  			homeTileX = homeTileX * 16 - (int)screenPosition.X + num8 - value2.Width / 2;
  			num3 = (int)num11 - (int)screenPosition.Y + 4;
  			int num13 = -8;
-@@ -35327,23 +_,23 @@
+@@ -35313,23 +_,23 @@
  			if (screenWidth > 800) {
  				int num = screenWidth - 300;
  				int num2 = 78;
@@ -3136,7 +3126,7 @@
  			}
  
  			int hoveredSnippet = -1;
-@@ -35485,7 +_,7 @@
+@@ -35471,7 +_,7 @@
  					}
  				}
  
@@ -3145,7 +3135,7 @@
  			}
  		}
  
-@@ -35530,8 +_,8 @@
+@@ -35516,8 +_,8 @@
  		}
  
  		if (EquipPage == 2) {
@@ -3156,7 +3146,7 @@
  			Item[] inv = player[myPlayer].miscEquips;
  			int num23 = screenWidth - 92;
  			int num24 = num20;
-@@ -35580,7 +_,7 @@
+@@ -35566,7 +_,7 @@
  					r.Y = num24 + m * 47;
  					bool flag3 = false;
  					Texture2D value2 = TextureAssets.InventoryTickOn.Value;
@@ -3165,7 +3155,7 @@
  					int num26 = 0;
  					if (num25 != -1 && mouseItem.IsAir) {
  						if (player[myPlayer].hideMisc[num25])
-@@ -35611,7 +_,7 @@
+@@ -35597,7 +_,7 @@
  						if (!player[myPlayer].enabledSuperCart)
  							value2 = TextureAssets.Extra[256].Value;
  
@@ -3174,7 +3164,7 @@
  						r2.Offset(-r2.Width / 2, -r2.Height / 2);
  						if (r2.Contains(value) && !PlayerInput.IgnoreMouseInterface) {
  							player[myPlayer].mouseInterface = true;
-@@ -35673,7 +_,7 @@
+@@ -35659,7 +_,7 @@
  				if (player[myPlayer].buffType[n] != 0) {
  					int num32 = num28 / num29;
  					int num33 = num28 % num29;
@@ -3183,7 +3173,7 @@
  					num27 = DrawBuffIcon(num27, n, point.X, point.Y);
  					UILinkPointNavigator.SetPosition(9000 + num28, new Vector2(point.X + 30, point.Y + 30));
  					num28++;
-@@ -35749,9 +_,9 @@
+@@ -35735,9 +_,9 @@
  				if (player[myPlayer].hideVisibleAccessory[num40])
  					value3 = TextureAssets.InventoryTickOff.Value;
  
@@ -3195,7 +3185,7 @@
  					player[myPlayer].mouseInterface = true;
  					if (mouseLeft && mouseLeftRelease) {
  						player[myPlayer].hideVisibleAccessory[num40] = !player[myPlayer].hideVisibleAccessory[num40];
-@@ -36062,7 +_,7 @@
+@@ -36048,7 +_,7 @@
  			Texture2D value5 = TextureAssets.NPCHappiness.Value;
  			float priceAdjustment = LocalPlayer.currentShoppingSettings.PriceAdjustment;
  			int frameX = ((!(priceAdjustment <= 0.82f)) ? ((priceAdjustment <= 1f) ? 1 : ((!(priceAdjustment <= 1.1f)) ? 3 : 2)) : 0);
@@ -3204,7 +3194,7 @@
  			Vector2 position = new Vector2(504 + shopHappinessIconOffsetX, invBottom + shopHappinessIconOffsetY);
  			spriteBatch.Draw(value5, position, rectangle2, Microsoft.Xna.Framework.Color.White, 0f, rectangle2.Size() / 2f, 1f, SpriteEffects.None, 0f);
  			string text3 = priceAdjustment.ToString("P0");
-@@ -36132,7 +_,7 @@
+@@ -36118,7 +_,7 @@
  
  			DoStatefulTickSound(ref allChestStackHover, state2);
  			num80 += (int)Player.Settings.StackToChestsPreferredMode * 2;
@@ -3213,7 +3203,7 @@
  		}
  
  		if (player[myPlayer].chest == -1 && npcShop == 0) {
-@@ -36208,7 +_,7 @@
+@@ -36194,7 +_,7 @@
  		int num2 = (int)((float)(inventoryTop - 2) + 0f * inventoryScale);
  		int num3 = (int)((float)(inventoryTop - 2) + (float)(num * 56) * inventoryScale);
  		Texture2D value = TextureAssets.Extra[259].Value;
@@ -3222,7 +3212,7 @@
  		ItemSlot.GetLoadoutColor(player.CurrentLoadoutIndex);
  		int num4 = player.Loadouts.Length;
  		int num5 = 32;
-@@ -36216,7 +_,7 @@
+@@ -36202,7 +_,7 @@
  		int state = -1;
  		_ = FontAssets.ItemStack.Value;
  		for (int i = 0; i < num4; i++) {
@@ -3231,7 +3221,7 @@
  			Microsoft.Xna.Framework.Color loadoutColor = ItemSlot.GetLoadoutColor(i);
  			_ = player.Loadouts[i];
  			int frameX = ((i == player.CurrentLoadoutIndex) ? 1 : 0);
-@@ -36236,7 +_,7 @@
+@@ -36222,7 +_,7 @@
  				state = i;
  			}
  
@@ -3240,7 +3230,7 @@
  			spriteBatch.Draw(value, rectangle2.Center.ToVector2(), rectangle3, Microsoft.Xna.Framework.Color.White, 0f, rectangle3.Size() / 2f, 1f, SpriteEffects.None, 0f);
  			if (flag) {
  				rectangle3 = value.Frame(3, 3, 2, i);
-@@ -36382,8 +_,8 @@
+@@ -36368,8 +_,8 @@
  			color = Microsoft.Xna.Framework.Color.Transparent;
  
  		color *= Utils.Remap(MathHelper.Clamp((float)Math.Sin(GlobalTimeWrappedHourly % num2 / num2 * ((float)Math.PI * 2f)), 0f, 1f), 0f, 1f, 0.4f, 1f);
@@ -3251,7 +3241,7 @@
  		Vector2 origin = rectangle.Size() / 2f;
  		spriteBatch.Draw(value, vector, rectangle, Microsoft.Xna.Framework.Color.White, 0f, origin, inventoryScale, SpriteEffects.None, 0f);
  		if (color != Microsoft.Xna.Framework.Color.Transparent)
-@@ -36393,7 +_,7 @@
+@@ -36379,7 +_,7 @@
  		Vector2 vector2 = FontAssets.MouseText.Value.MeasureString(text);
  		Vector2 vector3 = new Vector2(0f, 2f) * inventoryScale;
  		ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, text, vector - vector2 * 0.5f * inventoryScale + vector3, Microsoft.Xna.Framework.Color.White, 0f, Vector2.Zero, new Vector2(inventoryScale));
@@ -3260,7 +3250,7 @@
  			player[myPlayer].mouseInterface = true;
  			string text2 = text + " " + Lang.inter[10].Value;
  			text2 = text2 + "\n" + Language.GetTextValue("UI.DefenseDamageReduction", num4);
-@@ -36600,10 +_,10 @@
+@@ -36586,10 +_,10 @@
  		if (editChest)
  			num2 += 24;
  
@@ -3274,7 +3264,7 @@
  			player[myPlayer].mouseInterface = true;
  			flag = true;
  			if (mouseLeft && mouseLeftRelease) {
-@@ -36619,7 +_,7 @@
+@@ -36605,7 +_,7 @@
  		DoStatefulTickSound(ref emoteMouseOver, flag);
  		Texture2D value = TextureAssets.EmoteMenuButton.Value;
  		Vector2 position = rectangle.Center.ToVector2();
@@ -3283,7 +3273,7 @@
  		rectangle2.Width -= 2;
  		rectangle2.Height -= 2;
  		Vector2 origin = rectangle2.Size() / 2f;
-@@ -36651,10 +_,10 @@
+@@ -36637,10 +_,10 @@
  		if (editChest)
  			num2 += 24;
  
@@ -3297,7 +3287,7 @@
  			player[myPlayer].mouseInterface = true;
  			flag = true;
  			if (mouseLeft && mouseLeftRelease) {
-@@ -36671,7 +_,7 @@
+@@ -36657,7 +_,7 @@
  		DoStatefulTickSound(ref bestiaryMouseOver, flag);
  		Texture2D value = TextureAssets.BestiaryMenuButton.Value;
  		Vector2 position = rectangle.Center.ToVector2();
@@ -3306,7 +3296,7 @@
  		rectangle2.Width -= 2;
  		rectangle2.Height -= 2;
  		Vector2 origin = rectangle2.Size() / 2f;
-@@ -36691,7 +_,7 @@
+@@ -36677,7 +_,7 @@
  
  		float num2 = 0.9f;
  		Texture2D value = TextureAssets.HbLock[(!player[myPlayer].hbLocked) ? 1 : 0].Value;
@@ -3315,7 +3305,7 @@
  		bool flag = false;
  		if (mouseX > pivotTopLeftX && (float)mouseX < (float)pivotTopLeftX + (float)value2.Width * num2 && mouseY > num && (float)mouseY < (float)num + (float)value2.Height * num2 && !PlayerInput.IgnoreMouseInterface) {
  			flag = true;
-@@ -36729,7 +_,7 @@
+@@ -36715,7 +_,7 @@
  		int num3 = 10;
  		bool flag = player[myPlayer].builderAccStatus[num3] == 0;
  		Texture2D value = TextureAssets.blockReplaceIcon[0].Value;
@@ -3324,51 +3314,7 @@
  		bool flag2 = false;
  		if (mouseX > pivotTopLeftX && (float)mouseX < (float)pivotTopLeftX + (float)rectangle.Width * num2 && mouseY > num && (float)mouseY < (float)num + (float)rectangle.Height * num2 && !PlayerInput.IgnoreMouseInterface) {
  			flag2 = true;
-@@ -36751,6 +_,43 @@
- 		return flag2;
- 	}
- 
-+	private bool DrawCraftingReachIcon(int pivotTopLeftX, int pivotTopLeftY, bool pushSideToolsUp, int gamepadPointOffset)
-+	{
-+		if (!playerInventory)
-+			return false;
-+
-+		int yPosition = 92 + pivotTopLeftY;
-+		_ = player[myPlayer];
-+		if (pushSideToolsUp)
-+			yPosition = 71 + pivotTopLeftY;
-+
-+		float scale = 0.8f;
-+		int featureMode = Main.CraftingReachPreview;
-+		Texture2D icon = TextureAssets.Extra[176].Value;
-+		System.Drawing.Rectangle spriteFrame = icon.Frame(1, 1, 0);
-+		bool hovered = false;
-+		if (mouseX > pivotTopLeftX && (float)mouseX < (float)pivotTopLeftX + (float)spriteFrame.Width * scale && mouseY > yPosition && (float)mouseY < (float)yPosition + (float)spriteFrame.Height * scale && !PlayerInput.IgnoreMouseInterface) {
-+			hovered = true;
-+			player[myPlayer].mouseInterface = true;
-+			MouseText(Language.GetTextValue("GameUI.CraftingReachPreview" + featureMode), 0, 0);
-+			mouseText = true;
-+			if (mouseLeft && mouseLeftRelease) {
-+				SoundEngine.PlaySound(7);
-+				SoundEngine.PlaySound(21);
-+				Main.CraftingReachPreview = featureMode < 2 ? (featureMode + 1) : 0;
-+			}
-+		}
-+
-+		Vector2 vector = new Vector2(pivotTopLeftX + 3.5f, yPosition);
-+		spriteBatch.Draw(icon, vector, spriteFrame, Microsoft.Xna.Framework.Color.White, 0f, default(Vector2), scale, SpriteEffects.None, 0f);
-+		spriteBatch.Draw(icon, vector, spriteFrame, Microsoft.Xna.Framework.Color.White, 0f, default(Vector2), scale, SpriteEffects.None, 0f);
-+		if (hovered)
-+			spriteBatch.Draw(icon, vector, icon.Frame(1, 1, 0), OurFavoriteColor, 0f, default(Vector2), scale, SpriteEffects.None, 0f);
-+
-+		UILinkPointNavigator.SetPosition(6000 + gamepadPointOffset, vector + spriteFrame.Size() * 0.65f);
-+		return hovered;
-+	}
-+
- 	private bool DrawTorchBiomeSwapIcon(int pivotTopLeftX, int pivotTopLeftY, bool pushSideToolsUp, int gamepadPointOffset)
- 	{
- 		if (!playerInventory)
-@@ -36765,7 +_,7 @@
+@@ -36751,7 +_,7 @@
  		int num3 = 11;
  		bool flag = player[myPlayer].builderAccStatus[num3] == 0;
  		Texture2D value = TextureAssets.Extra[211].Value;
@@ -3377,7 +3323,7 @@
  		bool flag2 = false;
  		if (mouseX > pivotTopLeftX && (float)mouseX < (float)pivotTopLeftX + (float)rectangle.Width * num2 && mouseY > num && (float)mouseY < (float)num + (float)rectangle.Height * num2 && !PlayerInput.IgnoreMouseInterface) {
  			flag2 = true;
-@@ -36847,8 +_,8 @@
+@@ -36833,8 +_,8 @@
  				}
  			}
  
@@ -3388,7 +3334,7 @@
  			rectangle.Width -= 2;
  			rectangle.Height--;
  			spriteBatch.Draw(TextureAssets.Pvp[0].Value, new Vector2(num2 - 10, num3), rectangle, Microsoft.Xna.Framework.Color.White, 0f, Vector2.Zero, Vector2.One, SpriteEffects.None, 0f);
-@@ -36860,10 +_,10 @@
+@@ -36846,10 +_,10 @@
  		if (!ShouldTeamSelectDraw)
  			return;
  
@@ -3402,7 +3348,7 @@
  			rectangle2.X = rectangle2.Width * i;
  			bool flag = false;
  			if (r.Contains(MouseScreen.ToPoint()) && !PlayerInput.IgnoreMouseInterface) {
-@@ -36915,7 +_,7 @@
+@@ -36901,7 +_,7 @@
  			if (flag)
  				spriteBatch.Draw(TextureAssets.Pvp[2].Value, r.Location.ToVector2() + new Vector2(-2f), Microsoft.Xna.Framework.Color.White);
  
@@ -3411,7 +3357,7 @@
  			value.Width -= 2;
  			spriteBatch.Draw(TextureAssets.Pvp[1].Value, r.Location.ToVector2(), value, Microsoft.Xna.Framework.Color.White);
  			UILinkPointNavigator.SetPosition(1550 + i + 1, r.Location.ToVector2() + r.Size() * 0.75f);
-@@ -36995,7 +_,7 @@
+@@ -36981,7 +_,7 @@
  	{
  		PlayerInput.SetZoom_World();
  		Vector2 vector = ReverseGravitySupport(MouseScreen) + screenPosition;
@@ -3420,7 +3366,7 @@
  		PlayerInput.SetZoom_UI();
  		if (!LocalPlayer.ghost && LocalPlayer.spectating < 0)
  			ResourceSetsManager.TryToHoverOverResources();
-@@ -37008,9 +_,9 @@
+@@ -36994,9 +_,9 @@
  				if (!item[i].active)
  					continue;
  
@@ -3432,7 +3378,7 @@
  				if (mouseRectangle.Intersects(value)) {
  					player[myPlayer].cursorItemIconEnabled = false;
  					string text = item[i].AffixName();
-@@ -37035,7 +_,7 @@
+@@ -37021,7 +_,7 @@
  			if (!player[j].active || myPlayer == j || player[j].dead || player[j].ShouldNotDraw || !((double)player[j].stealth > 0.5))
  				continue;
  
@@ -3441,7 +3387,7 @@
  			if (!mouseText && mouseRectangle.Intersects(value2)) {
  				player[myPlayer].cursorItemIconEnabled = false;
  				int num = player[j].statLife;
-@@ -37085,7 +_,7 @@
+@@ -37071,7 +_,7 @@
  				color = Microsoft.Xna.Framework.Color.Lerp(color, Microsoft.Xna.Framework.Color.White, 1f);
  				int num3 = 10;
  				int num4 = 5;
@@ -3450,7 +3396,7 @@
  			}
  
  			for (int l = 0; l < lineAmount; l++) {
-@@ -37098,10 +_,10 @@
+@@ -37084,10 +_,10 @@
  		PlayerInput.SetZoom_UI();
  	}
  
@@ -3463,7 +3409,7 @@
  		for (int i = 0; i < maxNPCs; i++) {
  			NPC nPC = npc[i];
  			if (!nPC.active || nPC.CurrentlyShimmerTransparent())
-@@ -37110,9 +_,9 @@
+@@ -37096,9 +_,9 @@
  			int type = nPC.type;
  			LoadNPC(type);
  			nPC.position += nPC.netOffset;
@@ -3475,7 +3421,7 @@
  
  			if (nPC.type == 696 || nPC.type == 695)
  				value = Utils.CenteredRectangle(nPC.Bottom - new Vector2(nPC.direction * -10, 20f), new Vector2(60f, 40f));
-@@ -37144,7 +_,7 @@
+@@ -37130,7 +_,7 @@
  				else {
  					bool flag3 = SmartInteractShowingGenuine && SmartInteractNPC == i;
  					if (nPC.townNPC || nPC.type == 105 || nPC.type == 106 || nPC.type == 123 || nPC.type == 354 || nPC.type == 376 || nPC.type == 579 || nPC.type == 453 || nPC.type == 589) {
@@ -3484,7 +3430,7 @@
  						if (worldRegion.Intersects(value2))
  							flag3 = true;
  					}
-@@ -37243,7 +_,7 @@
+@@ -37229,7 +_,7 @@
  		spriteBatch.End();
  		spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, GameViewMatrix.ZoomMatrix);
  		PlayerInput.SetZoom_UI();
@@ -3493,7 +3439,7 @@
  		spriteBatch.End();
  		spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, _uiScaleMatrix);
  	}
-@@ -37374,7 +_,7 @@
+@@ -37360,7 +_,7 @@
  			return drawBuffText;
  
  		Microsoft.Xna.Framework.Color color = new Microsoft.Xna.Framework.Color(buffAlpha[buffSlotOnPlayer], buffAlpha[buffSlotOnPlayer], buffAlpha[buffSlotOnPlayer], buffAlpha[buffSlotOnPlayer]);
@@ -3502,7 +3448,7 @@
  		string text = null;
  		if (BuffID.Sets.BuffTextHandlers.TryGetValue(num, out var value))
  			text = value.HandleBuffText();
-@@ -37498,7 +_,7 @@
+@@ -37484,7 +_,7 @@
  					num6 += 26;
  				}
  
@@ -3511,7 +3457,7 @@
  			}
  		}
  
-@@ -37531,7 +_,7 @@
+@@ -37517,7 +_,7 @@
  				num12 += 26;
  			}
  
@@ -3520,7 +3466,7 @@
  		}
  	}
  
-@@ -37559,7 +_,7 @@
+@@ -37545,7 +_,7 @@
  				position.X -= 27f;
  				position.Y += 14f;
  				spriteBatch.Draw(TextureAssets.GolfSwingBarPanel.Value, position, null, Microsoft.Xna.Framework.Color.White);
@@ -3529,7 +3475,7 @@
  			}
  		}
  	}
-@@ -37582,9 +_,9 @@
+@@ -37568,9 +_,9 @@
  
  			vector2 -= (num2 + (float)Math.PI / 2f).ToRotationVector2() * (((float)Math.Sin(GlobalTimeWrappedHourly * 4f) * 0.5f + 0.5f) * 5f + 14f);
  			Texture2D value = TextureAssets.GolfBallArrow.Value;
@@ -3541,7 +3487,7 @@
  			spriteBatch.Draw(TextureAssets.GolfBallArrowShadow.Value, vector2 + new Vector2(-4f, 4f) * 1.5f, rectangle, Microsoft.Xna.Framework.Color.White * num, num2, origin, 1.5f, SpriteEffects.None, 0f);
  			float amount = (float)Math.Sin(GlobalTimeWrappedHourly * 4f) * 0.5f + 0.5f;
  			for (float num3 = 0f; num3 < 1f; num3 += 0.25f) {
-@@ -37724,8 +_,8 @@
+@@ -37710,8 +_,8 @@
  		int num5 = num2 + 234;
  		int num6 = num + 18;
  		selColor = player[myPlayer].hairColor;
@@ -3552,7 +3498,7 @@
  			int num7 = PlayerInput.ScrollWheelDelta / 120;
  			num7 = -num7;
  			int num8 = Math.Sign(num7);
-@@ -38060,9 +_,9 @@
+@@ -38046,9 +_,9 @@
  			int num33 = Hairstyles.AvailableHairstyles[hairStart + m];
  			UILinkPointNavigator.SetPosition(2605 + m, new Vector2(num29, num30) + TextureAssets.InventoryBack.Value.Size() * 0.75f);
  			if (player[myPlayer].hair == num33)
@@ -3564,7 +3510,7 @@
  
  			if (mouseX > num29 && mouseX < num29 + TextureAssets.InventoryBack.Width() && mouseY > num30 && mouseY < num30 + TextureAssets.InventoryBack.Height()) {
  				Asset<Texture2D> asset = Assets.Request<Texture2D>("Images/UI/PanelBorder");
-@@ -38077,11 +_,11 @@
+@@ -38063,11 +_,11 @@
  			LoadHair(num33);
  			float x = num29 + TextureAssets.InventoryBack.Width() / 2 - TextureAssets.PlayerHair[num33].Width() / 2;
  			float y = num30 + 4;
@@ -3580,7 +3526,7 @@
  			num32++;
  			num29 += 56;
  			if (num32 >= 5) {
-@@ -38194,14 +_,14 @@
+@@ -38180,14 +_,14 @@
  		if (selClothes == 5)
  			selColor = player[myPlayer].skinColor;
  
@@ -3597,7 +3543,7 @@
  		rectangle.Height -= 50;
  		vector.Y -= 22f;
  		bool flag = rectangle.Contains(MouseScreen.ToPoint());
-@@ -38442,9 +_,9 @@
+@@ -38428,9 +_,9 @@
  		num24 -= 8;
  		for (int m = 0; m < 6; m++) {
  			if (num10 == m)
@@ -3609,7 +3555,7 @@
  
  			if (mouseX > num23 && mouseX < num23 + TextureAssets.InventoryBack.Width() && mouseY > num24 && mouseY < num24 + TextureAssets.InventoryBack.Height() && mouseLeft && mouseLeftRelease) {
  				mouseLeftRelease = false;
-@@ -38476,7 +_,7 @@
+@@ -38462,7 +_,7 @@
  			if (m == 5)
  				color6 = player[myPlayer].skinColor;
  
@@ -3618,7 +3564,7 @@
  			if (m == 4) {
  				Texture2D value = Assets.Request<Texture2D>("Images/UI/CharCreation/ColorEyeBack").Value;
  				spriteBatch.Draw(value, new Vector2(x, y), value.Frame(), Microsoft.Xna.Framework.Color.White, 0f, default(Vector2), 1f, SpriteEffects.None, 0f);
-@@ -38527,7 +_,7 @@
+@@ -38513,7 +_,7 @@
  		spriteBatch.End();
  		spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, UIScaleMatrix);
  		PlayerRenderer.DrawPlayer(Camera, dresserInterfaceDummy, dresserInterfaceDummy.position, dresserInterfaceDummy.fullRotation, dresserInterfaceDummy.fullRotationOrigin);
@@ -3627,27 +3573,7 @@
  		r.Y += r.Height + 4;
  		r.Height = 46;
  		UILinkPointNavigator.SetPosition(2813, r.Center.ToVector2());
-@@ -38614,7 +_,7 @@
- 		if (_needToSetupDrawInterfaceLayers) {
- 			_needToSetupDrawInterfaceLayers = false;
- 			_gameInterfaceLayers = new List<GameInterfaceLayer>();
--			_gameInterfaceLayers.AddRange(new GameInterfaceLayer[43] {
-+			_gameInterfaceLayers.AddRange(new GameInterfaceLayer[44] {
- 				new LegacyGameInterfaceLayer("Vanilla: Interface Logic 1", delegate {
- 					DrawInterface_0_InterfaceLogic1();
- 					return true;
-@@ -38643,6 +_,10 @@
- 					DrawInterface_4_Ruler();
- 					return true;
- 				}),
-+				new LegacyGameInterfaceLayer("Unified: Crafting Reach", delegate {
-+					DrawInterface_4_1_CraftingReach();
-+					return true;
-+				}),
- 				new LegacyGameInterfaceLayer("Vanilla: Gamepad Lock On", delegate {
- 					DrawInterface_5_GamepadLockOn();
- 					return true;
-@@ -39479,7 +_,7 @@
+@@ -39465,7 +_,7 @@
  			}
  
  			num2 -= 22;
@@ -3656,7 +3582,7 @@
  		}
  	}
  
-@@ -39973,7 +_,7 @@
+@@ -39959,7 +_,7 @@
  			return;
  
  		Texture2D value = TextureAssets.Extra[2].Value;
@@ -3665,76 +3591,7 @@
  		int num10 = num6;
  		int num11 = num7;
  		if (player[myPlayer].gravDir == -1f)
-@@ -40016,6 +_,68 @@
- 		}
- 	}
- 
-+	private static void DrawInterface_4_1_CraftingReach()
-+	{
-+		float anim = craftingReachPreview_BoxAnim;
-+		Player player = LocalPlayer;
-+		if (anim <= 0f || !playerInventory || player.spectating >= 0)
-+			return;
-+
-+		Rectangle range = player.craftingReachRectangle;
-+		Texture2D pixel = TextureAssets.MagicPixel.Value;
-+
-+		float r = 0.5f, g = 0.5f, b = 0.7f;
-+		Color color = new Color(r, g, b) * (anim / 4.6f);
-+		int thickness = 2;
-+
-+		int left = range.Left * 16;
-+		int right = (range.Right + 1) * 16;
-+		int top = range.Top * 16;
-+		int bottom = (range.Bottom + 1) * 16;
-+
-+		float animWidth = (right - left) * anim;
-+		float animHeight = (bottom - top) * (0.5f + anim * 0.5f);
-+		float centerX = (left + right) * 0.5f;
-+		float centerY = (top + bottom) * 0.5f;
-+		float leftA = centerX - animWidth * 0.5f;
-+		float rightA = centerX + animWidth * 0.5f;
-+		float topA = centerY - animHeight * 0.5f;
-+		float bottomA = centerY + animHeight * 0.5f;
-+
-+		Vector2 screenTL = new Vector2(leftA, topA) - screenPosition;
-+		Vector2 screenBR = new Vector2(rightA, bottomA) - screenPosition;
-+
-+		// top
-+		spriteBatch.Draw(pixel,
-+			ReverseGravitySupport(new Vector2(screenTL.X + thickness, screenTL.Y), thickness),
-+			new Rectangle(0, 0, (int)(screenBR.X - screenTL.X - thickness * 2), thickness),
-+			color);
-+
-+		// bottom
-+		spriteBatch.Draw(pixel,
-+			ReverseGravitySupport(new Vector2(screenTL.X + thickness, screenBR.Y - thickness), thickness),
-+			new Rectangle(0, 0, (int)(screenBR.X - screenTL.X - thickness * 2), thickness),
-+			color);
-+
-+		// left
-+		spriteBatch.Draw(pixel,
-+			ReverseGravitySupport(new Vector2(screenTL.X, screenTL.Y), thickness),
-+			new Rectangle(0, 0, thickness, (int)(screenBR.Y - screenTL.Y)),
-+			color);
-+
-+		// right
-+		spriteBatch.Draw(pixel,
-+			ReverseGravitySupport(new Vector2(screenBR.X - thickness, screenTL.Y), thickness),
-+			new Rectangle(0, 0, thickness, (int)(screenBR.Y - screenTL.Y)),
-+			color);
-+
-+		// fill
-+		spriteBatch.Draw(pixel,
-+			ReverseGravitySupport(new Vector2(screenTL.X, screenTL.Y), thickness),
-+			new Rectangle(0, 0, (int)(screenBR.X - screenTL.X), (int)(screenBR.Y - screenTL.Y)),
-+			color);
-+	}
-+
- 	private static void DrawInterface_3_LaserRuler()
- 	{
- 		if (!player[myPlayer].rulerGrid || player[myPlayer].builderAccStatus[1] != 0)
-@@ -40031,12 +_,12 @@
+@@ -40017,12 +_,12 @@
  		vec = vec.ToTileCoordinates().ToVector2() * 16f;
  		int num4 = (screenWidth + 100) / 16;
  		int num5 = (screenHeight + 100) / 16;
@@ -3749,7 +3606,7 @@
  		vec -= Vector2.One;
  		for (int i = 0; i < num4; i++) {
  			for (int j = 0; j < num5; j++) {
-@@ -40068,15 +_,15 @@
+@@ -40054,15 +_,15 @@
  			}
  		}
  
@@ -3768,7 +3625,7 @@
  		for (int l = 0; l < num5; l++) {
  			if (l != point.Y)
  				spriteBatch.Draw(value, ReverseGravitySupport(new Vector2(point.X, l) * 16f - screenPosition + vec, 16f), value2, color2, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
-@@ -40110,7 +_,7 @@
+@@ -40096,7 +_,7 @@
  		Texture2D value = TextureAssets.Extra[199].Value;
  		Vector2 zero = Vector2.Zero;
  		int minionAttackTargetNPC = localPlayer.MinionAttackTargetNPC;
@@ -3777,7 +3634,7 @@
  		for (int i = 0; i < maxNPCs; i++) {
  			NPC nPC = npc[i];
  			if (nPC.active && nPC.Hitbox.Intersects(value2)) {
-@@ -40121,7 +_,7 @@
+@@ -40107,7 +_,7 @@
  				Vector2 position = vector + zero;
  				if (i == minionAttackTargetNPC) {
  					int frameY = (int)(GlobalTimeWrappedHourly * 10f) % 4;
@@ -3786,7 +3643,7 @@
  					Vector2 origin = rectangle.Size() / 2f;
  					Microsoft.Xna.Framework.Color color = Microsoft.Xna.Framework.Color.White * 0.7f;
  					color.A /= 2;
-@@ -40189,7 +_,7 @@
+@@ -40175,7 +_,7 @@
  				vector.Y += 26f;
  				instance.LoadItem(list[num2]);
  				Texture2D value = TextureAssets.Item[list[num2]].Value;
@@ -3795,7 +3652,7 @@
  				spriteBatch.Draw(value, vector, null, Lighting.GetColor(point.X, point.Y), (float)Math.PI / 4f, value.Size() / 2f, 1f, SpriteEffects.None, 0f);
  			}
  		}
-@@ -40240,7 +_,7 @@
+@@ -40226,7 +_,7 @@
  			vector.Y = (float)screenHeight - vector.Y - 16f;
  
  		Microsoft.Xna.Framework.Color newColor = Lighting.GetColor(SmartCursorX, SmartCursorY) * 1f;
@@ -3804,7 +3661,7 @@
  		float r = 1f;
  		float g = 0.9f;
  		float b = 0.1f;
-@@ -40257,7 +_,7 @@
+@@ -40243,7 +_,7 @@
  		spriteBatch.Draw(TextureAssets.MagicPixel.Value, vector + Vector2.UnitX * 16f, value, buffColor(newColor, r, g, b, a) * num, 0f, Vector2.Zero, new Vector2(2f, 16f), SpriteEffects.None, 0f);
  		spriteBatch.Draw(TextureAssets.MagicPixel.Value, vector + Vector2.UnitY * -2f, value, buffColor(newColor, r, g, b, a) * num, 0f, Vector2.Zero, new Vector2(16f, 2f), SpriteEffects.None, 0f);
  		spriteBatch.Draw(TextureAssets.MagicPixel.Value, vector + Vector2.UnitY * 16f, value, buffColor(newColor, r, g, b, a) * num, 0f, Vector2.Zero, new Vector2(16f, 2f), SpriteEffects.None, 0f);
@@ -3813,7 +3670,7 @@
  		if (lockedDesiredDirection.HasValue) {
  			int num2 = Array.IndexOf(SmartCursorDirectionLocks, lockedDesiredDirection.Value);
  			Tile tile = Main.tile[SmartCursorX + lockedDesiredDirection.Value.X, SmartCursorY + lockedDesiredDirection.Value.Y];
-@@ -40284,7 +_,7 @@
+@@ -40270,7 +_,7 @@
  				vector.Y = (float)screenHeight - vector.Y - 16f;
  
  			Microsoft.Xna.Framework.Color newColor = Lighting.GetColor(SmartInteractX, SmartInteractY) * 1f;
@@ -3822,7 +3679,7 @@
  			float r = 0.1f;
  			float g = 0.9f;
  			float b = 1f;
-@@ -40488,7 +_,7 @@
+@@ -40474,7 +_,7 @@
  				else {
  					int baseOption = 0;
  					int num10 = PlayerSceneMetrics.BestOreType;
@@ -3831,7 +3688,7 @@
  					Tile tileSafely = Framing.GetTileSafely(bestOrePosition);
  					if (tileSafely.active()) {
  						MapHelper.GetTileBaseOption(bestOrePosition.X, bestOrePosition.Y, tileSafely.type, tileSafely, ref baseOption);
-@@ -40696,7 +_,7 @@
+@@ -40682,7 +_,7 @@
  				}
  
  				UILinkPointNavigator.SetPosition(1558 + num3 - 1, vector2 + TextureAssets.InfoIcon[num].Value.Size() * 0.75f);
@@ -3840,7 +3697,7 @@
  				if (flag14)
  					spriteBatch.Draw(TextureAssets.InfoIcon[13].Value, vector2 - Vector2.One * 2f, null, OurFavoriteColor, 0f, default(Vector2), 1f, SpriteEffects.None, 0f);
  
-@@ -40840,7 +_,7 @@
+@@ -40826,7 +_,7 @@
  			}
  
  			Texture2D value = TextureAssets.BuilderAcc.Value;
@@ -3849,20 +3706,7 @@
  			Microsoft.Xna.Framework.Color color = Microsoft.Xna.Framework.Color.White;
  			Microsoft.Xna.Framework.Color color2 = new Microsoft.Xna.Framework.Color(127, 127, 127);
  			Vector2 vector = start + new Vector2(0f, num * 24);
-@@ -41007,6 +_,12 @@
- 			state = num;
- 
- 		num++;
-+
-+		if (DrawCraftingReachIcon(0, 24 * (totalDrawnIcons - 2), flag, 0)) {
-+			state = num;
-+		}
-+
-+		num++;
- 		if (player.unlockedBiomeTorches) {
- 			if (DrawTorchBiomeSwapIcon(0, 0, flag, 1))
- 				state = num;
-@@ -41034,7 +_,7 @@
+@@ -41020,7 +_,7 @@
  
  		bool flag = false;
  		Player player = Main.player[myPlayer];
@@ -3871,7 +3715,7 @@
  		int num = 5000;
  		int num2 = 0;
  		for (int i = 0; i < maxNPCs; i++) {
-@@ -41043,7 +_,7 @@
+@@ -41029,7 +_,7 @@
  
  			num2 = NPC.GetNPCInvasionGroup(npc[i].type);
  			if (num2 != 0 && (num2 != -1 || (!((double)player.position.Y > worldSurface * 16.0) && !dayTime && snowMoon)) && (num2 != -2 || (!((double)player.position.Y > worldSurface * 16.0) && !dayTime && pumpkinMoon)) && (num2 != -3 || DD2Event.Ongoing) && (num2 <= 0 || (!((double)player.position.Y > worldSurface * 16.0) && invasionType == num2))) {
@@ -3880,7 +3724,7 @@
  				if (rectangle.Intersects(value)) {
  					flag = true;
  					break;
-@@ -41227,7 +_,7 @@
+@@ -41213,7 +_,7 @@
  			int num2 = (int)(200f * num);
  			int num3 = (int)(45f * num);
  			Vector2 vector = new Vector2(screenWidth - 120, screenHeight - 40);
@@ -3889,7 +3733,7 @@
  			string text2 = "";
  			text2 = Language.GetTextValue(arg1: (invasionProgressMax != 0) ? ((int)((float)invasionProgress * 100f / (float)invasionProgressMax) + "%") : Language.GetTextValue("Game.InvasionPoints", invasionProgress), key: "Game.WaveMessage", arg0: invasionProgressWave);
  			Texture2D value2 = TextureAssets.ColorBar.Value;
-@@ -41242,15 +_,15 @@
+@@ -41228,15 +_,15 @@
  			Utils.DrawBorderString(spriteBatch, text2, vector2, Microsoft.Xna.Framework.Color.White * invasionProgressAlpha, num, 0.5f, 1f);
  			spriteBatch.Draw(value2, vector, null, Microsoft.Xna.Framework.Color.White * invasionProgressAlpha, 0f, new Vector2(value2.Width / 2, 0f), num, SpriteEffects.None, 0f);
  			vector2 += Vector2.UnitX * (num4 - 0.5f) * num5;
@@ -3909,7 +3753,7 @@
  			string text3 = "";
  			text3 = ((invasionProgressMax != 0) ? ((int)((float)invasionProgress * 100f / (float)invasionProgressMax) + "%") : invasionProgress.ToString());
  			text3 = Language.GetTextValue("Game.WaveCleared", text3);
-@@ -41269,9 +_,9 @@
+@@ -41255,9 +_,9 @@
  				Vector2 vector5 = vector3 + Vector2.UnitY * num12 + Vector2.UnitX * 1f;
  				Utils.DrawBorderString(spriteBatch, text3, vector5 + new Vector2(0f, -4f), Microsoft.Xna.Framework.Color.White * invasionProgressAlpha, num10, 0.5f, 1f);
  				vector5 += Vector2.UnitX * (num9 - 0.5f) * num11;
@@ -3922,7 +3766,7 @@
  			}
  		}
  
-@@ -41280,7 +_,7 @@
+@@ -41266,7 +_,7 @@
  		if (vector6.X > 200f)
  			num13 += vector6.X - 200f;
  
@@ -3931,7 +3775,7 @@
  		Utils.DrawInvBG(spriteBatch, r3, c);
  		spriteBatch.Draw(value, r3.Left() + Vector2.UnitX * num * 8f, null, Microsoft.Xna.Framework.Color.White * invasionProgressAlpha, 0f, new Vector2(0f, value.Height / 2), num * 0.8f, SpriteEffects.None, 0f);
  		Utils.DrawBorderString(spriteBatch, text, r3.Right() + Vector2.UnitX * num * -22f, Microsoft.Xna.Framework.Color.White * invasionProgressAlpha, num * 0.9f, 1f, 0.4f);
-@@ -41520,7 +_,7 @@
+@@ -41506,7 +_,7 @@
  				vector *= 1f;
  				vector += Vector2.One * 2f;
  				Vector2 origin = new Vector2(2f);
@@ -3940,7 +3784,7 @@
  				float scale = cursorScale * 1.1f;
  				if (showGamepadCursor) {
  					if (smart && !flag) {
-@@ -41739,16 +_,16 @@
+@@ -41725,16 +_,16 @@
  			boulderLogo = true;
  
  		if (playOldTile) {
@@ -3963,7 +3807,7 @@
  		}
  
  		if (dayTime && !WorldGen.remixWorldGen) {
-@@ -44894,7 +_,7 @@
+@@ -44887,7 +_,7 @@
  
  			b2 = (byte)num114;
  			white = new Microsoft.Xna.Framework.Color(b2, b2, b2, b2);
@@ -3972,7 +3816,7 @@
  		}
  
  		spriteBatch.End();
-@@ -44970,6 +_,8 @@
+@@ -44963,6 +_,8 @@
  		Netplay.HostToken = NewToken();
  		text = text + " -hosttoken " + Netplay.HostToken;
  		tServer = new Process();
@@ -3981,7 +3825,7 @@
  		if (Platform.IsLinux)
  			tServer.StartInfo.FileName = "TerrariaServer";
  		else if (Platform.IsOSX)
-@@ -44978,13 +_,23 @@
+@@ -44971,13 +_,23 @@
  			tServer.StartInfo.FileName = "TerrariaServer.exe";
  
  		tServer.StartInfo.Arguments = text;
@@ -4005,7 +3849,7 @@
  		if (SocialAPI.Network != null)
  			SocialAPI.Network.LaunchLocalServer(tServer, MenuServerMode);
  		else
-@@ -45046,6 +_,16 @@
+@@ -45039,6 +_,16 @@
  			titleLinks[i].Draw(spriteBatch, anchorPosition);
  			anchorPosition.X += 30f;
  		}
@@ -4022,7 +3866,7 @@
  	}
  
  	private static void DrawVersionNumber(Microsoft.Xna.Framework.Color menuColor, float upBump)
-@@ -45079,6 +_,12 @@
+@@ -45072,6 +_,12 @@
  				num2 = 2;
  
  			spriteBatch.DrawString(FontAssets.MouseText.Value, text, new Vector2(origin.X + (float)num + 10f, (float)screenHeight - origin.Y + (float)num2 - 2f - upBump), color, 0f, origin, 1f, SpriteEffects.None, 0f);
@@ -4035,7 +3879,7 @@
  		}
  	}
  
-@@ -45209,13 +_,13 @@
+@@ -45202,13 +_,13 @@
  		dualDungeonsSeed = false;
  	}
  
@@ -4051,7 +3895,7 @@
  	{
  		float uiScaleWanted = _uiScaleWanted;
  		float num = (float)screenHeight / 900f;
-@@ -45533,8 +_,8 @@
+@@ -45526,8 +_,8 @@
  
  	private void DrawSplash_LoadingFlower(Microsoft.Xna.Framework.Color splashColor)
  	{
@@ -4062,7 +3906,7 @@
  		float num = Math.Max(Math.Max(1f, val), val2);
  		Texture2D value = TextureAssets.LoadingSunflower.Value;
  		int num2 = 3;
-@@ -45544,7 +_,7 @@
+@@ -45537,7 +_,7 @@
  		if (num4 >= num3)
  			num4 = 0;
  
@@ -4071,7 +3915,7 @@
  		float rotation = 0f;
  		Vector2 origin = rectangle.Size() / 2f;
  		spriteBatch.Draw(value, position, rectangle, splashColor, rotation, origin, num, SpriteEffects.None, 0f);
-@@ -45561,7 +_,7 @@
+@@ -45554,7 +_,7 @@
  		if (num2 >= 8)
  			num2 = 14 - num2;
  
@@ -4080,7 +3924,7 @@
  		rectangle.Height -= 2;
  		float rotation = 0f;
  		Vector2 origin = rectangle.Size() / 2f;
-@@ -45597,14 +_,14 @@
+@@ -45590,14 +_,14 @@
  		Vector2 vec = new Vector2(value.Width, value.Height) * 0.5f;
  		float num2 = (float)(layerTextureIndex * 2) + 3f;
  		Vector2 vector = new Vector2(1f / num2);
@@ -4097,7 +3941,7 @@
  				vec *= 0.5f;
  				zero.Y += 175f;
  				break;
-@@ -45624,7 +_,7 @@
+@@ -45617,7 +_,7 @@
  				break;
  			case 6: {
  				int num8 = (int)(GlobalTimeWrappedHourly * 8f) % 4;
@@ -4106,7 +3950,7 @@
  				vec *= 0.5f;
  				zero.Y += num4;
  				zero.Y += -60f;
-@@ -45632,7 +_,7 @@
+@@ -45625,7 +_,7 @@
  			}
  			case 7: {
  				int num7 = (int)(GlobalTimeWrappedHourly * 8f) % 4;
@@ -4115,7 +3959,7 @@
  				vec *= 0.5f;
  				zero.Y += num4;
  				zero.X -= 400f;
-@@ -45641,7 +_,7 @@
+@@ -45634,7 +_,7 @@
  			}
  			case 8: {
  				int num6 = (int)(GlobalTimeWrappedHourly * 8f) % 4;
@@ -4124,7 +3968,7 @@
  				vec *= 0.5f;
  				zero.Y += num4;
  				zero.Y += 90f;
-@@ -45663,7 +_,7 @@
+@@ -45656,7 +_,7 @@
  			case 13: {
  				zero.Y += 20f * num2;
  				int num5 = (int)(GlobalTimeWrappedHourly * 8f) % 4;
@@ -4133,7 +3977,7 @@
  				vec *= 0.5f;
  				break;
  			}
-@@ -45688,7 +_,7 @@
+@@ -45681,7 +_,7 @@
  			spriteBatch.Draw(value, vec2, value2, Microsoft.Xna.Framework.Color.White, 0f, Vector2.Zero, num3, SpriteEffects.None, 0f);
  			if (layerTextureIndex == 0) {
  				int num14 = (int)(vec2.Y + (float)value2.Height * num3);
@@ -4142,7 +3986,7 @@
  			}
  
  			vec2.X += num10;
-@@ -45870,7 +_,7 @@
+@@ -45863,7 +_,7 @@
  									color2.R = (byte)((float)(int)color2.R * x);
  									color2.G = (byte)((float)(int)color2.G * y);
  									color2.B = (byte)((float)(int)color2.B * z);
@@ -4151,7 +3995,7 @@
  								}
  							}
  							else if (color.R > q2 || (double)(int)color.G > (double)q2 * 1.1 || (double)(int)color.B > (double)q2 * 1.2) {
-@@ -45899,21 +_,21 @@
+@@ -45892,21 +_,21 @@
  									color4.R = (byte)((float)(int)color4.R * x);
  									color4.G = (byte)((float)(int)color4.G * y);
  									color4.B = (byte)((float)(int)color4.B * z);
@@ -4176,7 +4020,7 @@
  						}
  					}
  				}
-@@ -45936,14 +_,14 @@
+@@ -45929,14 +_,14 @@
  				color6.R = (byte)((float)(int)color6.R * x);
  				color6.G = (byte)((float)(int)color6.G * y);
  				color6.B = (byte)((float)(int)color6.B * z);
@@ -4193,7 +4037,7 @@
  				}
  			}
  		}
-@@ -46079,14 +_,14 @@
+@@ -46072,14 +_,14 @@
  									color2.R = (byte)((float)(int)color2.R * x);
  									color2.G = (byte)((float)(int)color2.G * y);
  									color2.B = (byte)((float)(int)color2.B * z);
@@ -4210,7 +4054,7 @@
  									}
  								}
  							}
-@@ -46116,14 +_,14 @@
+@@ -46109,14 +_,14 @@
  									color5.R = (byte)((float)(int)color5.R * x);
  									color5.G = (byte)((float)(int)color5.G * y);
  									color5.B = (byte)((float)(int)color5.B * z);
@@ -4227,7 +4071,7 @@
  									}
  								}
  							}
-@@ -46131,14 +_,14 @@
+@@ -46124,14 +_,14 @@
  								color.R = (byte)((float)(int)color.R * x);
  								color.G = (byte)((float)(int)color.G * y);
  								color.B = (byte)((float)(int)color.B * z);
@@ -4244,7 +4088,7 @@
  								}
  							}
  						}
-@@ -46149,14 +_,14 @@
+@@ -46142,14 +_,14 @@
  							if (localShimmerAlpha > 0f)
  								color *= 1f - localShimmerAlpha;
  
@@ -4261,7 +4105,7 @@
  							}
  						}
  					}
-@@ -46188,14 +_,14 @@
+@@ -46181,14 +_,14 @@
  				color.R = (byte)((float)(int)color.R * x);
  				color.G = (byte)((float)(int)color.G * y);
  				color.B = (byte)((float)(int)color.B * z);
@@ -4278,7 +4122,7 @@
  				}
  			}
  		}
-@@ -46216,7 +_,7 @@
+@@ -46209,7 +_,7 @@
  				num = num2;
  		}
  
@@ -4287,7 +4131,7 @@
  	}
  
  	private void DrawBackground_DirtBackground(float localShimmerAlpha, int q1, int q2, ref Vector2 drawOffset, ref Vector3 backgroundColor)
-@@ -46271,7 +_,7 @@
+@@ -46264,7 +_,7 @@
  								Lighting.GetCornerColors(num4, num5, out var vertices);
  								vertices.BottomLeftColor = new Microsoft.Xna.Framework.Color(vertices.BottomLeftColor.ToVector3() * backgroundColor);
  								vertices.BottomRightColor = new Microsoft.Xna.Framework.Color(vertices.BottomRightColor.ToVector3() * backgroundColor);
@@ -4296,7 +4140,7 @@
  							}
  							else if ((color.R > q1 || (double)(int)color.G > (double)q1 * 1.1 || (double)(int)color.B > (double)q1 * 1.2) && !tile[num4, num5].active() && WallLightAt(num4, num5) && ugBackTransition == 0f) {
  								Lighting.GetColor9Slice(num4, num5, ref _drawbackground_colorSlices);
-@@ -46345,14 +_,14 @@
+@@ -46338,14 +_,14 @@
  										color2.R = (byte)((float)(int)color2.R * x);
  										color2.G = (byte)((float)(int)color2.G * y);
  										color2.B = (byte)((float)(int)color2.B * z);
@@ -4313,7 +4157,7 @@
  										}
  									}
  								}
-@@ -46360,7 +_,7 @@
+@@ -46353,7 +_,7 @@
  									color.R = (byte)((float)(int)color.R * x);
  									color.G = (byte)((float)(int)color.G * y);
  									color.B = (byte)((float)(int)color.B * z);
@@ -4322,7 +4166,7 @@
  								}
  							}
  							else if ((color.R > q2 || (double)(int)color.G > (double)q2 * 1.1 || (double)(int)color.B > (double)q2 * 1.2) && ugBackTransition == 0f) {
-@@ -46389,14 +_,14 @@
+@@ -46382,14 +_,14 @@
  									color5.R = (byte)((float)(int)color5.R * x);
  									color5.G = (byte)((float)(int)color5.G * y);
  									color5.B = (byte)((float)(int)color5.B * z);
@@ -4339,7 +4183,7 @@
  									}
  								}
  							}
-@@ -46404,14 +_,14 @@
+@@ -46397,14 +_,14 @@
  								color.R = (byte)((float)(int)color.R * x);
  								color.G = (byte)((float)(int)color.G * y);
  								color.B = (byte)((float)(int)color.B * z);
@@ -4356,7 +4200,7 @@
  								}
  							}
  						}
-@@ -46422,7 +_,7 @@
+@@ -46415,7 +_,7 @@
  							if (localShimmerAlpha > 0f)
  								color *= 1f - localShimmerAlpha;
  
@@ -4365,7 +4209,7 @@
  						}
  					}
  				}
-@@ -46456,7 +_,7 @@
+@@ -46449,7 +_,7 @@
  									vertices2.BottomRightColor.A = a;
  									vertices2.TopLeftColor.A = a;
  									vertices2.TopRightColor.A = a;
@@ -4374,7 +4218,7 @@
  								}
  							}
  						}
-@@ -46487,14 +_,14 @@
+@@ -46480,14 +_,14 @@
  				if (localShimmerAlpha > 0f)
  					color10 *= 1f - localShimmerAlpha;
  
@@ -4391,7 +4235,7 @@
  				}
  			}
  		}
-@@ -46525,7 +_,7 @@
+@@ -46518,7 +_,7 @@
  				if (localShimmerAlpha > 0f)
  					color *= 1f - localShimmerAlpha;
  
@@ -4400,7 +4244,7 @@
  			}
  		}
  
-@@ -46552,7 +_,7 @@
+@@ -46545,7 +_,7 @@
  				color3.G = (byte)((float)(int)color3.G * ugBackTransition);
  				color3.B = (byte)((float)(int)color3.B * ugBackTransition);
  				color3.A = (byte)((float)(int)color3.A * ugBackTransition);
@@ -4409,7 +4253,7 @@
  			}
  		}
  	}
-@@ -47075,14 +_,14 @@
+@@ -47068,14 +_,14 @@
  				color.R = (byte)((float)(int)color.R * num4);
  				color.G = (byte)((float)(int)color.G * num5);
  				color.B = (byte)((float)(int)color.B * num6);
@@ -4426,7 +4270,7 @@
  				}
  			}
  		}
-@@ -47129,7 +_,7 @@
+@@ -47122,7 +_,7 @@
  							if (color3.R > 0 || color3.G > 0 || color3.B > 0) {
  								if (!drawToScreen) {
  									Lighting.GetCornerColors(num23, num24, out var vertices);
@@ -4435,7 +4279,7 @@
  								}
  								else if ((color3.R > num || (double)(int)color3.G > (double)num * 1.1 || (double)(int)color3.B > (double)num * 1.2) && !tile[num23, num24].active() && WallLightAt(num23, num24) && ugBackTransition == 0f) {
  									Lighting.GetColor9Slice(num23, num24, ref slices);
-@@ -47203,14 +_,14 @@
+@@ -47196,14 +_,14 @@
  											color4.R = (byte)((float)(int)color4.R * num4);
  											color4.G = (byte)((float)(int)color4.G * num5);
  											color4.B = (byte)((float)(int)color4.B * num6);
@@ -4452,7 +4296,7 @@
  											}
  										}
  									}
-@@ -47218,7 +_,7 @@
+@@ -47211,7 +_,7 @@
  										color3.R = (byte)((float)(int)color3.R * num4);
  										color3.G = (byte)((float)(int)color3.G * num5);
  										color3.B = (byte)((float)(int)color3.B * num6);
@@ -4461,7 +4305,7 @@
  									}
  								}
  								else if ((color3.R > num2 || (double)(int)color3.G > (double)num2 * 1.1 || (double)(int)color3.B > (double)num2 * 1.2) && ugBackTransition == 0f) {
-@@ -47247,14 +_,14 @@
+@@ -47240,14 +_,14 @@
  										color7.R = (byte)((float)(int)color7.R * num4);
  										color7.G = (byte)((float)(int)color7.G * num5);
  										color7.B = (byte)((float)(int)color7.B * num6);
@@ -4478,7 +4322,7 @@
  										}
  									}
  								}
-@@ -47262,14 +_,14 @@
+@@ -47255,14 +_,14 @@
  									color3.R = (byte)((float)(int)color3.R * num4);
  									color3.G = (byte)((float)(int)color3.G * num5);
  									color3.B = (byte)((float)(int)color3.B * num6);
@@ -4495,7 +4339,7 @@
  									}
  								}
  							}
-@@ -47277,7 +_,7 @@
+@@ -47270,7 +_,7 @@
  								color3.R = (byte)((float)(int)color3.R * num4);
  								color3.G = (byte)((float)(int)color3.G * num5);
  								color3.B = (byte)((float)(int)color3.B * num6);
@@ -4504,7 +4348,7 @@
  							}
  						}
  					}
-@@ -47303,7 +_,7 @@
+@@ -47296,7 +_,7 @@
  									vertices2.BottomRightColor.A = a;
  									vertices2.TopLeftColor.A = a;
  									vertices2.TopRightColor.A = a;
@@ -4513,7 +4357,7 @@
  								}
  							}
  						}
-@@ -47325,14 +_,14 @@
+@@ -47318,14 +_,14 @@
  							color12.R = (byte)((float)(int)color12.R * num4);
  							color12.G = (byte)((float)(int)color12.G * num5);
  							color12.B = (byte)((float)(int)color12.B * num6);
@@ -4530,7 +4374,7 @@
  							}
  						}
  					}
-@@ -47446,14 +_,14 @@
+@@ -47439,14 +_,14 @@
  										color15.R = (byte)((float)(int)color15.R * num4);
  										color15.G = (byte)((float)(int)color15.G * num5);
  										color15.B = (byte)((float)(int)color15.B * num6);
@@ -4547,7 +4391,7 @@
  										}
  									}
  								}
-@@ -47483,14 +_,14 @@
+@@ -47476,14 +_,14 @@
  										color18.R = (byte)((float)(int)color18.R * num4);
  										color18.G = (byte)((float)(int)color18.G * num5);
  										color18.B = (byte)((float)(int)color18.B * num6);
@@ -4564,7 +4408,7 @@
  										}
  									}
  								}
-@@ -47498,14 +_,14 @@
+@@ -47491,14 +_,14 @@
  									color14.R = (byte)((float)(int)color14.R * num4);
  									color14.G = (byte)((float)(int)color14.G * num5);
  									color14.B = (byte)((float)(int)color14.B * num6);
@@ -4581,7 +4425,7 @@
  									}
  								}
  							}
-@@ -47513,14 +_,14 @@
+@@ -47506,14 +_,14 @@
  								color14.R = (byte)((float)(int)color14.R * num4);
  								color14.G = (byte)((float)(int)color14.G * num5);
  								color14.B = (byte)((float)(int)color14.B * num6);
@@ -4598,7 +4442,7 @@
  								}
  							}
  						}
-@@ -47542,14 +_,14 @@
+@@ -47535,14 +_,14 @@
  						color23.R = (byte)((float)(int)color23.R * num4);
  						color23.G = (byte)((float)(int)color23.G * num5);
  						color23.B = (byte)((float)(int)color23.B * num6);
@@ -4615,7 +4459,7 @@
  						}
  					}
  				}
-@@ -47658,7 +_,7 @@
+@@ -47651,7 +_,7 @@
  										color26.R = (byte)((float)(int)color26.R * num4);
  										color26.G = (byte)((float)(int)color26.G * num5);
  										color26.B = (byte)((float)(int)color26.B * num6);
@@ -4624,7 +4468,7 @@
  									}
  								}
  								else if (color25.R > num2 || (double)(int)color25.G > (double)num2 * 1.1 || (double)(int)color25.B > (double)num2 * 1.2) {
-@@ -47687,21 +_,21 @@
+@@ -47680,21 +_,21 @@
  										color28.R = (byte)((float)(int)color28.R * num4);
  										color28.G = (byte)((float)(int)color28.G * num5);
  										color28.B = (byte)((float)(int)color28.B * num6);
@@ -4649,7 +4493,7 @@
  							}
  						}
  					}
-@@ -48027,7 +_,7 @@
+@@ -48020,7 +_,7 @@
  			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise);
  			flag = true;
  			DrawMapFullscreenBackground(screenPosition, screenWidth, screenHeight);
@@ -4658,7 +4502,7 @@
  			spriteBatch.Draw(TextureAssets.Map.Value, destinationRectangle, Microsoft.Xna.Framework.Color.White);
  			if (mouseLeft && mouseLeftRelease) {
  				double totalSeconds = gameTime.TotalGameTime.TotalSeconds;
-@@ -48201,7 +_,7 @@
+@@ -48194,7 +_,7 @@
  						num43 -= 2f - num5 / 5f * 2f;
  						num42 -= 10f * num5;
  						num43 -= 10f * num5;
@@ -4667,7 +4511,7 @@
  						float num44 = num42 + 4f - 14f * num39;
  						float num45 = num43 + 2f - 14f * num39;
  						num44 -= 4f;
-@@ -48222,10 +_,10 @@
+@@ -48215,10 +_,10 @@
  				if (num48 > 1f)
  					num48 = 1f;
  
@@ -4681,7 +4525,7 @@
  				spriteBatch.End();
  				spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, transformMatrix2);
  				text = DrawNPCMapIcons2(text, num3, num4, num5, b, num10, num11, num12, num13, num48);
-@@ -48268,7 +_,7 @@
+@@ -48261,7 +_,7 @@
  					num49 += num10;
  					num50 += num11;
  					if (num49 > (float)(miniMapX + 8) && num49 < (float)(miniMapX + miniMapWidth - 18) && num50 > (float)(miniMapY + 8) && num50 < (float)(miniMapY + miniMapHeight - 16)) {
@@ -4690,7 +4534,7 @@
  						float num55 = num49 + 4f - 14f * num48;
  						float num56 = num50 + 2f - 14f * num48;
  						num55 -= 4f;
-@@ -48508,7 +_,7 @@
+@@ -48501,7 +_,7 @@
  					}
  				}
  
@@ -4699,7 +4543,7 @@
  			}
  
  			if (!gameMenu && !InGameUI.IsVisible)
-@@ -48770,11 +_,11 @@
+@@ -48763,11 +_,11 @@
  	{
  		for (int i = 0; i < maxSectionsX; i++) {
  			for (int j = 0; j < maxSectionsY; j++) {
@@ -4714,7 +4558,7 @@
  				}
  			}
  		}
-@@ -48782,10 +_,10 @@
+@@ -48775,10 +_,10 @@
  
  	private void DrawUnbreakableWallScansOnMap(float X, float Y, float left, float top, float scale)
  	{
@@ -4728,7 +4572,7 @@
  			bool num = UnbreakableWallScan.LineScan(point, point2);
  			Vector2 vector2 = vector + point2.ToVector2() * UnbreakableWallScan.ScanDistance;
  			Microsoft.Xna.Framework.Color color = (num ? Microsoft.Xna.Framework.Color.Red : Microsoft.Xna.Framework.Color.Yellow);
-@@ -48876,7 +_,7 @@
+@@ -48869,7 +_,7 @@
  		if (num > -1)
  			asset = TextureAssets.MapBGs[num];
  
@@ -4737,7 +4581,7 @@
  	}
  
  	private static bool DrawPlayerDeathMarker(float X, float Y, float scale, float left, float top, float headScale, int i, int alpha)
-@@ -48888,7 +_,7 @@
+@@ -48881,7 +_,7 @@
  		num2 -= 2f - scale / 5f * 2f;
  		num -= 10f * scale;
  		num2 -= 10f * scale;
@@ -4746,7 +4590,7 @@
  		float num3 = num + 4f - 14f * headScale;
  		float num4 = num2 + 2f - 14f * headScale;
  		float num5 = num3 + 28f * headScale;
-@@ -48899,14 +_,14 @@
+@@ -48892,14 +_,14 @@
  		return false;
  	}
  
@@ -4763,7 +4607,7 @@
  	{
  		Vector2? potionOfReturnOriginalUsePosition = LocalPlayer.PotionOfReturnOriginalUsePosition;
  		if (!potionOfReturnOriginalUsePosition.HasValue)
-@@ -48918,7 +_,7 @@
+@@ -48911,7 +_,7 @@
  		vec = vec.Floor();
  		if (!mapRect.HasValue || mapRect.Value.Contains(vec.ToPoint())) {
  			Texture2D value = TextureAssets.Extra[173].Value;
@@ -4772,7 +4616,7 @@
  			spriteBatch.Draw(value, vec, rectangle, Microsoft.Xna.Framework.Color.White, 0f, rectangle.Size() / 2f, drawScale, SpriteEffects.None, 0f);
  			if (Utils.CenteredRectangle(vec, rectangle.Size() * drawScale).Contains(MouseScreen.ToPoint())) {
  				mouseTextString = Language.GetTextValue("GameUI.PotionOfReturnExitPortal");
-@@ -48927,7 +_,7 @@
+@@ -48920,7 +_,7 @@
  		}
  	}
  
@@ -4781,7 +4625,7 @@
  	{
  		Vector2? potionOfReturnHomePosition = LocalPlayer.PotionOfReturnHomePosition;
  		if (!potionOfReturnHomePosition.HasValue)
-@@ -48939,7 +_,7 @@
+@@ -48932,7 +_,7 @@
  		vec = vec.Floor();
  		if (!mapRect.HasValue || mapRect.Value.Contains(vec.ToPoint())) {
  			Texture2D value = TextureAssets.Extra[175].Value;
@@ -4790,7 +4634,7 @@
  			spriteBatch.Draw(value, vec, rectangle, Microsoft.Xna.Framework.Color.White, 0f, rectangle.Size() / 2f, drawScale, SpriteEffects.None, 0f);
  			if (Utils.CenteredRectangle(vec, rectangle.Size() * drawScale).Contains(MouseScreen.ToPoint())) {
  				mouseTextString = Language.GetTextValue("GameUI.PotionOfReturnHomePortal");
-@@ -48948,7 +_,7 @@
+@@ -48941,7 +_,7 @@
  		}
  	}
  
@@ -4799,7 +4643,7 @@
  	{
  		Projectile lastHitBall = LocalGolfState.GetLastHitBall();
  		if (lastHitBall == null)
-@@ -48960,9 +_,9 @@
+@@ -48953,9 +_,9 @@
  		vec = vec.Floor();
  		if (!mapRect.HasValue || mapRect.Value.Contains(vec.ToPoint())) {
  			Texture2D value = TextureAssets.Extra[176].Value;
@@ -4811,7 +4655,7 @@
  			LoadProjectile(lastHitBall.type);
  			value = TextureAssets.Projectile[lastHitBall.type].Value;
  			rectangle = value.Frame();
-@@ -48995,7 +_,7 @@
+@@ -48988,7 +_,7 @@
  		BossNPCHeadRenderer.DrawWithOutlines(bossHeadId, new Vector2(x, y), new Microsoft.Xna.Framework.Color(alpha, alpha, alpha, alpha), rotation, headScale, effects);
  	}
  
@@ -4820,7 +4664,7 @@
  	{
  		float num = 2f * scale;
  		Microsoft.Xna.Framework.Color white = Microsoft.Xna.Framework.Color.White;
-@@ -49090,7 +_,7 @@
+@@ -49083,7 +_,7 @@
  		}
  	}
  
@@ -4829,7 +4673,7 @@
  	{
  		float[] array = bgAlphaFrontLayer;
  		bgAlphaFrontLayer = new float[array.Length];
-@@ -49166,7 +_,7 @@
+@@ -49159,7 +_,7 @@
  		val3 = Math.Max(val3, 5);
  		val2 = Math.Min(val2, maxTilesX - 5) + 2;
  		val4 = Math.Min(val4, maxTilesY - 5) + 4;
@@ -4838,7 +4682,7 @@
  		LiquidRenderer.Instance.PrepareDraw(drawArea);
  		WorldGen.SectionTileFrameWithCheck(area.Left, area.Top, area.Right, area.Bottom);
  		base.GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Transparent);
-@@ -49198,7 +_,7 @@
+@@ -49191,7 +_,7 @@
  				transform = Matrix.CreateScale(vector5.X, vector5.Y, 1f) * Matrix.CreateTranslation(vector6.X, vector6.Y, 0f) * transform;
  			}
  			else {
@@ -4847,7 +4691,7 @@
  				int num11 = 2048;
  				float num12 = MathHelper.Clamp((float)rectangle.Height * 16f / (float)num11, 1f, 3f);
  				screenWidth = (int)Math.Ceiling((float)(rectangle.Width * 16) / num12);
-@@ -49208,18 +_,18 @@
+@@ -49201,18 +_,18 @@
  				float num13 = (float)maxTilesY * 0.15f;
  				verticalParallaxOverride = (float)Utils.Remap(screenPosition.Y, worldSurface * 16.0, num13 * 16f, -1.0, -0.5);
  				int num14 = -120;
@@ -4869,7 +4713,7 @@
  			worldRect.Inflate(Math.Max(0, minScreenW - screenWidth) / 2, Math.Max(0, minScreenH - screenHeight) / 2);
  			worldRect = WorldUtils.ClampToWorldBorders(worldRect);
  			transform = Matrix.CreateTranslation((worldRect.TopLeft() - screenPosition).ToVector3()) * transform;
-@@ -49253,9 +_,9 @@
+@@ -49246,9 +_,9 @@
  				DrawUnderworldBackground(GameZoomTarget);
  			}
  			else {
@@ -4882,7 +4726,7 @@
  				int num16 = Utils.Clamp(rectangle2.Center.Y * 16, value.Top * 16 + y2 / 2, value.Bottom * 16 - y2 / 2);
  				screenPosition.Y = num16 - y2 / 2;
  				screenPosition.X = rectangle2.Left * 16;
-@@ -49730,7 +_,7 @@
+@@ -49723,7 +_,7 @@
  
  		if (!drawToScreen && !isBackground) {
  			TileDrawing.GetScreenDrawArea(!drawToScreen, out var _, out var firstTileX, out var lastTileX, out var firstTileY, out var lastTileY);
@@ -4891,7 +4735,7 @@
  			LiquidRenderer.Instance.PrepareDraw(drawArea);
  		}
  
-@@ -49743,6 +_,10 @@
+@@ -49736,6 +_,10 @@
  		}
  
  		DrawLiquid(isBackground, waterStyle, flag ? liquidAlpha[waterStyle] : 1f);
@@ -4902,7 +4746,7 @@
  		if (isBackground)
  			TimeLogger.DrawBackgroundWaterTiles.AddTime(fromTimestamp);
  		else
-@@ -49757,7 +_,7 @@
+@@ -49750,7 +_,7 @@
  		}
  
  		Vector2 drawOffset = (drawToScreen ? Vector2.Zero : new Vector2(offScreenRange, offScreenRange)) - screenPosition;
@@ -4911,7 +4755,7 @@
  			TilesRenderer.DrawLiquidBehindTiles(waterStyle);
  
  		LiquidRenderer.Instance.DrawNormalLiquids(spriteBatch, drawOffset, waterStyle, Alpha, bg, waterOnly);
-@@ -49775,7 +_,7 @@
+@@ -49768,7 +_,7 @@
  			if (WorldGen.SolidTile(x, y - 1) && num > 8)
  				num = 8;
  
@@ -4920,7 +4764,7 @@
  			Texture2D tileDrawTexture = instance.TilesRenderer.GetTileDrawTexture(Main.tile[x, y], x, y);
  			spriteBatch.Draw(tileDrawTexture, new Vector2(x * 16, y * 16 - num) + drawOffset, value, Lighting.GetColor(x, y), 0f, default(Vector2), 1f, SpriteEffects.None, 0f);
  		}
-@@ -49873,7 +_,7 @@
+@@ -49866,7 +_,7 @@
  
  				DrawTileInWater(-screenPosition + vector, j, i);
  				Vector2 vector2 = new Vector2(j * 16, i * 16 + (int)num11 * 2);
@@ -4929,7 +4773,7 @@
  				bool flag2 = true;
  				if (tile[j, i + 1].liquid < 245 && (!tile[j, i + 1].nactive() || !tileSolid[tile[j, i + 1].type] || tileSolidTop[tile[j, i + 1].type])) {
  					float num18 = 256 - tile[j, i + 1].liquid;
-@@ -49891,34 +_,34 @@
+@@ -49884,34 +_,34 @@
  							continue;
  
  						if (tile[j, i - 1].liquid > 0 && tile[j, i - 1].liquid > 0) {
@@ -4971,7 +4815,7 @@
  				}
  				else {
  					for (int k = i + 1; k < i + 6 && (!tile[j, k].nactive() || !tileSolid[tile[j, k].type] || tileSolidTop[tile[j, k].type]); k++) {
-@@ -49930,10 +_,10 @@
+@@ -49923,10 +_,10 @@
  
  					if (!flag2) {
  						num17 = 0.5f;
@@ -4984,7 +4828,7 @@
  					}
  				}
  
-@@ -50040,9 +_,9 @@
+@@ -50033,9 +_,9 @@
  							if (flag)
  								color3 = new Microsoft.Xna.Framework.Color(color3.ToVector4() * LiquidRenderer.GetShimmerBaseColor(j, i));
  
@@ -4996,7 +4840,7 @@
  						}
  					}
  					else {
-@@ -50077,9 +_,9 @@
+@@ -50070,9 +_,9 @@
  					color = new Microsoft.Xna.Framework.Color(color.ToVector4() * LiquidRenderer.GetShimmerBaseColor(j, i));
  
  				vector2 = new Vector2(j * 16, i * 16 + 16);
@@ -5008,7 +4852,7 @@
  
  				float num29 = 6f;
  				float num30 = 0.75f;
-@@ -50096,9 +_,9 @@
+@@ -50089,9 +_,9 @@
  					float num32 = 1f - (float)m / num29;
  					num32 *= num30;
  					vector2 = new Vector2(j * 16, num31 * 16 - 2);
@@ -5020,7 +4864,7 @@
  				}
  			}
  		}
-@@ -50112,8 +_,125 @@
+@@ -50105,8 +_,125 @@
  		drewLava = true;
  	}
  
@@ -5146,7 +4990,7 @@
  		if (shimmerAlpha == 1f)
  			return;
  
-@@ -50144,6 +_,7 @@
+@@ -50137,6 +_,7 @@
  			}
  		}
  
@@ -5154,7 +4998,7 @@
  		bool flag = ShouldShowInvisibleBlocksAndWalls();
  		for (int i = firstTileY; i < lastTileY; i++) {
  			bool flag2 = i >= UnderworldLayer;
-@@ -50159,9 +_,17 @@
+@@ -50152,9 +_,17 @@
  					if (Main.tile[j, i] == null)
  						Main.tile[j, i] = new Tile();
  
@@ -5172,7 +5016,7 @@
  					byte b = tile.liquid;
  					bool num5 = num4 <= num2 && ((!flag2 && b < 250) || WorldGen.SolidTile(tile) || (b >= 200 && num4 == 0f));
  					bool flag3 = tile.active() && tileBlockLight[tile.type] && (!tile.invisibleBlock() || flag);
-@@ -50171,12 +_,79 @@
+@@ -50164,12 +_,79 @@
  				}
  
  				if (j - num3 > 0)
@@ -5253,7 +5097,7 @@
  	}
  
  	public static bool ShouldShowInvisibleBlocksAndWalls()
-@@ -50297,8 +_,8 @@
+@@ -50290,8 +_,8 @@
  			UpdateDisplaySettings();
  
  		ReleaseTargets();
@@ -5264,7 +5108,7 @@
  		offScreenRange = 192;
  		if (num + offScreenRange * 2 > _renderTargetMaxSize)
  			offScreenRange = (_renderTargetMaxSize - num) / 2;
-@@ -50337,7 +_,7 @@
+@@ -50330,7 +_,7 @@
  	protected void DrawWires()
  	{
  		TimeLogger.StartTimestamp fromTimestamp = TimeLogger.Start();
@@ -5273,7 +5117,7 @@
  		Vector2 zero = Vector2.Zero;
  		DrawWiresSpecialTiles.Clear();
  		bool flag = !WiresUI.Settings.HideWires;
-@@ -50500,28 +_,28 @@
+@@ -50493,28 +_,28 @@
  							spriteBatch.Draw(TextureAssets.WireNew.Value, new Vector2(j * 16 - (int)screenPosition.X, i * 16 - (int)screenPosition.Y) + drawOffSet, value, color2 * (1f / num7), 0f, zero, 1f, SpriteEffects.None, 0f);
  							if (flag8) {
  								if (flag10 && !flag4)
@@ -5306,7 +5150,7 @@
  
  								flag2 = true;
  							}
-@@ -50585,28 +_,28 @@
+@@ -50578,28 +_,28 @@
  							spriteBatch.Draw(TextureAssets.WireNew.Value, new Vector2(j * 16 - (int)screenPosition.X, i * 16 - (int)screenPosition.Y) + drawOffSet, value, color3 * (1f / num7), 0f, zero, 1f, SpriteEffects.None, 0f);
  							if (flag8) {
  								if (flag10 && !flag4)
@@ -5339,7 +5183,7 @@
  
  								flag2 = true;
  							}
-@@ -50670,28 +_,28 @@
+@@ -50663,28 +_,28 @@
  							spriteBatch.Draw(TextureAssets.WireNew.Value, new Vector2(j * 16 - (int)screenPosition.X, i * 16 - (int)screenPosition.Y) + drawOffSet, value, color4 * (1f / num7), 0f, zero, 1f, SpriteEffects.None, 0f);
  							if (flag8) {
  								if (flag10 && !flag4)
@@ -5372,7 +5216,7 @@
  
  								flag2 = true;
  							}
-@@ -50713,7 +_,7 @@
+@@ -50706,7 +_,7 @@
  							break;
  					}
  
@@ -5381,7 +5225,7 @@
  				}
  
  				if (tile.active()) {
-@@ -51316,7 +_,7 @@
+@@ -51309,7 +_,7 @@
  					ColorOfSurfaceBackgroundsModified = colorOfSurfaceBackgroundsBase * num9;
  					SkyManager.Instance.DrawToDepth(spriteBatch, 1f / (float)bgParallax);
  					for (int i = 0; i < bgLoops; i++) {
@@ -5390,7 +5234,7 @@
  					}
  
  					num9 = cloudBGAlpha * 1.5f;
-@@ -51345,7 +_,7 @@
+@@ -51338,7 +_,7 @@
  					bgLoops = screenWidth / (int)num10 + 2 + 2;
  					SkyManager.Instance.DrawToDepth(spriteBatch, 1f / (float)bgParallax);
  					for (int j = 0; j < bgLoops; j++) {
@@ -5399,7 +5243,7 @@
  					}
  				}
  
-@@ -51387,8 +_,8 @@
+@@ -51380,8 +_,8 @@
  					LoadBackground(18);
  					LoadBackground(19);
  					for (int k = 0; k < bgLoops; k++) {
@@ -5410,7 +5254,7 @@
  					}
  				}
  			}
-@@ -51515,7 +_,7 @@
+@@ -51508,7 +_,7 @@
  				bgStartX = 0;
  				Microsoft.Xna.Framework.Color color2 = ColorOfTheSkies * num20 * atmo;
  				int height = Math.Max(screenHeight + 210, value.Height);
@@ -5419,7 +5263,7 @@
  			}
  		}
  
-@@ -52141,7 +_,7 @@
+@@ -52134,7 +_,7 @@
  			bgLoops = screenWidth / bgWidthScaled + 2;
  			if ((double)screenPosition.Y < worldSurface * 16.0 + 16.0) {
  				for (int i = 0; i < bgLoops; i++) {
@@ -5428,7 +5272,7 @@
  				}
  			}
  		}
-@@ -52165,7 +_,7 @@
+@@ -52158,7 +_,7 @@
  			bgLoops = screenWidth / bgWidthScaled + 2;
  			if ((double)screenPosition.Y < worldSurface * 16.0 + 16.0) {
  				for (int j = 0; j < bgLoops; j++) {
@@ -5437,7 +5281,7 @@
  				}
  			}
  		}
-@@ -52191,7 +_,7 @@
+@@ -52184,7 +_,7 @@
  		bgLoops = screenWidth / bgWidthScaled + 2;
  		if ((double)screenPosition.Y < worldSurface * 16.0 + 16.0) {
  			for (int k = 0; k < bgLoops; k++) {
@@ -5446,7 +5290,7 @@
  			}
  		}
  	}
-@@ -52696,7 +_,7 @@
+@@ -52689,7 +_,7 @@
  		bgLoops = screenWidth / bgWidthScaled + 2;
  		if ((double)screenPosition.Y < worldSurface * 16.0 + 16.0) {
  			for (int i = 0; i < bgLoops; i++) {
@@ -5455,7 +5299,7 @@
  			}
  		}
  
-@@ -52716,7 +_,7 @@
+@@ -52709,7 +_,7 @@
  		bgLoops = screenWidth / bgWidthScaled + 2;
  		if ((double)screenPosition.Y < worldSurface * 16.0 + 16.0) {
  			for (int j = 0; j < bgLoops; j++) {
@@ -5464,7 +5308,7 @@
  			}
  		}
  	}
-@@ -52880,7 +_,7 @@
+@@ -52873,7 +_,7 @@
  		float flashPower = WorldGen.BackgroundsCache.GetFlashPower(backgroundAreaId);
  		Microsoft.Xna.Framework.Color color = Microsoft.Xna.Framework.Color.Black * flashPower;
  		if (!(color == Microsoft.Xna.Framework.Color.Transparent))
@@ -5473,7 +5317,7 @@
  	}
  
  	private void DrawSurfaceBG_Corrupt(float backgroundTopMagicNumber, float bgGlobalScaleMultiplier, int pushBGTopHack, int[] bgTexIndexes)
-@@ -52906,7 +_,7 @@
+@@ -52899,7 +_,7 @@
  		bgLoops = screenWidth / bgWidthScaled + 2;
  		if ((double)screenPosition.Y < worldSurface * 16.0 + 16.0) {
  			for (int i = 0; i < bgLoops; i++) {
@@ -5482,7 +5326,7 @@
  			}
  		}
  
-@@ -52936,7 +_,7 @@
+@@ -52929,7 +_,7 @@
  				Texture2D value = TextureAssets.Background[bgTexIndexes[1]].Value;
  				if (value != null) {
  					for (int j = 0; j < bgLoops; j++) {
@@ -5491,7 +5335,7 @@
  					}
  				}
  			}
-@@ -52969,7 +_,7 @@
+@@ -52962,7 +_,7 @@
  		try {
  			if ((double)screenPosition.Y < worldSurface * 16.0 + 16.0) {
  				for (int k = 0; k < bgLoops; k++) {
@@ -5500,7 +5344,7 @@
  				}
  			}
  		}
-@@ -52978,10 +_,10 @@
+@@ -52971,10 +_,10 @@
  		}
  	}
  
@@ -5513,7 +5357,7 @@
  		switch (backgroundTextureIndex) {
  			case 235:
  				num = (int)(GetBackgroundCounter() / 20u) % 4;
-@@ -53244,7 +_,7 @@
+@@ -53237,7 +_,7 @@
  		value = MathHelper.Clamp(value, 0f, screenHeight);
  		value2 = MathHelper.Clamp(value2, 0f, screenHeight);
  		if (value2 - value > 0f)
@@ -5522,7 +5366,7 @@
  	}
  
  	public void DrawTileCracks(int crackType, HitTile hitter)
-@@ -53309,7 +_,7 @@
+@@ -53302,7 +_,7 @@
  				else if (damage >= 20)
  					num3 = 0;
  
@@ -5531,7 +5375,7 @@
  				if (flag4)
  					value.X = (4 + hitter.data[i].crackStyle / 2) * 18;
  
-@@ -53427,7 +_,7 @@
+@@ -53420,7 +_,7 @@
  		TimeLogger.PrepareRequests.AddTime(fromTimestamp3);
  		if (loadMap) {
  			refreshMap = false;
@@ -5540,7 +5384,7 @@
  		}
  
  		if (Lighting.UpdateEveryFrame)
-@@ -53553,7 +_,7 @@
+@@ -53546,7 +_,7 @@
  				updateMap = null;
  			}
  			else if (MapRenderer.ChangesQueued) {
@@ -5549,7 +5393,7 @@
  			}
  		}
  
-@@ -53627,8 +_,8 @@
+@@ -53620,8 +_,8 @@
  		if (DebugOptions.DrawWaitInMs > 0.0)
  			ThreadUtilities.HighPrecisionSleep(DebugOptions.DrawWaitInMs);
  
@@ -5560,7 +5404,7 @@
  		ForcedMinimumZoom = Math.Max(Math.Max(1f, val), val2);
  		GameViewMatrix.Effects = ((!gameMenu && player[myPlayer].gravDir != 1f) ? SpriteEffects.FlipVertically : SpriteEffects.None);
  		BackgroundViewMatrix.Effects = GameViewMatrix.Effects;
-@@ -53686,7 +_,7 @@
+@@ -53679,7 +_,7 @@
  				TimeLogger.StartTimestamp fromTimestamp5 = TimeLogger.Start();
  				spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, DefaultSamplerState, DepthStencilState.None, Rasterizer, null, matrix);
  				Asset<Texture2D> asset = TextureAssets.Background[background];
@@ -5569,7 +5413,7 @@
  				if (destinationRectangle.Bottom < asset.Height()) {
  					int num10 = asset.Height() - destinationRectangle.Bottom;
  					destinationRectangle.Height += num10;
-@@ -54023,7 +_,7 @@
+@@ -54016,7 +_,7 @@
  					num20 = 255;
  
  				BlackFadeIn -= 25;
@@ -5578,7 +5422,7 @@
  			}
  
  			spriteBatch.End();
-@@ -54116,7 +_,7 @@
+@@ -54109,7 +_,7 @@
  			trackedPosition = LocalPlayer.Center;
  		}
  
@@ -5587,7 +5431,7 @@
  		areaToLight.Inflate(28, 28);
  		SceneMetrics.Scan(new SceneMetricsScanSettings {
  			VisualScanArea = areaToLight,
-@@ -54466,17 +_,17 @@
+@@ -54459,17 +_,17 @@
  			moonColor *= num13;
  			Vector2 position = new Vector2(num6, num7 + moonModY);
  			if (WorldGen.drunkWorldGen)
@@ -5611,19 +5455,7 @@
  		sunModY = (short)((double)sunModY * 0.999);
  		moonModY = (short)((double)moonModY * 0.999);
  		if (gameMenu && netMode != 1) {
-@@ -54714,9 +_,9 @@
- 	private void DrawRainInMenu()
- 	{
- 		bool flag = base.IsActive;
--		Microsoft.Xna.Framework.Rectangle[] array = new Microsoft.Xna.Framework.Rectangle[6];
-+		System.Drawing.Rectangle[] array = new System.Drawing.Rectangle[6];
- 		for (int i = 0; i < array.Length; i++) {
--			array[i] = new Microsoft.Xna.Framework.Rectangle(i * 4, 0, 2, 40);
-+			array[i] = new System.Drawing.Rectangle(i * 4, 0, 2, 40);
- 		}
- 
- 		Microsoft.Xna.Framework.Color color = ColorOfTheSkies * 0.85f;
-@@ -55315,7 +_,7 @@
+@@ -55289,7 +_,7 @@
  		ColorOfTheSkies = bgColorToSet;
  	}
  
@@ -5632,7 +5464,7 @@
  	{
  		Vector2 vector = Camera.ScaledPosition;
  		Vector2 vector2 = Camera.ScaledSize;
-@@ -55328,13 +_,13 @@
+@@ -55302,13 +_,13 @@
  		int num2 = (int)Math.Floor((vector.X + vector2.X) / 16f) + 2;
  		int num3 = (int)Math.Floor(vector.Y / 16f) - 1;
  		int num4 = (int)Math.Floor((vector.Y + vector2.Y) / 16f) + 2;
@@ -5648,7 +5480,7 @@
  			Vector2 input = worldPlayArea.TopLeft() - GameViewMatrix.Translation;
  			Vector2 input2 = worldPlayArea.BottomRight() - Camera.ScaledSize - GameViewMatrix.Translation;
  			input = Utils.Round(input);
-@@ -55648,7 +_,7 @@
+@@ -55623,7 +_,7 @@
  					num4 -= num2 * 2f;
  
  				float num5 = MathHelper.Lerp(0.8f, 0f, Math.Abs(num4 - num3) * 10f);
@@ -5657,7 +5489,7 @@
  			}
  		}
  	}
-@@ -57439,8 +_,15 @@
+@@ -57413,8 +_,15 @@
  			Console.WriteLine(Language.GetTextValue("Misc.ResolutionChanged", width, height));
  		}
  

@@ -21,7 +21,7 @@
  using Terraria.Utilities;
  using Terraria.WorldBuilding;
  
-@@ -770,6 +_,7 @@
+@@ -787,6 +_,7 @@
  					continue;
  				}
  
@@ -29,7 +29,7 @@
  				Tile tile = new Tile(Main.tile[num6, num7]);
  				Tile tile2 = new Tile(Main.tile[num8, num9]);
  				Main.tile[num6, num7].active(tile2.active());
-@@ -782,6 +_,29 @@
+@@ -799,6 +_,29 @@
  				Main.tile[num8, num9].color(tile.color());
  				Main.tile[num8, num9].fullbrightBlock(tile.fullbrightBlock());
  				Main.tile[num8, num9].invisibleBlock(tile.invisibleBlock());
@@ -59,7 +59,7 @@
  			}
  
  			num3 = Main.maxTilesX / 2 / Variations.errorWorldAdjustment(1.0);
-@@ -843,6 +_,7 @@
+@@ -860,6 +_,7 @@
  
  				for (int num17 = 0; num17 < num10; num17++) {
  					for (int num18 = 0; num18 < num11; num18++) {
@@ -67,7 +67,7 @@
  						Tile tile3 = new Tile(Main.tile[num12 + num17, num13 + num18]);
  						Tile tile4 = new Tile(Main.tile[num14 + num17, num15 + num18]);
  						Main.tile[num12 + num17, num13 + num18].active(tile4.active());
-@@ -855,6 +_,29 @@
+@@ -872,6 +_,29 @@
  						Main.tile[num14 + num17, num15 + num18].color(tile3.color());
  						Main.tile[num14 + num17, num15 + num18].fullbrightBlock(tile3.fullbrightBlock());
  						Main.tile[num14 + num17, num15 + num18].invisibleBlock(tile3.invisibleBlock());
@@ -97,7 +97,7 @@
  					}
  				}
  			}
-@@ -885,7 +_,15 @@
+@@ -902,7 +_,15 @@
  				int num22 = genRand.Next(5, 21);
  				int num23 = num20;
  				int num24 = num21;
@@ -113,7 +113,7 @@
  				for (int num25 = 0; num25 < num22; num25++) {
  					num23 += (int)vector2D.X;
  					num24 += (int)vector2D.Y;
-@@ -894,11 +_,18 @@
+@@ -911,11 +_,18 @@
  
  					Main.tile[num20, num21].slope(0);
  					Main.tile[num20, num21].halfBrick(halfBrick: false);
@@ -132,7 +132,7 @@
  				}
  			}
  		}
-@@ -3816,7 +_,7 @@
+@@ -3833,7 +_,7 @@
  			return false;
  
  		Rectangle hitbox = Main.LocalPlayer.Hitbox;
@@ -141,7 +141,7 @@
  		NPC nPC = Main.npc[n];
  		Rectangle value = new Rectangle(nPC.homeTileX * 16, nPC.homeTileY * 16, 16, 16);
  		return hitbox.Intersects(value);
-@@ -5811,6 +_,7 @@
+@@ -5831,6 +_,7 @@
  		Main.treeStyle[3] = 0;
  		Liquid.numLiquid = 0;
  		LiquidBuffer.numLiquidBuffer = 0;
@@ -149,7 +149,7 @@
  		if (Main.netMode == 1 || lastMaxTilesX > Main.maxTilesX || lastMaxTilesY > Main.maxTilesY) {
  			for (int j = 0; j < lastMaxTilesX; j++) {
  				float num = (float)j / (float)lastMaxTilesX;
-@@ -5820,12 +_,14 @@
+@@ -5840,12 +_,14 @@
  				}
  			}
  		}
@@ -164,7 +164,7 @@
  		if (Main.netMode != 1) {
  			for (int l = 0; l < Main.maxTilesX; l++) {
  				float num2 = (float)l / (float)Main.maxTilesX;
-@@ -5838,6 +_,8 @@
+@@ -5858,6 +_,8 @@
  				}
  			}
  		}
@@ -173,7 +173,7 @@
  
  		for (int n = 0; n < Main.countsAsHostForGameplay.Length; n++) {
  			Main.countsAsHostForGameplay[n] = false;
-@@ -9216,6 +_,7 @@
+@@ -9236,6 +_,7 @@
  		generatingWorldOnThisThread = true;
  		bool flag = false;
  		try {
@@ -181,7 +181,7 @@
  			Console.WriteLine("Creating world - Seed: {0}, Width: {1}, Height: {2}, Evil: {3}, Difficulty: {4}", Main.ActiveWorldFileData.SeedText, Main.maxTilesX, Main.maxTilesY, WorldGenParam_Evil, Main.GameMode);
  			GenVars.configuration = WorldGenConfiguration.FromEmbeddedPath("Terraria.GameContent.WorldBuilding.Configuration.json");
  			Hooks.ProcessWorldGenConfig(ref GenVars.configuration);
-@@ -9225,6 +_,8 @@
+@@ -9245,6 +_,8 @@
  			AddPasses();
  			DisablePassesForSpecialSeeds(_generator._passes);
  			flag = _generator.GenerateWorld();
@@ -190,7 +190,7 @@
  			Finish();
  			return flag;
  		}
-@@ -19634,7 +_,9 @@
+@@ -19654,7 +_,9 @@
  			}
  
  			for (int j = num3; j < Main.maxTilesY; j++) {
@@ -200,7 +200,7 @@
  				Main.tile[i, j].active(active: true);
  				Main.tile[i, j].type = 57;
  			}
-@@ -24194,7 +_,7 @@
+@@ -24214,7 +_,7 @@
  	{
  		int treeHeight = 1;
  		int passStyle = -1;
@@ -209,7 +209,7 @@
  		for (int num = -1; num > -100; num--) {
  			Tile tile = Main.tile[x, y + num];
  			if (!tile.active() || !TileID.Sets.GetsCheckedForLeaves[tile.type])
-@@ -52036,7 +_,7 @@
+@@ -52056,7 +_,7 @@
  			return false;
  
  		Tile tile = Main.tile[i, j];
@@ -218,7 +218,7 @@
  		if (tile == null)
  			return false;
  
-@@ -60132,7 +_,7 @@
+@@ -60152,7 +_,7 @@
  				continue;
  
  			Rectangle tileRectangle = Utils.CenteredRectangle(player.Center.ToTileCoordinates(), Point.Zero);
@@ -227,7 +227,7 @@
  			tileRectangle = WorldUtils.ClampToWorld(tileRectangle, 10);
  			for (int j = 0; j < 300; j++) {
  				Point point = Main.rand.NextFromRectangle(tileRectangle);
-@@ -60380,7 +_,7 @@
+@@ -60400,7 +_,7 @@
  	private static void SpawnStormLightningNearPlayer(List<Rectangle> safespots, Player player)
  	{
  		Rectangle tileRectangle = Utils.CenteredRectangle(player.Center.ToTileCoordinates(), Point.Zero);
@@ -236,7 +236,7 @@
  		tileRectangle = WorldUtils.ClampToWorld(tileRectangle, 10);
  		if (tileRectangle.Width == 0 || tileRectangle.Height == 0)
  			return;
-@@ -68187,8 +_,12 @@
+@@ -68207,8 +_,12 @@
  								break;
  						}
  
@@ -249,7 +249,7 @@
  						bool flag = false;
  						switch (num) {
  							default:
-@@ -68219,8 +_,12 @@
+@@ -68239,8 +_,12 @@
  						if (up == 165 && flag && flag3)
  							up = num;
  

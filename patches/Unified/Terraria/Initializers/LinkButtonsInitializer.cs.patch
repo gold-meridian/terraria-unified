@@ -8,33 +8,33 @@
  
  namespace Terraria.Initializers;
  
-@@ -18,13 +_,37 @@
- 		titleLinks.Add(MakeSimpleButton("TitleLinks.Forums", "https://forums.terraria.org/index.php", 4));
- 		titleLinks.Add(MakeSimpleButton("TitleLinks.Merch", "https://terraria.org/store", 5));
- 		titleLinks.Add(MakeSimpleButton("TitleLinks.Wiki", "https://terraria.wiki.gg/", 6));
+@@ -19,13 +_,37 @@
+ 		titleLinks.Add(MakeSimpleButton("TitleLinks.Forums", "https://forums.terraria.org/index.php", 5));
+ 		titleLinks.Add(MakeSimpleButton("TitleLinks.Merch", "https://terraria.org/store", 6));
+ 		titleLinks.Add(MakeSimpleButton("TitleLinks.Wiki", "https://terraria.wiki.gg/", 7));
 +
 +		titleLinks = Main.UnifiedLinks;
 +		titleLinks.Add(MakeSimpleButton("TitleLinks.Discord", "https://discord.gg/yog", 0));
-+		titleLinks.Add(MakeSimpleButton("TitleLinks.Patreon", "https://patreon.com/c/steviegt6", 7));
-+		titleLinks.Add(MakeSimpleButton("TitleLinks.KoFi", "https://ko-fi.com/steviegt6", 8));
++		titleLinks.Add(MakeSimpleButton("TitleLinks.Patreon", "https://patreon.com/c/steviegt6", 8));
++		titleLinks.Add(MakeSimpleButton("TitleLinks.KoFi", "https://ko-fi.com/steviegt6", 9));
  	}
  
  	private static TitleLinkButton MakeSimpleButton(string textKey, string linkUrl, int horizontalFrameIndex)
  	{
 +		/*
  		Asset<Texture2D> asset = Main.Assets.Request<Texture2D>("Images/UI/TitleLinkButtons");
- 		Rectangle value = asset.Frame(7, 2, horizontalFrameIndex);
- 		Rectangle value2 = asset.Frame(7, 2, horizontalFrameIndex, 1);
+ 		Rectangle value = asset.Frame(8, 2, horizontalFrameIndex);
+ 		Rectangle value2 = asset.Frame(8, 2, horizontalFrameIndex, 1);
 +		*/
 +
-+		const int max_vanilla_frames = 7;
++		const int max_vanilla_frames = 8;
 +		Asset<Texture2D> asset;
 +		Rectangle value;
 +		Rectangle value2;
 +		if (horizontalFrameIndex < max_vanilla_frames) {
 +			asset = Main.Assets.Request<Texture2D>("Images/UI/TitleLinkButtons");
-+			value = asset.Frame(7, 2, horizontalFrameIndex);
-+			value2 = asset.Frame(7, 2, horizontalFrameIndex, 1);
++			value = asset.Frame(max_vanilla_frames, 2, horizontalFrameIndex);
++			value2 = asset.Frame(max_vanilla_frames, 2, horizontalFrameIndex, 1);
 +		}
 +		else {
 +			horizontalFrameIndex -= max_vanilla_frames;

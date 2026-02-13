@@ -1,6 +1,6 @@
 --- src/TerrariaNetCore/Terraria/NPC.cs
 +++ src/Unified/Terraria/NPC.cs
-@@ -4255,8 +_,8 @@
+@@ -4261,8 +_,8 @@
  
  		public static void SlimeRainSpawns(Player player)
  		{
@@ -11,7 +11,7 @@
  			float num = 15f;
  			if ((double)player.position.Y > Main.worldSurface * 16.0 + (double)(y / 2) || player.nearbyActiveNPCs > num)
  				return;
-@@ -44963,8 +_,13 @@
+@@ -44969,8 +_,13 @@
  			}
  		}
  
@@ -25,7 +25,7 @@
  
  		if (Main.tile[num6, num7].type == 666)
  			AddBuff(120, 180);
-@@ -60438,8 +_,10 @@
+@@ -60444,8 +_,10 @@
  					break;
  				}
  				if (velocity.X == 0f) {
@@ -36,7 +36,7 @@
  					frameCounter = 0.0;
  					break;
  				}
-@@ -75781,6 +_,8 @@
+@@ -75787,6 +_,8 @@
  			bool flag = false;
  			int num4 = (int)(position.X + (float)(width / 2)) / 16;
  			int num5 = (int)(position.Y + (float)(height / 2)) / 16;
@@ -45,7 +45,7 @@
  			try {
  				if (num4 >= 4 && num4 <= Main.maxTilesX - 4 && num5 >= 4 && num5 <= Main.maxTilesY - 4) {
  					if (Main.tile[num4, num5] == null)
-@@ -75800,6 +_,10 @@
+@@ -75806,6 +_,10 @@
  			}
  
  			if (flag)

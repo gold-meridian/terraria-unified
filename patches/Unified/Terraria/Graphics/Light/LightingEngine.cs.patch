@@ -1,14 +1,14 @@
 --- src/TerrariaNetCore/Terraria/Graphics/Light/LightingEngine.cs
 +++ src/Unified/Terraria/Graphics/Light/LightingEngine.cs
-@@ -52,6 +_,7 @@
- 		_perFrameLights.Clear();
+@@ -54,6 +_,7 @@
+ 		_oldPerFrameLights.Clear();
  	}
  
 +	/*
  	public Vector3 GetColor(int x, int y)
  	{
  		if (!_activeProcessedArea.Contains(x, y))
-@@ -60,6 +_,12 @@
+@@ -62,6 +_,12 @@
  		x -= _activeProcessedArea.X;
  		y -= _activeProcessedArea.Y;
  		return _activeLightMap[x, y];
