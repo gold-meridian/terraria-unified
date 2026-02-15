@@ -10,6 +10,7 @@ namespace Terraria;
 partial class Main
 {
 	internal static string UnifiedVersion => "0.2.0";
+
 	internal static bool UnifiedBranding => true;
 
 	public static bool Vsync { get; set; } = true;
@@ -19,11 +20,13 @@ partial class Main
 	private static void SaveUnifiedSettings(Preferences config)
 	{
 		config.Put("CraftingReachPreviewMode", (int)CraftingReachPreview.Mode);
+		config.Put(nameof(FixHotbarItemName), FixHotbarItemName.Enabled);
 	}
 
 	private static void LoadUnifiedSettings(Preferences config)
 	{
 		CraftingReachPreview.Mode = (CraftingReachPreview.PreviewMode)config.Get<int>("CraftingReachPreviewMode", 0);
+		FixHotbarItemName.Enabled = config.Get<bool>(nameof(FixHotbarItemName), true);
 	}
 
 	private static void DrawInterface_4_1_CraftingReach()
