@@ -4578,15 +4578,48 @@
  							}
  						}
  					}
-@@ -48020,7 +_,7 @@
+@@ -47973,6 +_,7 @@
+ 			float num28 = num2;
+ 			float num29 = TextureAssets.Map.Width();
+ 			float num30 = TextureAssets.Map.Height();
++			bool dynamicMapDraw = false;
+ 			if (maxTilesX == 8400) {
+ 				num26 *= 0.999f;
+ 				num27 -= 40.6f * num26;
+@@ -48015,13 +_,31 @@
+ 				num30 -= 8.31f;
+ 				num30 *= num26;
+ 			}
++			else
++				dynamicMapDraw = true;
+ 
+ 			spriteBatch.End();
  			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise);
  			flag = true;
  			DrawMapFullscreenBackground(screenPosition, screenWidth, screenHeight);
++			if (!dynamicMapDraw) {
 -			Microsoft.Xna.Framework.Rectangle destinationRectangle = new Microsoft.Xna.Framework.Rectangle((int)num27, (int)num28, (int)num29, (int)num30);
-+			System.Drawing.Rectangle destinationRectangle = new System.Drawing.Rectangle((int)num27, (int)num28, (int)num29, (int)num30);
- 			spriteBatch.Draw(TextureAssets.Map.Value, destinationRectangle, Microsoft.Xna.Framework.Color.White);
++				System.Drawing.Rectangle destinationRectangle = new System.Drawing.Rectangle((int)num27, (int)num28, (int)num29, (int)num30);
+-			spriteBatch.Draw(TextureAssets.Map.Value, destinationRectangle, Microsoft.Xna.Framework.Color.White);
++				spriteBatch.Draw(TextureAssets.Map.Value, destinationRectangle, Microsoft.Xna.Framework.Color.White);
++			}
++			else {
++				int num31 = (int)(num + mapFullscreenScale * 10f);
++				int num32 = (int)(num2 + mapFullscreenScale * 10f);
++				int num33 = (int)((maxTilesX - 40) * mapFullscreenScale);
++				int num34 = (int)((maxTilesY - 40) * mapFullscreenScale);
++				var destinationRectangle2 = new System.Drawing.Rectangle(num31, num32, num33, num34);
++				spriteBatch.Draw(TextureAssets.Map.Value, destinationRectangle2, new System.Drawing.Rectangle(40, 4, 848, 240), Microsoft.Xna.Framework.Color.White);
++				int num35 = (int)(40f * mapFullscreenScale * 5f);
++				int num36 = (int)(4f * mapFullscreenScale * 5f);
++				destinationRectangle2 = new System.Drawing.Rectangle(num31 - num35, num32 - num36, num35, num34 + 2 * num36);
++				spriteBatch.Draw(TextureAssets.Map.Value, destinationRectangle2, new System.Drawing.Rectangle(0, 0, 40, 248), Microsoft.Xna.Framework.Color.White);
++				destinationRectangle2 = new System.Drawing.Rectangle(num31 + num33, num32 - num36, num35, num34 + 2 * num36);
++				spriteBatch.Draw(TextureAssets.Map.Value, destinationRectangle2, new System.Drawing.Rectangle(888, 0, 40, 248), Microsoft.Xna.Framework.Color.White);
++			}
  			if (mouseLeft && mouseLeftRelease) {
  				double totalSeconds = gameTime.TotalGameTime.TotalSeconds;
+ 				if (totalSeconds - _lastPingMouseDownTime < 0.5 && Vector2.Distance(MouseScreen, _lastPingMousePosition) < 2f)
 @@ -48194,7 +_,7 @@
  						num43 -= 2f - num5 / 5f * 2f;
  						num42 -= 10f * num5;
