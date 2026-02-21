@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.IO;
+using Terraria.Map;
 using Terraria.Unified.Features;
+using static Terraria.GameContent.TextureAssets;
 
 namespace Terraria;
 
@@ -95,5 +97,18 @@ partial class Main
 			new Rectangle(0, 0, (int)(screenBR.X - screenTL.X), (int)(screenBR.Y - screenTL.Y)),
 			color
 		);
+	}
+
+	public static void ResizeWorldMap()
+	{
+		Map = new WorldMap(maxTilesX + 1, maxTilesY + 1);
+		MapRenderer.Resize();
+	}
+
+	public static void ResizeSectionBasedThings()
+	{
+		sectionManager = new WorldSections(maxTilesX / 200 + 1, maxTilesY / 150 + 1);
+		ActiveSections.Resize();
+		LeashedEntity.Resize();
 	}
 }

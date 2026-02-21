@@ -1,0 +1,20 @@
+--- src/TerrariaNetCore/Terraria/GameContent/LeashedEntity.cs
++++ src/Unified/Terraria/GameContent/LeashedEntity.cs
+@@ -8,7 +_,7 @@
+ 
+ namespace Terraria.GameContent;
+ 
+-public class LeashedEntity
++public partial class LeashedEntity
+ {
+ 	public class NetModule : Terraria.Net.NetModule
+ 	{
+@@ -230,7 +_,7 @@
+ 		}
+ 	}
+ 
+-	private static readonly SectionEntityList[,] BySection;
++	private static SectionEntityList[,] BySection;
+ 	private static readonly List<SectionEntityList> ActiveSectionList;
+ 	private static readonly List<LeashedEntity> ByWhoAmI;
+ 	private int sectionSlot;

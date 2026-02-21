@@ -1,0 +1,11 @@
+--- src/TerrariaNetCore/Terraria/DataStructures/ActiveSections.cs
++++ src/Unified/Terraria/DataStructures/ActiveSections.cs
+@@ -3,7 +_,7 @@
+ 
+ namespace Terraria.DataStructures;
+ 
+-public static class ActiveSections
++public static partial class ActiveSections
+ {
+ 	public static readonly uint SectionInactiveTime = 60u;
+ 	private static uint[,] LastActiveTime = new uint[Main.maxTilesX / 200 + 1, Main.maxTilesY / 150 + 1];

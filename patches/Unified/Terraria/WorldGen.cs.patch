@@ -141,6 +141,18 @@
  		NPC nPC = Main.npc[n];
  		Rectangle value = new Rectangle(nPC.homeTileX * 16, nPC.homeTileY * 16, 16, 16);
  		return hitbox.Intersects(value);
+@@ -5301,6 +_,11 @@
+ 		Main.rightWorld = Main.maxTilesX * 16;
+ 		Main.maxSectionsX = Main.maxTilesX / 200;
+ 		Main.maxSectionsY = Main.maxTilesY / 150;
++
++		// Resize the tilemap & world map.
++		Main.tile = new Tilemap((ushort)(Main.maxTilesX + 1), (ushort)(Main.maxTilesY + 1));
++		Main.ResizeSectionBasedThings();
++		Main.ResizeWorldMap();
+ 	}
+ 
+ 	public static int GetWorldSize()
 @@ -5831,6 +_,7 @@
  		Main.treeStyle[3] = 0;
  		Liquid.numLiquid = 0;

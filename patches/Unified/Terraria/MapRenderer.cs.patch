@@ -1,0 +1,54 @@
+--- src/TerrariaNetCore/Terraria/MapRenderer.cs
++++ src/Unified/Terraria/MapRenderer.cs
+@@ -10,18 +_,18 @@
+ 
+ namespace Terraria;
+ 
+-public class MapRenderer
++public partial class MapRenderer
+ {
+ 	public static readonly int textureMaxWidth;
+ 	public static readonly int textureMaxHeight;
+-	private static readonly int numTargetsX;
++	private static int numTargetsX;
+-	private static readonly int numTargetsY;
++	private static int numTargetsY;
+ 	private static readonly Color[] _mapColorCacheArray;
+ 	private static RenderTarget2D mapSectionTexture;
+-	private static readonly RenderTarget2D[,] mapTarget;
++	private static RenderTarget2D[,] mapTarget;
+-	private static readonly bool[,] initMap;
++	private static bool[,] initMap;
+-	private static readonly bool[,] mapWasContentLost;
++	private static bool[,] mapWasContentLost;
+-	private static readonly List<Point16>[,] changeQueues;
++	private static List<Point16>[,] changeQueues;
+ 	private static readonly int ChangeRefreshThreshold;
+ 
+ 	public static bool ChangesQueued {
+@@ -73,10 +_,16 @@
+ 			int width = textureMaxWidth;
+ 			int height = textureMaxHeight;
+ 			if (i == numTargetsX - 1)
++				/*
+ 				width = 400;
++				*/
++				width = Main.maxTilesX - ((i - 1) * textureMaxWidth);
+ 
+ 			if (j == numTargetsY - 1)
++				/*
+ 				height = 600;
++				*/
++				height = Main.maxTilesY - ((j - 1) * textureMaxHeight);
+ 
+ 			mapTarget[i, j] = new RenderTarget2D(GraphicsDevice, width, height, mipMap: false, GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
+ 			initMap[i, j] = true;
+@@ -338,7 +_,7 @@
+ 		float num3 = (float)textureMaxHeight * scale;
+ 		float num4 = X;
+ 		float num5 = 0f;
+-		for (int i = 0; i <= 4; i++) {
++		for (int i = 0; i < numTargetsX; i++) {
+ 			if ((float)((i + 1) * textureMaxWidth) <= minSizeX || (float)(i * textureMaxWidth) >= minSizeX + maxSizeX)
+ 				continue;
+ 
