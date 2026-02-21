@@ -18,6 +18,17 @@
  			AddBuff(37, 10);
  			SoundEngine.PlaySound(4, (int)Main.npc[Main.wofNPCIndex].position.X, (int)Main.npc[Main.wofNPCIndex].position.Y, 10);
  		}
+@@ -18848,7 +_,10 @@
+ 
+ 		Tile floorTile = GetFloorTile(num, num2);
+ 		int num3 = -1;
++		/*
+ 		if (floorTile != null)
++		*/
++		if (floorTile.active())
+ 			num3 = floorTile.type;
+ 
+ 		if (num3 <= -1) {
 @@ -18882,7 +_,7 @@
  
  	public static Tile GetFloorTile(int x, int y)
