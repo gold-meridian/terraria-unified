@@ -18,38 +18,56 @@
  			AddBuff(37, 10);
  			SoundEngine.PlaySound(4, (int)Main.npc[Main.wofNPCIndex].position.X, (int)Main.npc[Main.wofNPCIndex].position.Y, 10);
  		}
-@@ -18848,7 +_,10 @@
+@@ -18846,10 +_,14 @@
+ 		if (gravDir == -1f)
+ 			num2 = (int)(position.Y - 0.1f) / 16;
  
- 		Tile floorTile = GetFloorTile(num, num2);
+-		Tile floorTile = GetFloorTile(num, num2);
++		Tile? floorTile = GetFloorTile(num, num2);
  		int num3 = -1;
 +		/*
  		if (floorTile != null)
-+		*/
-+		if (floorTile.active())
  			num3 = floorTile.type;
++		*/
++		if (floorTile.HasValue)
++			num3 = floorTile.Value.type;
  
  		if (num3 <= -1) {
-@@ -18882,7 +_,7 @@
+ 			ResetFloorFlags();
+@@ -18868,7 +_,10 @@
+ 			num3 = -1;
  
- 	public static Tile GetFloorTile(int x, int y)
- 	{
--		Tile result = null;
-+		Tile result = default;
- 		if (Main.tile[x - 1, y] == null)
- 			Main.tile[x - 1, y] = new Tile();
+ 		if (!wet && !mount.Cart)
++			/*
+ 			MakeFloorDust(Falling, num3, floorTile.frameX, floorTile.frameY, floorTile.color());
++			*/
++			MakeFloorDust(Falling, num3, floorTile.Value.frameX, floorTile.Value.frameY, floorTile.Value.color());
+ 	}
  
-@@ -18902,7 +_,11 @@
- 		return result;
+ 	public void ResetFloorFlags()
+@@ -18880,9 +_,12 @@
+ 		runningOnSand = false;
  	}
  
 +	/*
- 	public static int GetFloorTileType(int x, int y) => ((int?)GetFloorTile(x, y)?.type) ?? (-1);
+ 	public static Tile GetFloorTile(int x, int y)
 +	*/
-+
-+	public static int GetFloorTileType(int x, int y) => GetFloorTile(x, y).type;
++	public static Tile? GetFloorTile(int x, int y)
+ 	{
+-		Tile result = null;
++		Tile? result = null;
+ 		if (Main.tile[x - 1, y] == null)
+ 			Main.tile[x - 1, y] = new Tile();
+ 
+@@ -18901,7 +_,7 @@
+ 
+ 		return result;
+ 	}
+-
++	
+ 	public static int GetFloorTileType(int x, int y) => ((int?)GetFloorTile(x, y)?.type) ?? (-1);
  
  	private void MakeFloorDust(bool Falling, int type, int frameX, int frameY, int paintColor)
- 	{
 @@ -19490,6 +_,8 @@
  		if (whoAmI != Main.myPlayer) {
  			int num2 = (int)(position.X + (float)(width / 2)) / 16;
