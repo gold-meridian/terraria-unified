@@ -39,6 +39,34 @@
  
  	private void MakeFloorDust(bool Falling, int type, int frameX, int frameY, int paintColor)
  	{
+@@ -19129,10 +_,15 @@
+ 		if (position.Y < Main.topWorld + (float)num) {
+ 			Main.cameraY = 0f;
+ 			if (Main.remixWorld || forcedGravity > 0) {
++				/*
+ 				if (position.Y < Main.topWorld + (float)num - (float)height && !dead) {
++				*/
++				if (position.Y < Main.topWorld + (float)num - (float)height && !dead && whoAmI == Main.myPlayer) {
+ 					KillMe(PlayerDeathReason.ByOther(19), 10.0, 0);
++					/*
+ 					if (whoAmI == Main.myPlayer)
++					*/
+-						AchievementsHelper.NotifyProgressionEvent(44);
++					AchievementsHelper.NotifyProgressionEvent(44);
+ 				}
+ 
+ 				int num4 = num / 2;
+@@ -19156,7 +_,10 @@
+ 		}
+ 
+ 		if (position.Y > Main.bottomWorld - (float)num) {
++			/*
+ 			if (!dead)
++			*/
++			if (!dead && whoAmI == Main.myPlayer)
+ 				KillMe(PlayerDeathReason.ByOther(21), 10.0, 0);
+ 
+ 			Main.cameraY = 0f;
 @@ -19490,6 +_,8 @@
  		if (whoAmI != Main.myPlayer) {
  			int num2 = (int)(position.X + (float)(width / 2)) / 16;
