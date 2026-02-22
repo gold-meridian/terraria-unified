@@ -66,10 +66,14 @@
  		return GlobalBrightness * (color.X + color.Y + color.Z) / 3f;
  	}
  
-@@ -108,10 +_,10 @@
+@@ -108,10 +_,14 @@
  		Vector2 vector2 = new Vector2(vector.X % 1f, vector.Y % 1f);
  		int num = (int)vector.X;
  		int num2 = (int)vector.Y;
++		// Lazy patch for reflective dye crash in character select
++		if (EngineExport == null)
++			EngineExport = _activeEngine.GetExport();
++
 -		Vector3 color = _activeEngine.GetColor(num, num2);
 +		Vector3 color = EngineExport.GetColor(num, num2);
 -		Vector3 color2 = _activeEngine.GetColor(num + 1, num2);
