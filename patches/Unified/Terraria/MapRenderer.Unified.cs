@@ -4,8 +4,8 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Terraria;
 
-    public partial class MapRenderer
-    {
+public partial class MapRenderer
+{
 	public static void Resize()
 	{
 		for (int x = 0; x < numTargetsX; x++) {
@@ -27,4 +27,4 @@ namespace Terraria;
 			}
 		}
 	}
-    }
+}

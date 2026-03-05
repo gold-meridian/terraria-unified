@@ -5,7 +5,6 @@ using Terraria.GameContent;
 using Terraria.IO;
 using Terraria.Map;
 using Terraria.Unified.Features;
-using static Terraria.GameContent.TextureAssets;
 
 namespace Terraria;
 

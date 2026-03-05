@@ -57,11 +57,13 @@
  
  			mapTarget[i, j] = new RenderTarget2D(GraphicsDevice, width, height, mipMap: false, GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
  			initMap[i, j] = true;
-@@ -338,7 +_,7 @@
+@@ -338,7 +_,10 @@
  		float num3 = (float)textureMaxHeight * scale;
  		float num4 = X;
  		float num5 = 0f;
--		for (int i = 0; i <= 4; i++) {
++		/*
+ 		for (int i = 0; i <= 4; i++) {
++		*/
 +		for (int i = 0; i < numTargetsX; i++) {
  			if ((float)((i + 1) * textureMaxWidth) <= minSizeX || (float)(i * textureMaxWidth) >= minSizeX + maxSizeX)
  				continue;

@@ -9,11 +9,13 @@
  {
  	public class NetModule : Terraria.Net.NetModule
  	{
-@@ -230,7 +_,7 @@
+@@ -230,7 +_,10 @@
  		}
  	}
  
--	private static readonly SectionEntityList[,] BySection;
++	/*
+ 	private static readonly SectionEntityList[,] BySection;
++	*/
 +	private static SectionEntityList[,] BySection;
  	private static readonly List<SectionEntityList> ActiveSectionList;
  	private static readonly List<LeashedEntity> ByWhoAmI;
