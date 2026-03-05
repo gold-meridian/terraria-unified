@@ -4599,7 +4599,7 @@
  			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise);
  			flag = true;
  			DrawMapFullscreenBackground(screenPosition, screenWidth, screenHeight);
-+			if (!dynamicMapDraw) {
++			if (dynamicMapDraw) {
 +				goto SkipVanillaMapDraw;
 +			}
 +
