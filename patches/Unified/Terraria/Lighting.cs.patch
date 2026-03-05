@@ -1,6 +1,6 @@
 --- src/TerrariaNetCore/Terraria/Lighting.cs
 +++ src/Unified/Terraria/Lighting.cs
-@@ -3,11 +_,38 @@
+@@ -3,11 +_,41 @@
  using Terraria.Graphics;
  using Terraria.Graphics.Light;
  using Terraria.ID;
@@ -10,6 +10,9 @@
  namespace Terraria;
  
 -public class Lighting
++// LightMap is never null so long as the area isn't empty.  Unsafe functions do
++// not care about this restriction as API consumers are expected to guard
++// against out-of-bounds accesses in their own code regardless.
 +public sealed class LightingEngineExport(LightMap workingMap, Rectangle area)
 +{
 +	public Rectangle Area => area;
@@ -40,11 +43,17 @@
  {
  	private const float DEFAULT_GLOBAL_BRIGHTNESS = 1.2f;
  	private const float BLIND_GLOBAL_BRIGHTNESS = 1f;
-@@ -18,6 +_,8 @@
+@@ -18,6 +_,14 @@
  	private static readonly LegacyLighting LegacyEngine = new LegacyLighting(Main.Camera);
  	private static ILightingEngine _activeEngine;
  
-+	public static LightingEngineExport EngineExport { get; private set; }
++	// This empty export has a null map to reduce memory consumption and extra
++	// time spent initializing an export that goes generally unused.  We just
++	// need to populate with a sane default value to avoid exceptions before a
++	// game world is entered.
++	private static readonly LightingEngineExport empty_export = new(workingMap: null, area: Rectangle.Empty);
++
++	public static LightingEngineExport EngineExport { get; private set; } = empty_export;
 +
  	public static float GlobalBrightness { get; set; }
  

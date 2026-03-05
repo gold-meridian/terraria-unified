@@ -18,27 +18,79 @@
  			AddBuff(37, 10);
  			SoundEngine.PlaySound(4, (int)Main.npc[Main.wofNPCIndex].position.X, (int)Main.npc[Main.wofNPCIndex].position.Y, 10);
  		}
-@@ -18882,7 +_,7 @@
+@@ -18846,10 +_,17 @@
+ 		if (gravDir == -1f)
+ 			num2 = (int)(position.Y - 0.1f) / 16;
  
- 	public static Tile GetFloorTile(int x, int y)
- 	{
--		Tile result = null;
-+		Tile result = default;
- 		if (Main.tile[x - 1, y] == null)
- 			Main.tile[x - 1, y] = new Tile();
++		/*
+ 		Tile floorTile = GetFloorTile(num, num2);
++		*/
++		Tile? floorTile = GetFloorTile(num, num2);
+ 		int num3 = -1;
++		/*
+ 		if (floorTile != null)
+ 			num3 = floorTile.type;
++		*/
++		if (floorTile.HasValue)
++			num3 = floorTile.Value.type;
  
-@@ -18902,7 +_,11 @@
- 		return result;
+ 		if (num3 <= -1) {
+ 			ResetFloorFlags();
+@@ -18868,7 +_,10 @@
+ 			num3 = -1;
+ 
+ 		if (!wet && !mount.Cart)
++			/*
+ 			MakeFloorDust(Falling, num3, floorTile.frameX, floorTile.frameY, floorTile.color());
++			*/
++			MakeFloorDust(Falling, num3, floorTile.Value.frameX, floorTile.Value.frameY, floorTile.Value.color());
+ 	}
+ 
+ 	public void ResetFloorFlags()
+@@ -18880,9 +_,12 @@
+ 		runningOnSand = false;
  	}
  
 +	/*
- 	public static int GetFloorTileType(int x, int y) => ((int?)GetFloorTile(x, y)?.type) ?? (-1);
+ 	public static Tile GetFloorTile(int x, int y)
 +	*/
-+
-+	public static int GetFloorTileType(int x, int y) => GetFloorTile(x, y).type;
- 
- 	private void MakeFloorDust(bool Falling, int type, int frameX, int frameY, int paintColor)
++	public static Tile? GetFloorTile(int x, int y)
  	{
+-		Tile result = null;
++		Tile? result = null;
+ 		if (Main.tile[x - 1, y] == null)
+ 			Main.tile[x - 1, y] = new Tile();
+ 
+@@ -19129,9 +_,16 @@
+ 		if (position.Y < Main.topWorld + (float)num) {
+ 			Main.cameraY = 0f;
+ 			if (Main.remixWorld || forcedGravity > 0) {
++				// TU(#28): Restrict border movement killing the player to the
++				// owning client.
++				/*
+ 				if (position.Y < Main.topWorld + (float)num - (float)height && !dead) {
++				*/
++				if (position.Y < Main.topWorld + (float)num - (float)height && !dead && whoAmI == Main.myPlayer) {
+ 					KillMe(PlayerDeathReason.ByOther(19), 10.0, 0);
++					/*
+ 					if (whoAmI == Main.myPlayer)
++					*/
+ 						AchievementsHelper.NotifyProgressionEvent(44);
+ 				}
+ 
+@@ -19156,7 +_,12 @@
+ 		}
+ 
+ 		if (position.Y > Main.bottomWorld - (float)num) {
++			// TU(#28): Restrict border movement killing the player to the
++			// owning client.
++			/*
+ 			if (!dead)
++			*/
++			if (!dead && whoAmI == Main.myPlayer)
+ 				KillMe(PlayerDeathReason.ByOther(21), 10.0, 0);
+ 
+ 			Main.cameraY = 0f;
 @@ -19490,6 +_,8 @@
  		if (whoAmI != Main.myPlayer) {
  			int num2 = (int)(position.X + (float)(width / 2)) / 16;
