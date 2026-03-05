@@ -1,6 +1,6 @@
 --- src/TerrariaNetCore/Terraria/MapRenderer.cs
 +++ src/Unified/Terraria/MapRenderer.cs
-@@ -10,18 +_,18 @@
+@@ -10,18 +_,28 @@
  
  namespace Terraria;
  
@@ -9,23 +9,37 @@
  {
  	public static readonly int textureMaxWidth;
  	public static readonly int textureMaxHeight;
--	private static readonly int numTargetsX;
++	/*
+ 	private static readonly int numTargetsX;
+ 	private static readonly int numTargetsY;
++	*/
 +	private static int numTargetsX;
--	private static readonly int numTargetsY;
 +	private static int numTargetsY;
  	private static readonly Color[] _mapColorCacheArray;
  	private static RenderTarget2D mapSectionTexture;
--	private static readonly RenderTarget2D[,] mapTarget;
++	/*
+ 	private static readonly RenderTarget2D[,] mapTarget;
+ 	private static readonly bool[,] initMap;
+ 	private static readonly bool[,] mapWasContentLost;
+ 	private static readonly List<Point16>[,] changeQueues;
++	*/
 +	private static RenderTarget2D[,] mapTarget;
--	private static readonly bool[,] initMap;
 +	private static bool[,] initMap;
--	private static readonly bool[,] mapWasContentLost;
 +	private static bool[,] mapWasContentLost;
--	private static readonly List<Point16>[,] changeQueues;
 +	private static List<Point16>[,] changeQueues;
  	private static readonly int ChangeRefreshThreshold;
  
  	public static bool ChangesQueued {
+@@ -54,6 +_,9 @@
+ 		mapWasContentLost = new bool[numTargetsX, numTargetsY];
+ 		changeQueues = new List<Point16>[numTargetsX, numTargetsY];
+ 		ChangeRefreshThreshold = 2048;
++		/*
++		for (int i = 0; i <= 4; i++) {
++		*/
+ 		for (int i = 0; i < numTargetsX; i++) {
+ 			for (int j = 0; j < numTargetsY; j++) {
+ 				changeQueues[i, j] = new List<Point16>(ChangeRefreshThreshold);
 @@ -73,10 +_,16 @@
  			int width = textureMaxWidth;
  			int height = textureMaxHeight;

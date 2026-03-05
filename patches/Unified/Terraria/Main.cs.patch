@@ -4578,15 +4578,17 @@
  							}
  						}
  					}
-@@ -47973,6 +_,7 @@
+@@ -47973,6 +_,9 @@
  			float num28 = num2;
  			float num29 = TextureAssets.Map.Width();
  			float num30 = TextureAssets.Map.Height();
++			// TU(#29): Whether map drawing needs to be adaptive to arbitrary
++			// sizes.
 +			bool dynamicMapDraw = false;
  			if (maxTilesX == 8400) {
  				num26 *= 0.999f;
  				num27 -= 40.6f * num26;
-@@ -48015,13 +_,31 @@
+@@ -48015,13 +_,35 @@
  				num30 -= 8.31f;
  				num30 *= num26;
  			}
@@ -4598,12 +4600,15 @@
  			flag = true;
  			DrawMapFullscreenBackground(screenPosition, screenWidth, screenHeight);
 +			if (!dynamicMapDraw) {
--			Microsoft.Xna.Framework.Rectangle destinationRectangle = new Microsoft.Xna.Framework.Rectangle((int)num27, (int)num28, (int)num29, (int)num30);
-+				System.Drawing.Rectangle destinationRectangle = new System.Drawing.Rectangle((int)num27, (int)num28, (int)num29, (int)num30);
--			spriteBatch.Draw(TextureAssets.Map.Value, destinationRectangle, Microsoft.Xna.Framework.Color.White);
-+				spriteBatch.Draw(TextureAssets.Map.Value, destinationRectangle, Microsoft.Xna.Framework.Color.White);
++				goto SkipVanillaMapDraw;
 +			}
-+			else {
++
+-			Microsoft.Xna.Framework.Rectangle destinationRectangle = new Microsoft.Xna.Framework.Rectangle((int)num27, (int)num28, (int)num29, (int)num30);
++			System.Drawing.Rectangle destinationRectangle = new System.Drawing.Rectangle((int)num27, (int)num28, (int)num29, (int)num30);
+ 			spriteBatch.Draw(TextureAssets.Map.Value, destinationRectangle, Microsoft.Xna.Framework.Color.White);
++
++		SkipVanillaMapDraw:
++			if (dynamicMapDraw) {
 +				int num31 = (int)(num + mapFullscreenScale * 10f);
 +				int num32 = (int)(num2 + mapFullscreenScale * 10f);
 +				int num33 = (int)((maxTilesX - 40) * mapFullscreenScale);
