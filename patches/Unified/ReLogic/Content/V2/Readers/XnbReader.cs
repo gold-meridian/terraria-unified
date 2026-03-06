@@ -75,7 +75,19 @@ public sealed class XnbReader<T>(IServiceProvider services) : IAssetReader<T, Xn
 		return contentLoader.Load<T>();
 	}
 
-	public void Dispose(T asset) { }
+	public void Dispose(T asset)
+	{
+		if (asset is IDisposable disposable) {
+			disposable.Dispose();
+		}
+	}
 
-	public void Dispose() { }
+	public void Dispose()
+	{
+		if (!contentLoader.IsValueCreated) {
+			return;
+		}
+
+		contentLoader.Value?.Dispose();
+	}
 }

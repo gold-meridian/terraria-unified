@@ -8,7 +8,7 @@
  using Microsoft.Xna.Framework;
  using Microsoft.Xna.Framework.Graphics;
  using Newtonsoft.Json.Linq;
-@@ -11,26 +_,61 @@
+@@ -11,26 +_,43 @@
  using Terraria.GameContent;
  using Terraria.ID;
  using Terraria.IO;
@@ -19,24 +19,6 @@
  
  public static class AssetInitializer
  {
-+	public class FxcReader(GraphicsDevice graphicsDevice) : IAssetReader
-+	{
-+		public async ValueTask<T> FromStream<T>(Stream stream, MainThreadCreationContext mainThreadCtx) where T : class
-+		{
-+			if (typeof(T) != typeof(Effect)) {
-+				throw AssetLoadException.FromInvalidReader<FxcReader, T>();
-+			}
-+
-+			var ms = new MemoryStream();
-+			stream.CopyTo(ms);
-+
-+			await mainThreadCtx;
-+			Debug.Assert(mainThreadCtx.IsCompleted);
-+
-+			return new Effect(graphicsDevice, ms.ToArray()) as T;
-+		}
-+	}
-+
 +	internal static AssetReaderCollection assetReaderCollection;
 +
  	public static void CreateAssetServices(GameServiceContainer services)
