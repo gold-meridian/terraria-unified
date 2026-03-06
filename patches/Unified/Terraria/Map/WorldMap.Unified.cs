@@ -49,9 +49,12 @@ public sealed class WorldMap(int maxWidth, int maxHeight)
 		int cy = y >> CHUNK_SHIFT;
 		long key = ChunkKey(cx, cy);
 
-		if (!chunks.TryGetValue(key, out var chunk)) {
-			chunk = new MapChunk(CHUNK_SIZE);
-			chunks.Add(key, chunk);
+		MapChunk chunk;
+		lock (chunks) {
+			if (!chunks.TryGetValue(key, out chunk)) {
+				chunk = new MapChunk(CHUNK_SIZE);
+				chunks.Add(key, chunk);
+			}
 		}
 
 		return ref chunk.Tiles[TileIndex(x & CHUNK_MASK, y & CHUNK_MASK)];
@@ -93,12 +96,15 @@ public sealed class WorldMap(int maxWidth, int maxHeight)
 		int cy = y >> CHUNK_SHIFT;
 		long key = ChunkKey(cx, cy);
 
-		if (!chunks.TryGetValue(key, out var chunk)) {
-			if (light == 0)
-				return false;
+		MapChunk chunk;
+		lock (chunks) {
+			if (!chunks.TryGetValue(key, out chunk)) {
+				if (light == 0)
+					return false;
 
-			chunk = new MapChunk(CHUNK_SIZE);
-			chunks.Add(key, chunk);
+				chunk = new MapChunk(CHUNK_SIZE);
+				chunks.Add(key, chunk);
+			}
 		}
 
 		int index = TileIndex(x & CHUNK_MASK, y & CHUNK_MASK);
