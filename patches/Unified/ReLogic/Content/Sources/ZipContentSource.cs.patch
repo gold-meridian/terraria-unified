@@ -1,0 +1,97 @@
+--- src/TerrariaNetCore/ReLogic/Content/Sources/ZipContentSource.cs
++++ src/Unified/ReLogic/Content/Sources/ZipContentSource.cs
+@@ -7,19 +_,29 @@
+ 
+ namespace ReLogic.Content.Sources;
+ 
++/*
+ public class ZipContentSource : IContentSource, IDisposable
++*/
++public class ZipContentSource : ContentSource, IDisposable
+ {
+ 	private readonly ZipFile _zipFile;
+ 	private readonly Dictionary<string, ZipEntry> _entries = new Dictionary<string, ZipEntry>();
+ 	private readonly string _basePath;
+ 	private bool _isDisposed;
++	/*
+ 	private readonly RejectedAssetCollection _rejections = new RejectedAssetCollection();
++	*/
+ 
+ 	public int EntryCount => _entries.Count;
+ 
++	/*
+ 	public IContentValidator ContentValidator { get; set; }
++	*/
+ 
++	/*
+ 	public string FileWatcherPath => null;
++	*/
++	public override string FileWatcherPath => null;
+ 
+ 	public ZipContentSource(string path)
+ 		: this(path, "")
+@@ -41,6 +_,7 @@
+ 		Refresh();
+ 	}
+ 
++	/*
+ 	public bool HasAsset(string assetName)
+ 	{
+ 		if (!_entries.TryGetValue(assetName, out var _))
+@@ -70,28 +_,42 @@
+ 
+ 		return Path.GetExtension(value.FileName) ?? "";
+ 	}
++	*/
+ 
++	/*
+ 	public Stream OpenStream(string assetName)
++	*/
++	public override Stream OpenStream(string assetName)
+ 	{
+ 		if (!_entries.TryGetValue(assetName, out var value))
+ 			throw AssetLoadException.FromMissingAsset(assetName);
+ 
+ 		MemoryStream memoryStream = new MemoryStream((int)value.UncompressedSize);
++		lock (_zipFile) {
+ 		value.Extract(memoryStream);
++		}
+ 		memoryStream.Position = 0L;
+ 		return memoryStream;
+ 	}
+ 
++	/*
+ 	public void Refresh()
++	*/
++	public override void Refresh()
+ 	{
+ 		_entries.Clear();
+ 		foreach (ZipEntry item in _zipFile.Entries.Where((ZipEntry entry) => !entry.IsDirectory && entry.FileName.StartsWith(_basePath))) {
+ 			string fileName = item.FileName;
++			/*
+ 			string text = Path.GetExtension(fileName) ?? "";
+ 			string path = fileName.Substring(_basePath.Length, fileName.Length - text.Length - _basePath.Length);
++			*/
++			string path = fileName.Substring(_basePath.Length, fileName.Length - _basePath.Length);
+ 			path = AssetPathHelper.CleanPath(path);
+ 			_entries[path] = item;
+ 		}
++
++		SetAssetNames(_entries.Keys);
+ 	}
+ 
+ 	private static bool ZipPathContainsInvalidCharacters(string path)
+@@ -129,6 +_,7 @@
+ 		Dispose(disposing: true);
+ 	}
+ 
++	/*
+ 	public void RejectAsset(string assetName, IRejectionReason reason)
+ 	{
+ 		_rejections.Reject(assetName, reason);
+@@ -140,4 +_,5 @@
+ 	}
+ 
+ 	public bool TryGetRejections(List<string> rejectionReasons) => _rejections.TryGetRejections(rejectionReasons);
++	*/
+ }

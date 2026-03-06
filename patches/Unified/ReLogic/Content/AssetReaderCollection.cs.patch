@@ -1,0 +1,33 @@
+--- src/TerrariaNetCore/ReLogic/Content/AssetReaderCollection.cs
++++ src/Unified/ReLogic/Content/AssetReaderCollection.cs
+@@ -1,10 +_,11 @@
+ using System.Collections.Generic;
+ using System.IO;
++using System.Linq;
+ using ReLogic.Content.Readers;
+ 
+ namespace ReLogic.Content;
+ 
+-public class AssetReaderCollection
++public partial class AssetReaderCollection
+ {
+ 	private readonly Dictionary<string, IAssetReader> _readersByExtension = new Dictionary<string, IAssetReader>();
+ 
+@@ -13,8 +_,11 @@
+ 		foreach (string text in extensions) {
+ 			_readersByExtension[text.ToLower()] = reader;
+ 		}
++
++		_extensions = _readersByExtension.Keys.ToArray();
+ 	}
+ 
++	/*
+ 	public T Read<T>(Stream stream, string extension) where T : class
+ 	{
+ 		if (!_readersByExtension.TryGetValue(extension.ToLower(), out var value))
+@@ -24,4 +_,5 @@
+ 	}
+ 
+ 	public bool CanReadExtension(string extension) => _readersByExtension.ContainsKey(extension.ToLower());
++	*/
+ }

@@ -1,0 +1,31 @@
+--- src/TerrariaNetCore/ReLogic/Content/IAssetRepository.cs
++++ src/Unified/ReLogic/Content/IAssetRepository.cs
+@@ -1,5 +_,6 @@
+ using System;
+ using System.Collections.Generic;
++using System.IO;
+ using ReLogic.Content.Sources;
+ 
+ namespace ReLogic.Content;
+@@ -26,7 +_,21 @@
+ 
+ 	Asset<T> Request<T>(string assetName, AssetRequestMode mode = AssetRequestMode.ImmediateLoad) where T : class;
+ 
++	// For if we ever want to change the default request mode like tModLoader.
++	/*
++	Asset<T> Request<T>(string assetName, AssetRequestMode mode = AssetRequestMode.AsyncLoad) where T : class;
++
++	internal Asset<T> Request<T>(string assetName) where T : class
++		=> Request<T>(assetName, AssetRequestMode.ImmediateLoad);
++	*/
++
++	/*
+ 	void TransferCompletedAssets();
++	*/
++
++	Asset<T> CreateUntracked<T>(Stream stream, string name, AssetRequestMode mode = AssetRequestMode.ImmediateLoad) where T : class;
++
++	bool TransferCompletedAssets();
+ 
+ 	void EnableAssetWatcher();
+ }

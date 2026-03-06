@@ -1,10 +1,13 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using System.Collections.Generic;
 using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.IO;
 using Terraria.Map;
 using Terraria.Unified.Features;
+using Terraria.Unified.Startup;
 
 namespace Terraria;
 
@@ -109,5 +112,29 @@ partial class Main
 		sectionManager = new WorldSections(maxTilesX / 200 + 1, maxTilesY / 150 + 1);
 		ActiveSections.Resize();
 		LeashedEntity.Resize();
+	}
+
+	private void InitUnifiedContentManager()
+	{
+		if (dedServ) {
+			return;
+		}
+
+		var vanillaContentFolder = GameLaunch.Instance.Host.Services.GetRequiredService<IContentDirectoryResolver>().GetContentDirectory();
+
+		/*
+		UnifiedContentManager localOverrideContentManager = null;
+		if (Directory.Exists(Path.Combine("Content", "Images"))) {
+			localOverrideContentManager = new UnifiedContentManager(Content.ServiceProvider, "Content", null);
+		}
+
+		base.Content = new UnifiedContentManager(Content.ServiceProvider, vanillaContentFolder, localOverrideContentManager);
+		*/
+
+		// base.Content = new UnifiedContentManager(Content.ServiceProvider, vanillaContentFolder);
+
+		base.Content.RootDirectory = vanillaContentFolder;
+
+		// TODO: Fix file casings.
 	}
 }

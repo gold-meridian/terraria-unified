@@ -8,33 +8,32 @@
  using Microsoft.Xna.Framework;
  using Microsoft.Xna.Framework.Graphics;
  using Newtonsoft.Json.Linq;
-@@ -18,14 +_,45 @@
+@@ -11,26 +_,61 @@
+ using Terraria.GameContent;
+ using Terraria.ID;
+ using Terraria.IO;
+-using Terraria.Testing;
+ using Terraria.Utilities;
+ 
+ namespace Terraria.Initializers;
  
  public static class AssetInitializer
  {
-+	public class FxcReader : IAssetReader
++	public class FxcReader(GraphicsDevice graphicsDevice) : IAssetReader
 +	{
-+		private readonly GraphicsDevice _graphicsDevice;
-+
-+		public FxcReader(GraphicsDevice graphicsDevice)
++		public async ValueTask<T> FromStream<T>(Stream stream, MainThreadCreationContext mainThreadCtx) where T : class
 +		{
-+			_graphicsDevice = graphicsDevice;
-+		}
-+
-+		public T FromStream<T>(Stream stream) where T : class
-+		{
-+			if (typeof(T) != typeof(Effect))
++			if (typeof(T) != typeof(Effect)) {
 +				throw AssetLoadException.FromInvalidReader<FxcReader, T>();
++			}
 +
 +			var ms = new MemoryStream();
 +			stream.CopyTo(ms);
 +
-+			/*
 +			await mainThreadCtx;
 +			Debug.Assert(mainThreadCtx.IsCompleted);
-+			*/
 +
-+			return new Effect(_graphicsDevice, ms.ToArray()) as T;
++			return new Effect(graphicsDevice, ms.ToArray()) as T;
 +		}
 +	}
 +
@@ -52,6 +51,24 @@
 +
 +		assetReaderCollection.RegisterReader(new FxcReader(Main.instance.Services.Get<IGraphicsDeviceService>().GraphicsDevice), ".fxc");
 +
++		/*
  		AsyncAssetLoader asyncAssetLoader = new AsyncAssetLoader(assetReaderCollection, 20);
  		asyncAssetLoader.RequireTypeCreationOnTransfer(typeof(Texture2D));
  		asyncAssetLoader.RequireTypeCreationOnTransfer(typeof(DynamicSpriteFont));
+ 		asyncAssetLoader.RequireTypeCreationOnTransfer(typeof(SpriteFont));
++		*/
++
++		XnbReader.LoadOnMainThread<Texture2D>.Value = true;
++		XnbReader.LoadOnMainThread<DynamicSpriteFont>.Value = true;
++		XnbReader.LoadOnMainThread<SpriteFont>.Value = true;
++		XnbReader.LoadOnMainThread<Effect>.Value = true;
++
++		AssetRepository.SetMainThread();
++
++		/*
+ 		IAssetRepository assetRepository = new AssetRepository(new AssetLoader(assetReaderCollection), asyncAssetLoader);
++		*/
++		var assetRepository = new AssetRepository(assetReaderCollection);
+ 		assetRepository.AssetValueUpdatedHandler = (AssetValueUpdated)Delegate.Combine(assetRepository.AssetValueUpdatedHandler, new AssetValueUpdated(TagAsset));
+ 		services.AddService(typeof(AssetReaderCollection), assetReaderCollection);
+ 		services.AddService(typeof(IAssetRepository), assetRepository);

@@ -256,7 +256,7 @@
  		if (currentValue <= 162) {
  			bool currentValue9 = false;
  			uint currentValue10 = 0u;
-@@ -5426,7 +_,14 @@
+@@ -5426,7 +_,12 @@
  #if FNA
  			Console.WriteLine("SDL Video Driver: " + SDL3.SDL.SDL_GetCurrentVideoDriver());
  #endif
@@ -264,13 +264,20 @@
  			base.Content.RootDirectory = "Content";
 +			*/
 +
-+			Content.RootDirectory = GameLaunch.Instance.Host.Services.GetRequiredService<IContentDirectoryResolver>().GetContentDirectory();
-+
 +			// Force the game to always use HiDef.
 +			graphics.GraphicsProfile = GraphicsProfile.HiDef;
  		}
  	}
  
+@@ -5508,6 +_,8 @@
+ 
+ 	protected override void Initialize()
+ 	{
++		InitUnifiedContentManager();
++
+ 		musicFade[50] = 1f;
+ 		if (dedServ)
+ 			netMode = 2;
 @@ -5554,7 +_,10 @@
  			return;
  		}
@@ -291,6 +298,30 @@
  	{
  		FancyErrorPrinter.ShowFailedToLoadAssetError(e, assetPath);
  	}
+@@ -9736,6 +_,11 @@
+ 
+ 	protected override void LoadContent()
+ 	{
++		Asset<Texture2D>.DefaultValue = new Texture2D(base.GraphicsDevice, 1, 1) {
++			Name = "Asynchronously-loaded Asset Dummy Texture (do not dispose or modify!)"
++		};
++		Asset<Texture2D>.DefaultValue.SetData([Color.Transparent]); // AMD graphics cards on Linux/Mac don't initialize textures to transparent by default (#1918)
++
+ 		if (base.Services.Get<IAssetRepository>() == null)
+ 			AssetInitializer.CreateAssetServices(base.Services);
+ 
+@@ -9756,7 +_,11 @@
+ 		audioSystem = SoundEngine.Initialize();
+ 		audioSystem.SetPlayCallback(102, RainbowBoulderMusicPlayCallback);
+ 		AssetSourceController = new AssetSourceController(Assets, new IContentSource[1] {
++			/*
+ 			new XnaContentSource(base.Content.RootDirectory)
++			*/
++			// new XnaDirectContentSource(((UnifiedContentManager)Content).RootDirectories)
++			new XnaDirectContentSource(base.Content.RootDirectory)
+ 		});
+ 
+ 		VanillaContentValidator.Instance = new VanillaContentValidator("Terraria.IO.Data.ResourcePacksDefaultInfo.tsv");
 @@ -9768,6 +_,9 @@
  		AssetInitializer.LoadSplashAssets();
  		ChromaInitializer.Load();

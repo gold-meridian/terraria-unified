@@ -23,9 +23,14 @@ internal sealed class ContentDirectoryResolver(ILogger<ContentDirectoryResolver>
 
 		List<string> contentDirectories = [];
 
-		contentDirectories.Add("Content");
+		// contentDirectories.Add("Content");
 		contentDirectories.Add(Path.Combine("..", "Content"));
 		contentDirectories.Add(Path.Combine("..", "Terraria", "Content"));
+
+		if (OperatingSystem.IsMacOS()) {
+			contentDirectories.Add(Path.Combine("..", "Terraria", "Terraria.app", "Contents", "Resources", "Content"));
+			contentDirectories.Add(Path.Combine("..", "Terraria.app", "Contents", "Resources", "Content"));
+		}
 
 		switch (SocialAPI.Mode) {
 			case SocialMode.Steam:
@@ -51,7 +56,7 @@ internal sealed class ContentDirectoryResolver(ILogger<ContentDirectoryResolver>
 		}
 
 		logger.LogError("Failed to find a valid content directory!");
-		return "Content";
+		return "../Content";
 	}
 }
 

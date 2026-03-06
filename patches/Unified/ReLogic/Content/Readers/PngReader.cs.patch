@@ -1,0 +1,34 @@
+--- src/TerrariaNetCore/ReLogic/Content/Readers/PngReader.cs
++++ src/Unified/ReLogic/Content/Readers/PngReader.cs
+@@ -1,6 +_,8 @@
+ using System;
++using System.Diagnostics;
+ using System.IO;
+ using System.Threading;
++using System.Threading.Tasks;
+ using Microsoft.Xna.Framework;
+ using Microsoft.Xna.Framework.Graphics;
+ 
+@@ -18,7 +_,10 @@
+ 		_colorProcessingCache = new ThreadLocal<Color[]>();
+ 	}
+ 
++	/*
+ 	public T FromStream<T>(Stream stream) where T : class
++	*/
++	public async ValueTask<T> FromStream<T>(Stream stream, MainThreadCreationContext mainThreadCtx) where T : class
+ 	{
+ 		if (typeof(T) != typeof(Texture2D))
+ 			throw AssetLoadException.FromInvalidReader<PngReader, T>();
+@@ -26,7 +_,10 @@
+ #if NETCORE
+ 		IntPtr img = FNA3D.ReadImageStream(stream, out int width, out int height, out int len);
+ 		PreMultiplyAlpha(img, len);
+-		
++
++		await mainThreadCtx;
++		Debug.Assert(mainThreadCtx.IsCompleted);
++
+ 		var texture2D = new Texture2D(_graphicsDevice, width, height);
+ 		texture2D.SetDataPointerEXT(0, null, img, len);
+ 		FNA3D.FNA3D_Image_Free(img);

@@ -2,6 +2,11 @@ largeaddresstool/dumpbin.exe
 largeaddresstool/editbin.exe
 largeaddresstool/link.exe
 largeaddresstool/mspdb140.dll
+ReLogic/Content/AssetLoader.cs
+ReLogic/Content/AsyncAssetLoader.cs
+ReLogic/Content/ContentRejectionFromFailedLoad_ByAssetExtensionType.cs
+ReLogic/Content/IAsyncAssetLoader.cs
+ReLogic/Content/Sources/XnaContentSource.cs
 ReLogic/IO/ConsoleOutputMirror.cs
 Terraria/MonoLaunch.cs
 Terraria/Program.cs

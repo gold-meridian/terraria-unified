@@ -1,0 +1,11 @@
+--- src/TerrariaNetCore/ReLogic/Content/IAsset.cs
++++ src/Unified/ReLogic/Content/IAsset.cs
+@@ -3,7 +_,7 @@
+ 
+ namespace ReLogic.Content;
+ 
+-public interface IAsset : IDisposable
++public partial interface IAsset : IDisposable
+ {
+ 	AssetState State { get; }
+ 

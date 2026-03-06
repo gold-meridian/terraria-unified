@@ -1,0 +1,107 @@
+--- src/TerrariaNetCore/ReLogic/Content/AssetRepository.cs
++++ src/Unified/ReLogic/Content/AssetRepository.cs
+@@ -1,4 +_,5 @@
+ using System;
++using System.Collections.Concurrent;
+ using System.Collections.Generic;
+ using System.IO;
+ using System.Linq;
+@@ -6,25 +_,48 @@
+ 
+ namespace ReLogic.Content;
+ 
+-public class AssetRepository : IAssetRepository, IDisposable
++public partial class AssetRepository : IAssetRepository, IDisposable
+ {
++	/*
+ 	private readonly Dictionary<string, IAsset> _assets = new Dictionary<string, IAsset>();
+ 	private IEnumerable<IContentSource> _sources = new IContentSource[0];
++	*/
++
++	protected readonly Dictionary<string, IAsset> _assets = new Dictionary<string, IAsset>();
++
++	protected IContentSource[] _sources { get; private set; }
++
+ 	private readonly Dictionary<Type, Action<IAsset, AssetRequestMode>> _typeSpecificReloadActions = new Dictionary<Type, Action<IAsset, AssetRequestMode>>();
+ 	private readonly Dictionary<Type, Func<IAsset, IContentSource, string, Func<Stream>, bool>> _typeSpecificUpdateActions = new Dictionary<Type, Func<IAsset, IContentSource, string, Func<Stream>, bool>>();
++	/*
+ 	private readonly IAsyncAssetLoader _asyncLoader;
+ 	private readonly IAssetLoader _loader;
++	*/
++	protected readonly AssetReaderCollection _readers;
+ 	private AssetChangeWatcher _changeWatcher;
+ 	private readonly object _requestLock = new object();
++	internal readonly ConcurrentQueue<Action> _assetTransferQueue = new();
+ 	private bool _isDisposed;
+ 
++	public bool IsDisposed => _isDisposed;
++
++	/*
+ 	public int PendingAssets => _asyncLoader.Remaining;
++	*/
++
++	private int _Remaining;
++
++	public int PendingAssets => _Remaining;
+ 
+ 	public int TotalAssets { get; private set; }
+ 
+ 	public int LoadedAssets { get; private set; }
+ 
++	/*
+ 	public bool IsAsyncLoadingEnabled => _asyncLoader.IsRunning;
++	*/
++
++	public bool IsAsyncLoadingEnabled => true;
+ 
+ 	public AssetValueUpdated AssetValueUpdatedHandler { get; set; }
+ 
+@@ -36,6 +_,7 @@
+ 
+ 	public ContentFileUpdated ContentFileUpdatedHandler { get; set; }
+ 
++	/*
+ 	public AssetRepository(IAssetLoader syncLoader, IAsyncAssetLoader asyncLoader)
+ 	{
+ 		_loader = syncLoader;
+@@ -50,7 +_,15 @@
+ 		if (useAsync)
+ 			_asyncLoader.Start();
+ 	}
++	*/
+ 
++	public AssetRepository(AssetReaderCollection readers, IEnumerable<IContentSource> sources = null)
++	{
++		_readers = readers;
++		_sources = sources?.ToArray() ?? [];
++	}
++
++	/*
+ 	public void SetSources(IEnumerable<IContentSource> sources, AssetRequestMode mode = AssetRequestMode.ImmediateLoad)
+ 	{
+ 		ThrowIfDisposed();
+@@ -65,6 +_,24 @@
+ 
+ 		if (_changeWatcher != null)
+ 			_changeWatcher.UpdateSources(sources);
++	}
++	*/
++
++	public virtual void SetSources(IEnumerable<IContentSource> sources, AssetRequestMode mode = AssetRequestMode.ImmediateLoad)
++	{
++		ThrowIfDisposed();
++		ThrowIfNotMainThread();
++
++		lock (_requestLock) { // prevent new assets being requested or loaded
++			TransferAllAssets();
++
++			_sources = sources.ToArray();
++			ReloadAssetsIfSourceChanged(mode);
++
++			if (mode == AssetRequestMode.ImmediateLoad && _Remaining > 0) {
++				throw new Exception("Some assets loaded asynchronously, despite AssetRequestMode.ImmediateLoad on main thread");
++			}
++		}
+ 	}
+ 
+ 	public Asset<T> Request<T>(string assetName, AssetRequestMode mode = AssetRequestMode.ImmediateLoad) where T : class

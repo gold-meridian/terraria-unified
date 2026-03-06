@@ -1,0 +1,98 @@
+--- src/TerrariaNetCore/ReLogic/Content/Sources/FileSystemContentSource.cs
++++ src/Unified/ReLogic/Content/Sources/FileSystemContentSource.cs
+@@ -1,20 +_,31 @@
+ using System;
+ using System.Collections.Generic;
+ using System.IO;
++using System.Linq;
+ 
+ namespace ReLogic.Content.Sources;
+ 
++/*
+ public class FileSystemContentSource : IContentSource
++*/
++public class FileSystemContentSource : ContentSource
+ {
+ 	private readonly string _basePath;
+ 	private readonly Dictionary<string, string> _nameToAbsolutePath = new Dictionary<string, string>();
++	/*
+ 	private readonly RejectedAssetCollection _rejections = new RejectedAssetCollection();
+ 
+ 	public IContentValidator ContentValidator { get; set; }
++	*/
+ 
+ 	public int FileCount => _nameToAbsolutePath.Count;
+ 
++	/*
+ 	public string FileWatcherPath => _basePath;
++	*/
++
++	public override string FileWatcherPath => _basePath;
++
+ 
+ 	public FileSystemContentSource(string basePath)
+ 	{
+@@ -23,8 +_,13 @@
+ 			_basePath += Path.DirectorySeparatorChar;
+ 
+ 		Refresh();
++
++		foreach (var pair in assetExtensions.ToArray()) {
++			assetExtensions.TryAdd(pair.Key + pair.Value, pair.Value);
++		}
+ 	}
+ 
++	/*
+ 	public bool HasAsset(string assetName)
+ 	{
+ 		if (_rejections.IsRejected(assetName))
+@@ -51,8 +_,12 @@
+ 
+ 		return Path.GetExtension(value) ?? "";
+ 	}
++	*/
+ 
++	/*
+ 	public Stream OpenStream(string assetName)
++	*/
++	public override Stream OpenStream(string assetName)
+ 	{
+ 		if (!_nameToAbsolutePath.TryGetValue(assetName, out var value))
+ 			throw AssetLoadException.FromMissingAsset(assetName);
+@@ -68,21 +_,30 @@
+ 		}
+ 	}
+ 
++	/*
+ 	public void Refresh()
++	*/
++	public override void Refresh()
+ 	{
+ 		_nameToAbsolutePath.Clear();
+ 		if (Directory.Exists(_basePath)) {
+ 			string[] files = Directory.GetFiles(_basePath, "*", SearchOption.AllDirectories);
+ 			for (int i = 0; i < files.Length; i++) {
+ 				string fullPath = Path.GetFullPath(files[i]);
++				/*
+ 				string text = Path.GetExtension(fullPath) ?? "";
+ 				string path = fullPath.Substring(_basePath.Length, fullPath.Length - text.Length - _basePath.Length);
++				*/
++				string path = fullPath.Substring(_basePath.Length);
+ 				path = AssetPathHelper.CleanPath(path);
+ 				_nameToAbsolutePath[path] = fullPath;
+ 			}
+ 		}
++
++		SetAssetNames(_nameToAbsolutePath.Keys);
+ 	}
+ 
++	/*
+ 	public void RejectAsset(string assetName, IRejectionReason reason)
+ 	{
+ 		_rejections.Reject(assetName, reason);
+@@ -94,4 +_,5 @@
+ 	}
+ 
+ 	public bool TryGetRejections(List<string> rejectionReasons) => _rejections.TryGetRejections(rejectionReasons);
++	*/
+ }
