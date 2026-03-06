@@ -38,7 +38,7 @@
 +		}
 +		else {
 +			horizontalFrameIndex -= max_vanilla_frames;
-+			asset = ContentSources.ManifestAssets.Request<Texture2D>("Terraria.Unified.Assets.TitleLinkButtons");
++			asset = ContentSources.ManifestAssets.Request<Texture2D>("Terraria.Unified.Assets.TitleLinkButtons", AssetRequestMode.ImmediateLoad);
 +			value = asset.Frame(2, 2, horizontalFrameIndex);
 +			value2 = asset.Frame(2, 2, horizontalFrameIndex, 1);
 +		}
