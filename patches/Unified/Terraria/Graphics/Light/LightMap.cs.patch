@@ -157,7 +157,7 @@
  		Vector3 zero = Vector3.Zero;
  		bool flag = false;
  		bool flag2 = false;
-@@ -187,15 +_,217 @@
+@@ -187,15 +_,205 @@
  					break;
  			}
  		}
@@ -252,7 +252,10 @@
 +						break;
 +
 +					case LightMaskMode.Water: {
++						/*
 +						float n = _random.WithModifier((ulong)i).Next(98, 100) * 0.01f;
++						*/
++						const float n = 99f / 100f;
 +						if (!fr)
 +							zr *= water.X * n;
 +						if (!fg)
@@ -306,22 +309,7 @@
 +					Vector128<float> decay;
 +					var theMask = pMask[p - pColors];
 +					if (theMask == LightMaskMode.Water) {
-+						/*
-+						var modifier = (ulong)(p - pColors);
-+						var s = ((modifier * 25214903917UL + 11UL) & 0xFFFFFFFFFFFFUL) ^_random.Seed;
-+						s = (s * 25214903917UL + 11UL) & 0xFFFFFFFFFFFFUL;
-+						float n = ((int)(s >> 47) + 98) * 0.01f;
-+						// float n = (s >> 47 != 0) ? 0.99f : 0.98f;
-+						// float n = _random.WithModifier((ulong)(p - pColors)).Next(98, 100) * 0.01f;
-+						*/
-+						ulong m = (ulong)(p - pColors);
-+						m ^= m >> 16;
-+						m *= 0x7FEB352D;
-+						m ^= m >> 15;
-+						m *= 0x846CA68B;
-+						m ^= m >> 16;
-+						float n = ((m & 1UL) != 0) ? 0.99f : 0.98f;
-+
++						const float n = 99f / 100f;
 +						decay = vWater * n;
 +					}
 +					else {
