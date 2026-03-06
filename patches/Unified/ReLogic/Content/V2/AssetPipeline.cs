@@ -3,6 +3,8 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ReLogic.Content.Readers;
@@ -94,6 +96,8 @@ public sealed class AssetPipeline(
 	private readonly ConcurrentQueue<PreparedAsset> preparedQueue = [];
 	private readonly SemaphoreSlim prepareGate = new(maxConcurrentPrepares, maxConcurrentPrepares);
 
+	private IContentSource[] sources = sources;
+
 	public Asset<T> Request<T>(string path, AssetRequestMode mode) where T : class
 	{
 		var normalizedPath = NormalizePath(path);
@@ -175,7 +179,7 @@ public sealed class AssetPipeline(
 
 			for (var sourceIndex = startSourceIndex; sourceIndex < sources.Length; sourceIndex++) {
 				var source = sources[sourceIndex];
-				var context = new AssetLoadContext(record.Key.Path, source, services);
+				var context = new AssetLoadContext(record.Key.Path, source, null, services);
 
 				if (!source.HasAsset(record.Key.Path)) {
 					continue;
@@ -185,8 +189,9 @@ public sealed class AssetPipeline(
 					var prepareResult = await reader.PrepareAsync(context, CancellationToken.None).ConfigureAwait(false);
 					if (!prepareResult.Succeeded) {
 						lock (record.Sync) {
-							if (record.Version != version)
+							if (record.Version != version) {
 								return null;
+							}
 
 							record.Failures.Add(new AssetSourceFailure(source, prepareResult.Reason, prepareResult.Error));
 						}
@@ -198,8 +203,9 @@ public sealed class AssetPipeline(
 						var finalizeResult = reader.Finalize(context, prepareResult.PreparedData!);
 						if (!finalizeResult.Succeeded) {
 							lock (record.Sync) {
-								if (record.Version != version)
+								if (record.Version != version) {
 									return null;
+								}
 
 								record.Failures.Add(new AssetSourceFailure(source, finalizeResult.Reason, finalizeResult.Error));
 							}
@@ -224,8 +230,9 @@ public sealed class AssetPipeline(
 					}
 
 					lock (record.Sync) {
-						if (record.Version != version)
+						if (record.Version != version) {
 							return null;
+						}
 
 						record.State = AssetState.WaitingForMainThread;
 					}
@@ -243,8 +250,9 @@ public sealed class AssetPipeline(
 				}
 				catch (Exception ex) {
 					lock (record.Sync) {
-						if (record.Version != version)
+						if (record.Version != version) {
 							return null;
+						}
 
 						record.Failures.Add(new AssetSourceFailure(source, null, ex));
 					}
@@ -252,8 +260,9 @@ public sealed class AssetPipeline(
 			}
 
 			lock (record.Sync) {
-				if (record.Version != version)
+				if (record.Version != version) {
 					return null;
+				}
 
 				record.Error = new AssetLoadFailureException(
 					record.Key.Path,
@@ -284,7 +293,7 @@ public sealed class AssetPipeline(
 			}
 		}
 
-		var context = new AssetLoadContext(record.Key.Path, prepared.Source, services);
+		var context = new AssetLoadContext(record.Key.Path, prepared.Source, null, services);
 
 		try {
 			var finalizeResult = prepared.Reader.Finalize(context, prepared.PreparedData);
@@ -312,61 +321,31 @@ public sealed class AssetPipeline(
 				return;
 			}
 
-			RetryFromNextSource(
-				record,
-				prepared.Version,
-				prepared.SourceIndex + 1,
-				finalizeResult.Reason,
-				finalizeResult.Error
-			);
-		}
-		catch (Exception e) {
-			RetryFromNextSource(
-				record,
-				prepared.Version,
-				prepared.SourceIndex + 1,
-				null,
-				e
-			);
-		}
-	}
+			lock (record.Sync) {
+				if (record.Version != prepared.Version)
+					return;
 
-	private void RetryFromNextSource(
-		AssetRecord record,
-		int version,
-		int nextSourceIndex,
-		string? reason,
-		Exception? exception
-	)
-	{
-		lock (record.Sync) {
-			if (record.Version != version)
-				return;
-
-			if (nextSourceIndex >= sources.Length) {
-				record.Error = new AssetLoadFailureException(
-					record.Key.Path,
-					record.Key.AssetType,
-					record.Failures.ToArray()
-				);
-
-				record.State = AssetState.Failed;
-				return;
-			}
-
-			record.State = AssetState.Queued;
-
-			if (reason is not null || exception is not null) {
 				record.Failures.Add(
 					new AssetSourceFailure(
-						sources[nextSourceIndex - 1],
-						reason,
-						exception
+						prepared.Source,
+						finalizeResult.Reason,
+						finalizeResult.Error
 					)
 				);
-			}
 
-			record.PrepareTask = Task.Run(() => PrepareAsync(record, version, nextSourceIndex));
+				record.State = AssetState.Queued;
+				record.PrepareTask = Task.Run(() => PrepareAsync(record, prepared.Version, prepared.SourceIndex + 1));
+			}
+		}
+		catch (Exception e) {
+			lock (record.Sync) {
+				if (record.Version != prepared.Version)
+					return;
+
+				record.Failures.Add(new AssetSourceFailure(prepared.Source, null, e));
+				record.State = AssetState.Queued;
+				record.PrepareTask = Task.Run(() => PrepareAsync(record, prepared.Version, prepared.SourceIndex + 1));
+			}
 		}
 	}
 
@@ -380,6 +359,182 @@ public sealed class AssetPipeline(
 		var prepared = prepareTask.GetAwaiter().GetResult();
 		if (prepared is { } pending) {
 			FinalizePrepared(pending);
+		}
+	}
+
+	public void SetSources(IReadOnlyList<IContentSource> newSources)
+	{
+		sources = newSources.ToArray();
+
+		foreach (var (_, record) in records)
+		{
+			ReloadTrackedAssetImmediately(record);
+		}
+	}
+
+	private void ReloadTrackedAssetImmediately(AssetRecord record)
+	{
+		lock (record.Sync)
+		{
+			record.Version++;
+			record.Error = null;
+			record.Failures.Clear();
+			record.State = AssetState.Queued;
+		}
+
+		LoadRecordImmediately(record, 0);
+	}
+
+	private void LoadRecordImmediately(AssetRecord record, int startSourceIndex)
+	{
+		var reader = record.Reader ?? readers.GetReader(record.Key.AssetType);
+		record.Reader = reader;
+
+		object? oldValue;
+		lock (record.Sync) {
+			oldValue = record.Value;
+			record.Value = null;
+		}
+
+		for (var sourceIndex = startSourceIndex; sourceIndex < sources.Length; sourceIndex++) {
+			var source = sources[sourceIndex];
+			var context = new AssetLoadContext(
+				record.Key.Path,
+				source,
+				null,
+				services
+			);
+
+			try {
+				var prepareResult = reader.PrepareAsync(context, CancellationToken.None).GetAwaiter().GetResult();
+				if (!prepareResult.Succeeded) {
+					lock (record.Sync) {
+						record.Failures.Add(new AssetSourceFailure(source, prepareResult.Reason, prepareResult.Error));
+					}
+
+					continue;
+				}
+
+				var finalizeResult = reader.Finalize(context, prepareResult.PreparedData!);
+				if (!finalizeResult.Succeeded) {
+					lock (record.Sync) {
+						record.Failures.Add(new AssetSourceFailure(source, finalizeResult.Reason, finalizeResult.Error));
+					}
+
+					continue;
+				}
+
+				lock (record.Sync) {
+					record.Value = finalizeResult.Asset;
+					record.Error = null;
+					record.State = AssetState.Loaded;
+				}
+
+				if (oldValue is not null) {
+					reader.Dispose(oldValue);
+				}
+
+				return;
+			}
+			catch (Exception ex) {
+				lock (record.Sync) {
+					record.Failures.Add(new AssetSourceFailure(source, null, ex));
+				}
+			}
+		}
+
+		if (oldValue is not null) {
+			reader.Dispose(oldValue);
+		}
+
+		lock (record.Sync) {
+			record.Error = new AssetLoadFailureException(
+				record.Key.Path,
+				record.Key.AssetType,
+				record.Failures.ToArray()
+			);
+
+			record.State = AssetState.Failed;
+		}
+	}
+
+	public Asset<T> CreateUntracked<T>(Stream stream) where T : class
+	{
+		var key = new AssetKey(typeof(T), "<untracked>");
+		var record = new AssetRecord
+		{
+			Key = key,
+			AssetWrapper = null!,
+			State = AssetState.Unloaded,
+		};
+		var asset = new Asset<T>(record, GetDefaultValue<T>());
+		record.AssetWrapper = asset;
+
+		record.Reader = readers.GetReader(typeof(T));
+		LoadRecordFromDirectStreamImmediately(record, stream, "<untracked>");
+
+		return asset;
+	}
+
+	private void LoadRecordFromDirectStreamImmediately(AssetRecord record, Stream stream, string debugName)
+	{
+		var reader = record.Reader ?? readers.GetReader(record.Key.AssetType);
+		record.Reader = reader;
+
+		var context = new AssetLoadContext(
+			debugName,
+			null,
+			() => stream,
+			services
+		);
+
+		try {
+			var prepareResult = reader.PrepareAsync(context, CancellationToken.None).GetAwaiter().GetResult();
+			if (!prepareResult.Succeeded) {
+				lock (record.Sync) {
+					record.Error = new AssetLoadFailureException(
+						debugName,
+						record.Key.AssetType,
+						[new AssetSourceFailure(null, prepareResult.Reason, prepareResult.Error)]
+					);
+
+					record.State = AssetState.Failed;
+				}
+
+				return;
+			}
+
+			var finalizeResult = reader.Finalize(context, prepareResult.PreparedData!);
+			if (!finalizeResult.Succeeded) {
+				lock (record.Sync) {
+					record.Error = new AssetLoadFailureException(
+						debugName,
+						record.Key.AssetType,
+						[new AssetSourceFailure(null, finalizeResult.Reason, finalizeResult.Error)]
+					);
+
+					record.State = AssetState.Failed;
+				}
+
+				return;
+			}
+
+			lock (record.Sync) {
+				record.Value = finalizeResult.Asset;
+				record.Error = null;
+				record.State = AssetState.Loaded;
+			}
+		}
+		catch (Exception ex) {
+			lock (record.Sync) {
+				record.Error = new AssetLoadFailureException(
+					debugName,
+					record.Key.AssetType,
+					[new AssetSourceFailure(null, null, ex)]
+				);
+
+				record.State = AssetState.Failed;
+			}
 		}
 	}
 

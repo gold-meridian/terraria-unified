@@ -4,6 +4,7 @@ largeaddresstool/link.exe
 largeaddresstool/mspdb140.dll
 ReLogic/Content/Asset.cs
 ReLogic/Content/AssetLoader.cs
+ReLogic/Content/AssetLoadException.cs
 ReLogic/Content/AssetPathHelper.cs
 ReLogic/Content/AssetRepository.cs
 ReLogic/Content/AssetRequestMode.cs
@@ -13,6 +14,7 @@ ReLogic/Content/ContentRejectionFromFailedLoad_ByAssetExtensionType.cs
 ReLogic/Content/IAsset.cs
 ReLogic/Content/IAsyncAssetLoader.cs
 ReLogic/Content/IContentValidator.cs
+ReLogic/Content/IRejectionReason.cs
 ReLogic/Content/LoadAssetDelegate.cs
 ReLogic/Content/Readers/IAssetReader.cs
 ReLogic/Content/Readers/PngReader.cs

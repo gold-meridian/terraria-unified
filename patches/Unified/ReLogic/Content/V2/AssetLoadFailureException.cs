@@ -7,7 +7,7 @@ using ReLogic.Content.Sources;
 namespace ReLogic.Content;
 
 internal readonly record struct AssetSourceFailure(
-	IContentSource Source,
+	IContentSource? Source,
 	string? Reason,
 	Exception? Exception
 );

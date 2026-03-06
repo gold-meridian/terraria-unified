@@ -19,7 +19,7 @@ public sealed class PngReader(GraphicsDevice graphicsDevice) : IAssetReader<Text
 
 	public async ValueTask<AssetPrepareResult<ImageHandle>> PrepareAsync(AssetLoadContext context, CancellationToken cancellationToken)
 	{
-		await using var stream = await context.ContentSource.OpenStreamAsync(context.Path, cancellationToken).ConfigureAwait(false);
+		await using var stream = await context.OpenOwnedStreamAsync(cancellationToken);
 
 		var pImage = FNA3D.ReadImageStream(stream, out int width, out int height, out int len);
 		{
