@@ -33,36 +33,47 @@ public sealed class XnbReader<T>(IServiceProvider services) : IAssetReader<T, Xn
 
 	private readonly ThreadLocal<InternalContentManager> contentLoader = new(() => new InternalContentManager(services));
 
-	public async ValueTask<StreamHandle> PrepareAsync(AssetLoadContext context, CancellationToken cancellationToken)
+	public async ValueTask<AssetPrepareResult<StreamHandle>> PrepareAsync(AssetLoadContext context, CancellationToken cancellationToken)
 	{
 		var content = contentLoader.Value!;
 
 		var stream = await context.ContentSource.OpenStreamAsync(context.Path, cancellationToken).ConfigureAwait(false);
 		if (LoadOnMainThread) {
-			return new StreamHandle(
-				stream,
-				content,
-				Asset: default(T?),
-				AssetLoaded: false
+			return AssetPrepareResult<StreamHandle>.Success(
+				new StreamHandle(
+					stream,
+					content,
+					Asset: default(T?),
+					AssetLoaded: false
+				)
 			);
 		}
 
-		return new StreamHandle(
-			stream,
-			content,
-			Asset: LoadAsset(stream, content),
-			AssetLoaded: true
+		return AssetPrepareResult<StreamHandle>.Success(
+			new StreamHandle(
+				stream,
+				content,
+				Asset: LoadAsset(stream, content),
+				AssetLoaded: true
+			)
 		);
 	}
 
-	public T Finalize(AssetLoadContext context, StreamHandle preparedData)
+	public AssetFinalizeResult<T> Finalize(AssetLoadContext context, StreamHandle preparedData)
 	{
 		try {
-			if (preparedData.AssetLoaded) {
-				return preparedData.Asset!;
+			var asset = preparedData.AssetLoaded
+				? preparedData.Asset
+				: LoadAsset(preparedData.Stream, preparedData.ContentLoader);
+
+			if (asset is not null) {
+				return AssetFinalizeResult<T>.Success(asset);
 			}
 
-			return LoadAsset(preparedData.Stream, preparedData.ContentLoader);
+			return AssetFinalizeResult<T>.Reject("Read null value from ContentManager");
+		}
+		catch (Exception e) {
+			return AssetFinalizeResult<T>.Reject("Exception occurred when reading from ContentManager", e);
 		}
 		finally {
 			preparedData.Stream.Dispose();

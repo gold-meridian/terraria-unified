@@ -11,7 +11,7 @@ public sealed class FxcReader(GraphicsDevice graphicsDevice) : IAssetReader<Effe
 {
 	public AssetFinalizeThread FinalizeThread => AssetFinalizeThread.MainThread;
 
-	public async ValueTask<MemoryStream> PrepareAsync(AssetLoadContext context, CancellationToken cancellationToken)
+	public async ValueTask<AssetPrepareResult<MemoryStream>> PrepareAsync(AssetLoadContext context, CancellationToken cancellationToken)
 	{
 		await using var stream = await context.ContentSource.OpenStreamAsync(context.Path, cancellationToken).ConfigureAwait(false);
 
@@ -20,12 +20,12 @@ public sealed class FxcReader(GraphicsDevice graphicsDevice) : IAssetReader<Effe
 			await stream.CopyToAsync(ms, cancellationToken);
 		}
 
-		return ms;
+		return AssetPrepareResult<MemoryStream>.Success(ms);
 	}
 
-	public Effect Finalize(AssetLoadContext context, MemoryStream preparedData)
+	public AssetFinalizeResult<Effect> Finalize(AssetLoadContext context, MemoryStream preparedData)
 	{
-		return new Effect(graphicsDevice, preparedData.ToArray());
+		return AssetFinalizeResult<Effect>.Success(new Effect(graphicsDevice, preparedData.ToArray()));
 	}
 
 	public void Dispose(Effect asset)

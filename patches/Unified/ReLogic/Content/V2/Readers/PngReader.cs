@@ -17,7 +17,7 @@ public sealed class PngReader(GraphicsDevice graphicsDevice) : IAssetReader<Text
 
 	public AssetFinalizeThread FinalizeThread => AssetFinalizeThread.MainThread;
 
-	public async ValueTask<ImageHandle> PrepareAsync(AssetLoadContext context, CancellationToken cancellationToken)
+	public async ValueTask<AssetPrepareResult<ImageHandle>> PrepareAsync(AssetLoadContext context, CancellationToken cancellationToken)
 	{
 		await using var stream = await context.ContentSource.OpenStreamAsync(context.Path, cancellationToken).ConfigureAwait(false);
 
@@ -26,10 +26,10 @@ public sealed class PngReader(GraphicsDevice graphicsDevice) : IAssetReader<Text
 			PreMultiplyAlpha(pImage, len);
 		}
 
-		return new ImageHandle(width, height, pImage, len);
+		return AssetPrepareResult<ImageHandle>.Success(new ImageHandle(width, height, pImage, len));
 	}
 
-	public Texture2D Finalize(AssetLoadContext context, ImageHandle preparedData)
+	public AssetFinalizeResult<Texture2D> Finalize(AssetLoadContext context, ImageHandle preparedData)
 	{
 		var tex = new Texture2D(graphicsDevice, preparedData.Width, preparedData.Height);
 		{
@@ -37,7 +37,7 @@ public sealed class PngReader(GraphicsDevice graphicsDevice) : IAssetReader<Text
 		}
 		FNA3D.FNA3D_Image_Free(preparedData.Pointer);
 
-		return tex;
+		return AssetFinalizeResult<Texture2D>.Success(tex);
 	}
 
 	public void Dispose(Texture2D asset)

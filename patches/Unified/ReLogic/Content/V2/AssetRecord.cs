@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ReLogic.Content.Readers;
 
@@ -26,5 +27,6 @@ internal sealed class AssetRecord
 	public IAssetReader? Reader;
 	public int Version;
 
+	public readonly List<AssetSourceFailure> Failures = [];
 	public readonly object Sync = new();
 }

@@ -6,47 +6,87 @@ using System.Threading.Tasks;
 
 namespace ReLogic.Content.Readers;
 
+public enum AssetFinalizeThread
+{
+	WorkerThread,
+	MainThread,
+}
+
+public enum AssetPrepareState
+{
+	Succeeded,
+	Rejected,
+}
+
+public readonly record struct AssetPrepareResult<T>(
+	AssetPrepareState State,
+	T PreparedData,
+	string? Reason = null,
+	Exception? Error = null
+)
+{
+	public bool Succeeded => State == AssetPrepareState.Succeeded;
+
+	public bool Rejected => State == AssetPrepareState.Rejected;
+
+	public static AssetPrepareResult<T> Success(T preparedData)
+	{
+		return new AssetPrepareResult<T>(
+			AssetPrepareState.Succeeded,
+			preparedData
+		);
+	}
+
+	public static AssetPrepareResult<T> Reject(string? reason = null, Exception? error = null)
+	{
+		return new AssetPrepareResult<T>(
+			AssetPrepareState.Rejected,
+			default(T)!,
+			reason,
+			error
+		);
+	}
+}
+
+public enum AssetFinalizeState
+{
+	Succeeded,
+	Rejected,
+}
+
+public readonly record struct AssetFinalizeResult<T>(
+	AssetFinalizeState State,
+	T? Asset,
+	string? Reason,
+	Exception? Error
+)
+{
+	public bool Succeeded => State == AssetFinalizeState.Succeeded;
+
+	public bool Rejected => State == AssetFinalizeState.Rejected;
+
+	public static AssetFinalizeResult<T> Success(T asset)
+	{
+		return new AssetFinalizeResult<T>(AssetFinalizeState.Succeeded, asset, null, null);
+	}
+
+	public static AssetFinalizeResult<T> Reject(string? reason = null, Exception? error = null)
+	{
+		return new AssetFinalizeResult<T>(AssetFinalizeState.Rejected, default(T?), reason, error);
+	}
+}
+
 public interface IAssetReader : IDisposable
 {
 	Type AssetType { get; }
 
 	AssetFinalizeThread FinalizeThread { get; }
 
-	ValueTask<object> PrepareAsync(AssetLoadContext context, CancellationToken cancellationToken);
+	ValueTask<AssetPrepareResult<object?>> PrepareAsync(AssetLoadContext context, CancellationToken cancellationToken);
 
-	object Finalize(AssetLoadContext context, object preparedData);
+	AssetFinalizeResult<object> Finalize(AssetLoadContext context, object preparedData);
 
 	void Dispose(object asset);
-}
-
-public interface IAssetReader<TAsset> : IAssetReader
-	where TAsset : notnull
-{
-	Type IAssetReader.AssetType => typeof(TAsset);
-
-	async ValueTask<object> IAssetReader.PrepareAsync(AssetLoadContext context, CancellationToken cancellationToken)
-	{
-		await PrepareAsync(context, cancellationToken);
-		return null!;
-	}
-
-	object IAssetReader.Finalize(AssetLoadContext context, object preparedData)
-	{
-		return Finalize(context);
-	}
-
-	void IAssetReader.Dispose(object asset)
-	{
-		if (asset is TAsset t) {
-			Dispose(t);
-		}
-	}
-
-	new ValueTask PrepareAsync(AssetLoadContext context, CancellationToken cancellationToken);
-
-	TAsset Finalize(AssetLoadContext context);
-
-	void Dispose(TAsset asset);
 }
 
 public interface IAssetReader<TAsset, TData> : IAssetReader
@@ -55,14 +95,21 @@ public interface IAssetReader<TAsset, TData> : IAssetReader
 {
 	Type IAssetReader.AssetType => typeof(TAsset);
 
-	async ValueTask<object> IAssetReader.PrepareAsync(AssetLoadContext context, CancellationToken cancellationToken)
+	async ValueTask<AssetPrepareResult<object?>> IAssetReader.PrepareAsync(AssetLoadContext context, CancellationToken cancellationToken)
 	{
-		return await PrepareAsync(context, cancellationToken);
+		var attempt = await PrepareAsync(context, cancellationToken);
+		return new AssetPrepareResult<object?>(
+			attempt.State,
+			attempt.PreparedData,
+			attempt.Reason,
+			attempt.Error
+		);
 	}
 
-	object IAssetReader.Finalize(AssetLoadContext context, object preparedData)
+	AssetFinalizeResult<object> IAssetReader.Finalize(AssetLoadContext context, object preparedData)
 	{
-		return Finalize(context, (TData)preparedData);
+		var attempt = Finalize(context, (TData)preparedData);
+		return new AssetFinalizeResult<object>(attempt.State, attempt.Asset, attempt.Reason, attempt.Error);
 	}
 
 	void IAssetReader.Dispose(object asset)
@@ -72,9 +119,9 @@ public interface IAssetReader<TAsset, TData> : IAssetReader
 		}
 	}
 
-	new ValueTask<TData> PrepareAsync(AssetLoadContext context, CancellationToken cancellationToken);
+	new ValueTask<AssetPrepareResult<TData>> PrepareAsync(AssetLoadContext context, CancellationToken cancellationToken);
 
-	TAsset Finalize(AssetLoadContext context, TData preparedData);
+	AssetFinalizeResult<TAsset> Finalize(AssetLoadContext context, TData preparedData);
 
 	void Dispose(TAsset asset);
 }
