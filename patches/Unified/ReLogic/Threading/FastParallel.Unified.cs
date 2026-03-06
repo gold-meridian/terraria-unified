@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 namespace ReLogic.Threading;
@@ -8,87 +9,19 @@ namespace ReLogic.Threading;
 
 public static class FastParallel
 {
-	private record struct WorkerState(
-		ParallelForAction Action,
-		object Context,
-		int ToExclusive,
-		int ChunkSize,
-		ManualResetEventSlim DoneEvent,
-		int WorkerCount
-	)
+	private sealed class WorkerState
 	{
+		public ParallelForAction Action;
+		public object Context;
+		public int ToExclusive;
+		public int ChunkSize;
+
 		public int NextIndex;
+
+		long _pad0, _pad1, _pad2, _pad3;
 
 		public int RemainingWorkers;
 	}
-
-	public static void For(int fromInclusive, int toExclusive, ParallelForAction callback, object context = null)
-	{
-		int length = toExclusive - fromInclusive;
-		if (length <= 0) {
-			return;
-		}
-
-		var done = new ManualResetEventSlim(false);
-
-		var workers = Math.Min(Environment.ProcessorCount, length);
-		var chunkSize = Math.Max(1, length / (workers * 4));
-
-		var state = new WorkerState(
-			callback,
-			context,
-			toExclusive,
-			chunkSize,
-			done,
-			workers
-		) {
-			NextIndex = fromInclusive,
-			RemainingWorkers = workers
-		};
-
-		for (var i = 1; i < workers; i++) {
-			ThreadPool.UnsafeQueueUserWorkItem(
-				static s => s.Invoke(),
-				Worker,
-				preferLocal: false
-			);
-		}
-
-		Worker();
-
-		if (!done.Wait(10000)) {
-			ThreadPool.GetAvailableThreads(out int workerThreads, out _);
-			throw new Exception($"Fatal Deadlock in FastParallelFor. pending: {ThreadPool.PendingWorkItemCount}. avail: {workerThreads}");
-		}
-
-		return;
-
-		void Worker()
-		{
-			while (true) {
-				var start = Interlocked.Add(ref state.NextIndex, state.ChunkSize) - state.ChunkSize;
-
-				if (start >= state.ToExclusive) {
-					break;
-				}
-
-				var end = Math.Min(start + state.ChunkSize, state.ToExclusive);
-
-				state.Action.Invoke(start, end, state.Context);
-			}
-
-			if (Interlocked.Decrement(ref state.RemainingWorkers) == 0) {
-				state.DoneEvent.Set();
-			}
-		}
-	}
-}
-
-/*
-public static class FastParallel
-{
-	// TODO: Do I care to support this?  Goes unused in vanilla.
-	public static bool ForceTasksOnCallingThread { get; set; } = false;
 
 	public static void For(int fromInclusive, int toExclusive, ParallelForAction callback, object context = null)
 	{
@@ -97,11 +30,61 @@ public static class FastParallel
 			return;
 		}
 
-		var chunk = Math.Max(1, length / (Environment.ProcessorCount * 4));
-		Parallel.ForEach(
-			Partitioner.Create(fromInclusive, toExclusive, chunk),
-			range => callback(range.Item1, range.Item2, context)
-		);
+		var workers = Math.Min(Environment.ProcessorCount, length);
+		if (workers == 1) {
+			callback(fromInclusive, toExclusive, context);
+			return;
+		}
+
+		var chunkSize = Math.Max(1, length / (workers * 8));
+		var state = new WorkerState {
+			Action = callback,
+			Context = context,
+			ToExclusive = toExclusive,
+			ChunkSize = chunkSize,
+			NextIndex = fromInclusive,
+			RemainingWorkers = workers
+		};
+
+		for (int i = 1; i < workers; i++) {
+			ThreadPool.UnsafeQueueUserWorkItem(
+				Worker,
+				state,
+				preferLocal: true
+			);
+		}
+
+		Worker(state);
+
+		var spinner = new SpinWait();
+		while (Volatile.Read(ref state.RemainingWorkers) != 0) {
+			spinner.SpinOnce();
+		}
+	}
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	private static void Worker(WorkerState state)
+	{
+		var action = state.Action;
+		var context = state.Context;
+		var chunkSize = state.ChunkSize;
+		var toExclusive = state.ToExclusive;
+
+		while (true) {
+			var start = Interlocked.Add(ref state.NextIndex, chunkSize) - chunkSize;
+
+			if (start >= toExclusive) {
+				break;
+			}
+
+			var end = start + chunkSize;
+			if (end > toExclusive) {
+				end = toExclusive;
+			}
+
+			action(start, end, context);
+		}
+
+		Interlocked.Decrement(ref state.RemainingWorkers);
 	}
 }
-*/
