@@ -1,12 +1,23 @@
 ﻿using System.Collections.Generic;
 using Terraria.DataStructures;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace Terraria;
 
 public partial class MapRenderer
 {
 	public static void Resize()
+	{
+		if (ThreadCheck.IsMainThread) {
+			Resize_Inner();
+		}
+		else {
+			Main.RunOnMainThread(Resize_Inner);
+		}
+	}
+
+	private static void Resize_Inner()
 	{
 		for (int x = 0; x < numTargetsX; x++) {
 			for (int y = 0; y < numTargetsY; y++) {
