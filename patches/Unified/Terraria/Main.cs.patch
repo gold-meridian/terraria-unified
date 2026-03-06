@@ -318,7 +318,7 @@
  			new XnaContentSource(base.Content.RootDirectory)
 +			*/
 +			// new XnaDirectContentSource(((UnifiedContentManager)Content).RootDirectories)
-+			new XnaDirectContentSource(base.Content.RootDirectory)
++			new XnaDirectContentSource([base.Content.RootDirectory])
  		});
  
  		VanillaContentValidator.Instance = new VanillaContentValidator("Terraria.IO.Data.ResourcePacksDefaultInfo.tsv");
