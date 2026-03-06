@@ -10,6 +10,8 @@ public interface IAssetReader
 {
 	Type AssetType { get; }
 
+	AssetFinalizeThread FinalizeThread { get; }
+
 	ValueTask<object> PrepareAsync(AssetLoadContext context, CancellationToken cancellationToken);
 
 	object Finalize(AssetLoadContext context, object preparedData);
@@ -17,28 +19,32 @@ public interface IAssetReader
 	void Dispose(object asset);
 }
 
-public interface IAssetReader<T> : IAssetReader where T : notnull
+public interface IAssetReader<TAsset, TData> : IAssetReader
+	where TAsset : notnull
+	where TData : notnull
 {
-	Type IAssetReader.AssetType => typeof(T);
+	Type IAssetReader.AssetType => typeof(TAsset);
 
-	ValueTask<object> IAssetReader.PrepareAsync(AssetLoadContext context, CancellationToken cancellationToken)
+	async ValueTask<object> IAssetReader.PrepareAsync(AssetLoadContext context, CancellationToken cancellationToken)
 	{
-
+		return await PrepareAsync(context, cancellationToken);
 	}
 
 	object IAssetReader.Finalize(AssetLoadContext context, object preparedData)
 	{
-		return Finalize(context, preparedData);
+		return Finalize(context, (TData)preparedData);
 	}
 
 	void IAssetReader.Dispose(object asset)
 	{
-		if (asset is T t) {
+		if (asset is TAsset t) {
 			Dispose(t);
 		}
 	}
 
-	new T Finalize(AssetLoadContext context, object preparedData);
+	new ValueTask<TData> PrepareAsync(AssetLoadContext context, CancellationToken cancellationToken);
 
-	void Dispose(T asset);
+	TAsset Finalize(AssetLoadContext context, TData preparedData);
+
+	void Dispose(TAsset asset);
 }

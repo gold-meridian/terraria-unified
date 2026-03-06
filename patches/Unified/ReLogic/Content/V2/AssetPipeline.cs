@@ -4,6 +4,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
+using ReLogic.Content.Readers;
 using ReLogic.Content.Sources;
 
 namespace ReLogic.Content;
@@ -15,12 +16,9 @@ public sealed class AssetPipeline(
 	IServiceProvider? services = null
 )
 {
-	private readonly IContentSource contentSource = contentSource;
-	private readonly AssetReaderRegistry readers = readers;
 	private readonly ConcurrentDictionary<AssetKey, AssetRecord> records = [];
 	private readonly ConcurrentQueue<PreparedAsset> preparedQueue = [];
 	private readonly SemaphoreSlim prepareGate = new(maxConcurrentPrepares, maxConcurrentPrepares);
-	private readonly IServiceProvider? services = services;
 
 	public Asset<T> Request<T>(string path, AssetRequestMode mode) where T : class
 	{
@@ -96,8 +94,27 @@ public sealed class AssetPipeline(
 				record.State = AssetState.Preparing;
 			}
 
+			var reader = record.Reader!;
 			var context = new AssetLoadContext(record.Key.Path, contentSource, services);
-			var preparedData = await record.Reader!.PrepareAsync(context, CancellationToken.None).ConfigureAwait(false);
+			var preparedData = await reader.PrepareAsync(context, CancellationToken.None).ConfigureAwait(false);
+
+			if (reader.FinalizeThread == AssetFinalizeThread.WorkerThread) {
+				var value = reader.Finalize(context, preparedData);
+
+				lock (record.Sync) {
+					if (record.Version != version) {
+						reader.Dispose(value);
+						return;
+					}
+
+					record.Value = value;
+					record.PreparedData = null;
+					record.Error = null;
+					record.State = AssetState.Loaded;
+				}
+
+				return;
+			}
 
 			lock (record.Sync) {
 				if (record.Version != version) {
@@ -108,7 +125,7 @@ public sealed class AssetPipeline(
 				record.State = AssetState.WaitingForMainThread;
 			}
 
-			preparedQueue.Enqueue(new PreparedAsset(record, record.Reader!, preparedData, version));
+			preparedQueue.Enqueue(new PreparedAsset(record, reader, preparedData, version));
 		}
 		catch (Exception e) {
 			lock (record.Sync) {
