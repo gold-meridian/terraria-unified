@@ -164,10 +164,15 @@ public sealed class AssetPipeline(
 			var context = new AssetLoadContext(record.Key.Path, contentSource, services);
 			var assetValue = prepared.Reader.Finalize(context, prepared.PreparedData);
 
-			lock (record.Sync)
-			{
-				if (record.Version != prepared.Version)
-				{
+			lock (record.Sync) {
+				if (record.Version != prepared.Version) {
+					prepared.Reader.Dispose(assetValue);
+					return;
+				}
+
+				// Prevent a possible double-finalization if PrepareAsync
+				// enqueued to preparedQueue in an Immediate request.
+				if (record.State != AssetState.WaitingForMainThread) {
 					prepared.Reader.Dispose(assetValue);
 					return;
 				}
@@ -177,10 +182,8 @@ public sealed class AssetPipeline(
 				record.State = AssetState.Loaded;
 			}
 		}
-		catch (Exception e)
-		{
-			lock (record.Sync)
-			{
+		catch (Exception e) {
+			lock (record.Sync) {
 				if (record.Version != prepared.Version) {
 					return;
 				}

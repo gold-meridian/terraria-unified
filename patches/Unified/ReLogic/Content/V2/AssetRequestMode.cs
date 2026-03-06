@@ -16,7 +16,7 @@ public enum AssetRequestMode
 	///		Begins loading the asset asynchronously, immediately producing an
 	///		<see cref="Asset{T}"/> instance with a dummy value until the frame
 	///		the asset is loaded.
- 	/// </summary>
+	/// </summary>
 	AsyncLoad,
 
 	/// <summary>
