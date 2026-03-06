@@ -1,0 +1,88 @@
+--- src/TerrariaNetCore/ReLogic/Threading/FastParallel.cs
++++ src/Unified/ReLogic/Threading/FastParallel.cs
+@@ -1,3 +_,4 @@
++#if false
+ using System;
+ using System.Threading;
+ 
+@@ -5,6 +_,7 @@
+ 
+ public static class FastParallel
+ {
++	/*
+ 	private class RangeTask
+ 	{
+ 		private readonly ParallelForAction _action;
+@@ -41,6 +_,25 @@
+ #endif
+ 		}
+ 	}
++	*/
++
++	private readonly record struct RangeTask(
++		ParallelForAction Action,
++		int FromInclusive,
++		int ToExclusive,
++		object Context,
++		CountdownEvent Countdown
++	)
++	{
++		public void Invoke()
++		{
++			if (FromInclusive != ToExclusive) {
++				Action.Invoke(FromInclusive, ToExclusive, Context);
++			}
++
++			Countdown.Signal();
++		}
++	}
+ 
+ 	public static bool ForceTasksOnCallingThread { get; set; }
+ 
+@@ -66,7 +_,7 @@
+ 		ThreadPriority priority = Thread.CurrentThread.Priority;
+ 		Thread.CurrentThread.Priority = ThreadPriority.Highest;
+ #endif
+-		
++
+ 		int num3 = num / num2;
+ 		int num4 = num % num2;
+ 		CountdownEvent countdownEvent = new CountdownEvent(num2);
+@@ -80,10 +_,24 @@
+ 			int num8 = num5;
+ 			int toExclusive2 = num8 + num7;
+ 			RangeTask rangeTask = new RangeTask(callback, num8, toExclusive2, context, countdownEvent);
++			/*
+ 			if (num6 < 1)
+ 				InvokeTask(rangeTask);
+ 			else
+ 				ThreadPool.QueueUserWorkItem(InvokeTask, rangeTask);
++			*/
++			if (num6 < 1) {
++				rangeTask.Invoke();
++			}
++			else {
++				ThreadPool.UnsafeQueueUserWorkItem(
++					static item => {
++						item.Invoke();
++					},
++					rangeTask,
++					preferLocal: false
++				);
++			}
+ 		}
+ 
+ 		// Vanilla uses a while loop because in XNA, the main thread is [STAThread] which means WaitForSingleObject() calls (from WaitHandle.Wait) will run the message pump, potentially delaying the frame for an undesired amount of time
+@@ -104,8 +_,12 @@
+ #endif
+ 	}
+ 
++	/*
+ 	private static void InvokeTask(object context)
+ 	{
+ 		((RangeTask)context).Invoke();
+ 	}
++	*/
+ }
++
++#endif
