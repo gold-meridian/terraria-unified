@@ -20,10 +20,9 @@ internal sealed class AssetRecord
 
 	public volatile AssetState State;
 	public object? Value;
-	public object? PreparedData;
 	public Exception? Error;
 
-	public Task? PrepareTask;
+	public Task<PreparedAsset?>? PrepareTask;
 	public IAssetReader? Reader;
 	public int Version;
 

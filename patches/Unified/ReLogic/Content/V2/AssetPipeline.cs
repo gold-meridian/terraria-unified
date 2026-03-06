@@ -81,14 +81,14 @@ public sealed class AssetPipeline(
 		}
 	}
 
-	private async Task PrepareAsync(AssetRecord record, int version)
+	private async Task<PreparedAsset?> PrepareAsync(AssetRecord record, int version)
 	{
 		await prepareGate.WaitAsync().ConfigureAwait(false);
 
 		try {
 			lock (record.Sync) {
 				if (record.Version != version) {
-					return;
+					return null;
 				}
 
 				record.State = AssetState.Preparing;
@@ -104,38 +104,42 @@ public sealed class AssetPipeline(
 				lock (record.Sync) {
 					if (record.Version != version) {
 						reader.Dispose(value);
-						return;
+						return null;
 					}
 
 					record.Value = value;
-					record.PreparedData = null;
 					record.Error = null;
 					record.State = AssetState.Loaded;
 				}
 
-				return;
+				// No need to return it here since it already finishes preparing
+				// on the main thread.
+				return null;
 			}
 
 			lock (record.Sync) {
 				if (record.Version != version) {
-					return;
+					return null;
 				}
 
-				record.PreparedData = preparedData;
 				record.State = AssetState.WaitingForMainThread;
 			}
 
-			preparedQueue.Enqueue(new PreparedAsset(record, reader, preparedData, version));
+			var prepared = new PreparedAsset(record, reader, preparedData, version);
+			preparedQueue.Enqueue(prepared);
+			return prepared;
 		}
 		catch (Exception e) {
 			lock (record.Sync) {
 				if (record.Version != version) {
-					return;
+					return null;
 				}
 
 				record.Error = e;
 				record.State = AssetState.Failed;
 			}
+
+			return null;
 		}
 		finally {
 			prepareGate.Release();
@@ -169,7 +173,6 @@ public sealed class AssetPipeline(
 				}
 
 				record.Value = assetValue;
-				record.PreparedData = null;
 				record.Error = null;
 				record.State = AssetState.Loaded;
 			}
@@ -178,8 +181,9 @@ public sealed class AssetPipeline(
 		{
 			lock (record.Sync)
 			{
-				if (record.Version != prepared.Version)
+				if (record.Version != prepared.Version) {
 					return;
+				}
 
 				record.Error = e;
 				record.State = AssetState.Failed;
@@ -189,11 +193,14 @@ public sealed class AssetPipeline(
 
 	private void TryCompleteImmediately(AssetRecord record)
 	{
-		record.PrepareTask?.GetAwaiter().GetResult();
+		var prepareTask = record.PrepareTask;
+		if (prepareTask is null) {
+			return;
+		}
 
-		if (record is { State: AssetState.WaitingForMainThread, PreparedData: not null, Reader: not null })
-		{
-			FinalizePrepared(new PreparedAsset(record, record.Reader, record.PreparedData, record.Version));
+		var prepared = prepareTask.GetAwaiter().GetResult();
+		if (prepared is { } pending) {
+			FinalizePrepared(pending);
 		}
 	}
 
