@@ -216,3 +216,11 @@
  		if (Main.InSmartCursorHighlightArea(x, y, out var actuallySelected)) {
  			int num = (tileLight.R + tileLight.G + tileLight.B) / 3;
  			if (num > 10) {
+@@ -5964,6 +_,7 @@
+ 
+ 	private void DrawTiles_EmitParticles(int j, int i, Tile tileCache, ushort typeCache, short tileFrameX, short tileFrameY, Color tileLight)
+ 	{
++		// Note: probably only run this every 1/16 second
+ 		bool flag = IsVisible(tileCache);
+ 		int leafFrequency = _leafFrequency;
+ 		leafFrequency /= 4;

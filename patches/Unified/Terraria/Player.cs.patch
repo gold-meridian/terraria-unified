@@ -9,6 +9,18 @@
  {
  	public static class BuilderAccToggleIDs
  	{
+@@ -779,7 +_,11 @@
+ 	public float carpetFrameCounter;
+ 	public bool canCarpet;
+ 	public int carpetTime;
++	/*
+ 	public int miscCounter;
++	*/
++	private float _miscCounter;
++	public int miscCounter => (int)_miscCounter;
+ 	public int infernoCounter;
+ 	public int insanityShadowCooldown;
+ 	public int starCloakCooldown;
 @@ -17682,7 +_,7 @@
  			Hurt(PlayerDeathReason.LegacyDefault(), attackDamage_ScaledByDifficulty, Main.npc[Main.wofNPCIndex].direction);
  		}
@@ -119,6 +131,21 @@
  			HandleBeingInChestRange();
  			tileEntityAnchor.GetTileEntity()?.OnPlayerUpdate(this);
  		}
+@@ -23234,9 +_,14 @@
+ 
+ 	public void UpdateMiscCounter()
+ 	{
++		/*
+ 		miscCounter++;
+ 		if (miscCounter >= 300)
+ 			miscCounter = 0;
++		*/
++		_miscCounter += (!Main.gameMenu ? 1 : Main.DrawDeltaTime);
++		if (_miscCounter >= 300)
++			_miscCounter = 0;
+ 	}
+ 
+ 	private void WingAirLogicTweaks()
 @@ -28746,6 +_,8 @@
  
  	public void AdjTiles()

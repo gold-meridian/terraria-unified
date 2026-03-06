@@ -39,6 +39,17 @@
  #endif
  {
  	public static class CurrentFrameFlags
+@@ -376,7 +_,10 @@
+ 	};
+ 	public static Vector2 CurrentPan = Vector2.Zero;
+ 	public static float sunCircle;
++	/*
+ 	public static int BlackFadeIn;
++	*/
++	public static float BlackFadeIn;
+ 	public static bool noWindowBorder = false;
+ 	public static RasterizerState Rasterizer = RasterizerState.CullCounterClockwise;
+ 	private string _cachedTitle;
 @@ -483,7 +_,14 @@
  	public static int desiredWorldTilesUpdateRate = 1;
  	public const int MaxWorldViewSizeWidth = 1920;
@@ -55,6 +66,19 @@
  	public static int maxScreenW = 1920;
  	public static int maxScreenH = 1200;
  	public static int minScreenW = 800;
+@@ -509,8 +_,12 @@
+ 	public static int[] recentPort = new int[maxMP];
+ 	public static bool shortRender = true;
+ 	public static bool BackgroundEnabled = true;
++	/*
+ 	public static int instantBGTransitionCounter = 2;
+ 	public static int bgDelay;
++	*/
++	public static float instantBGTransitionCounter = 2;
++	public static float bgDelay;
+ 	public static int bgStyle;
+ 	public static float[] bgAlphaFrontLayer = new float[16];
+ 	public static float[] bgAlphaFarBackLayer = new float[16];
 @@ -525,13 +_,23 @@
  	public static int wofDrawAreaBottom;
  	public static int wofDrawFrameIndex;
@@ -88,6 +112,44 @@
  	public static int mapTimeMax = 30;
  	public static int mapTime = mapTimeMax;
  	public static bool clearMap;
+@@ -640,7 +_,10 @@
+ 	public static bool frameRelease;
+ 	public static bool showFrameRate = false;
+ 	public static int magmaBGFrame;
++	/*
+ 	public static int magmaBGFrameCounter;
++	*/
++	public static float magmaBGFrameCounter;
+ 	public static int saveTimer = 0;
+ 	public static bool autoJoin;
+ 	public static bool serverStarting = false;
+@@ -717,8 +_,14 @@
+ 	public static string buffString = "";
+ 	public static string libPath = "";
+ 	public static int lo;
++	/*
+ 	public static int LogoA = 255;
++	*/
++	public static float LogoA = 255;
++	/*
+ 	public static int LogoB;
++	*/
++	public static float LogoB;
+ 	public static bool LogoT;
+ 	public static string statusText = "";
+ 	public static string worldName = "";
+@@ -785,7 +_,10 @@
+ 	public static Cloud[] cloud = new Cloud[200];
+ 	public static bool resetClouds = true;
+ 	public static float SmoothedMushroomLightInfluence;
++	/*
+-	public static int fadeCounter;
++	public static int fadeCounter; 
++	*/
++	public static float fadeCounter;
+ 	public static float invAlpha = 1f;
+ 	public static float invDir = 1f;
+ 	[ThreadStatic]
 @@ -948,7 +_,10 @@
  	public static HairstyleUnlocksHelper Hairstyles = new HairstyleUnlocksHelper();
  	public static bool tilesLoaded = false;
@@ -99,6 +161,28 @@
  	public static Dust[] dust = new Dust[6001];
  	public static Star[] star = new Star[400];
  	public static WorldItem[] item = new WorldItem[401];
+@@ -962,7 +_,10 @@
+ 	public static Chest[] chest = new Chest[8000];
+ 	public static Sign[] sign = new Sign[32000];
+ 	public static int[] itemFrame = new int[401];
++	/*
+ 	public static int[] itemFrameCounter = new int[401];
++	*/
++	public static float[] itemFrameCounter = new float[401];
+ 	public static DrawAnimation[] itemAnimations = new DrawAnimation[ItemID.Count];
+ 	private static DrawAnimation _coinOnWorldAnimation = new DrawAnimationVertical(6, 8);
+ 	private static DrawAnimation _monkStaffT3OnWorldAnimation = new DrawAnimationVertical(5, 3);
+@@ -1000,7 +_,10 @@
+ 	public static bool mouseLeftRelease;
+ 	public static bool mouseRightRelease;
+ 	public static bool playerInventory;
++	/*
+ 	public static int stackSplit;
++	*/
++	public static float stackSplit;
+ 	public static bool quickCraftStackSplit;
+ 	public static int stackCounter;
+ 	public static int timesTriedToFastStack;
 @@ -1010,7 +_,7 @@
  	public static Item guideItem = new Item();
  	public static Item reforgeItem = new Item();
@@ -108,6 +192,17 @@
  	public static bool PipsFastScroll;
  	public static bool PipsUseGrid;
  	public static PipPage PipsCurrentPage;
+@@ -1039,7 +_,10 @@
+ 	public static int oldNPCShop;
+ 	public static int npcChatCornerItem;
+ 	public static NPCID.Sets.NPCPortraitProvider npcChatPortrait;
++	/*
+ 	public static int npcChatPortraitFrameCounter;
++	*/
++	public static float npcChatPortraitFrameCounter;
+ 	public Chest[] shop = new Chest[100];
+ 	public static ItemShopSellbackHelper shopSellbackHelper = new ItemShopSellbackHelper();
+ 	public static readonly int TravelShopMaxSlots = 40;
 @@ -1910,8 +_,8 @@
  	public static int SmartInteractNPC;
  	public static int SmartInteractProj;
@@ -119,6 +214,17 @@
  	public static int TileInteractionLX = -1;
  	public static int TileInteractionLY = -1;
  	public static int TileInteractionHX = -1;
+@@ -1943,7 +_,10 @@
+ 	public static bool UnpinFromCore0 = false;
+ 	public static bool NoPooling = false;
+ 	public static bool CollectGen0EveryFrame = false;
++	/*
+ 	private int splashCounter;
++	*/
++	private float splashCounter;
+ 	public List<int> DrawCacheNPCsMoonMoon = new List<int>(maxNPCs);
+ 	public List<int> DrawCacheNPCsOverPlayers = new List<int>(maxNPCs);
+ 	public List<int> DrawCacheNPCProjectiles = new List<int>(maxNPCs);
 @@ -1966,7 +_,7 @@
  	private static bool shouldSetDefaultUIScale = true;
  	private static float newDefaultUIScale = 0f;
@@ -128,6 +234,17 @@
  	public static bool startFullscreen = false;
  	public static string oldStatusText = "";
  	public static string autoGenFileLocation = null;
+@@ -2036,7 +_,10 @@
+ 	private const int _mouseTextTooltip_MaxLines = 30;
+ 	private static readonly string[] _mouseTextTooltipLine_Text = new string[30];
+ 	private static readonly Microsoft.Xna.Framework.Color[] _mouseTextTooltipLine_Color = new Microsoft.Xna.Framework.Color[30];
++	/*
+ 	public int textBlinkerCount;
++	*/
++	public float textBlinkerCount;
+ 	public int textBlinkerState;
+ 	public static string newWorldName = "";
+ 	private static Vector3 shimmerShine = new Vector3(1f, 0.5f, 1f);
 @@ -2104,15 +_,15 @@
  	private static Vector2 _itemIconCacheScreenPosition;
  	private static int _itemIconCacheSelectedItemID;
@@ -448,6 +565,15 @@
  			if (lastChestDisplayRectangle.Contains(MouseScreen.ToPoint())) {
  				flag = false;
  				int num11 = Math.Sign(num);
+@@ -16999,7 +_,7 @@
+ 		oldInputText = inputText;
+ 		inputText = Keyboard.GetState();
+ 		if (inputText.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Back) && oldInputText.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Back) && !imeCompositionActive) {
+-			backSpaceRate -= 0.05f;
++			backSpaceRate -= 0.05f * DrawDeltaTime;
+ 			if (backSpaceRate < 0f)
+ 				backSpaceRate = 0f;
+ 
 @@ -17270,7 +_,7 @@
  		if (settingsEnabled_OpaqueBoxBehindTooltips) {
  			int num8 = 14;
@@ -466,6 +592,18 @@
  		int num = 220;
  		int num2 = 72;
  		int num3 = -1;
+@@ -18193,7 +_,11 @@
+ 
+ 	internal void DrawFPS()
+ 	{
++		// todo - dont modify debugWords
++		debugWords = "";
+ 		if (showFrameRate) {
++			debugWords = $"DrawDeltaTime {DrawDeltaTime} ({DrawGameTime.ElapsedGameTime.Ticks} / 166667)";
++
+ 			string text = frameRate + "fps " + updateRate + "ups";
+ 			text = text + " (" + (Liquid.numLiquid + LiquidBuffer.numLiquidBuffer) + ")";
+ 			text = text + " (" + (int)(gfxQuality * 100f) + "%)";
 @@ -18522,13 +_,13 @@
  			if (flag) {
  				LoadGore(gore[i].type);
@@ -3040,6 +3178,44 @@
  	{
  		LoadItem(item.type);
  		if (ItemID.Sets.AnimatesAsSoul[item.type] || ItemID.Sets.NebulaPickup[item.type]) {
+@@ -33187,14 +_,14 @@
+ 					int num = item.type - 71;
+ 					texture = TextureAssets.Coin[num].Value;
+ 					DrawItem_AnimateSlot(slot, 6, 8);
+-					frame = (glowmaskFrame = _coinOnWorldAnimation.GetFrame(texture, itemFrameCounter[slot]));
++					frame = (glowmaskFrame = _coinOnWorldAnimation.GetFrame(texture, (int)itemFrameCounter[slot]));
+ 					return;
+ 				}
+ 				case 3858:
+ 					texture = TextureAssets.Item[item.type].Value;
+ 					DrawItem_AnimateSlot(slot, 5, 3);
+ 					frame = texture.Frame();
+-					glowmaskFrame = TextureAssets.GlowMask[233].Value.Frame(1, 3, 0, itemFrameCounter[slot] / 5);
++					glowmaskFrame = TextureAssets.GlowMask[233].Value.Frame(1, 3, 0, (int)itemFrameCounter[slot] / 5);
+ 					glowmaskFrame.Height -= 2;
+ 					return;
+ 				case 75:
+@@ -33212,14 +_,18 @@
+ 		}
+ 
+ 		if (itemAnimations[item.type] != null)
+-			frame = (glowmaskFrame = itemAnimations[item.type].GetFrame(texture, itemFrameCounter[slot]));
++			frame = (glowmaskFrame = itemAnimations[item.type].GetFrame(texture, (int)itemFrameCounter[slot]));
+ 		else
+ 			frame = (glowmaskFrame = texture.Frame());
+ 	}
+ 
+ 	private void DrawItem_AnimateSlot(int slot, int gameFramesPerSpriteFrame, int spriteFramesAmount)
+ 	{
++		/*
+-		if (++itemFrameCounter[slot] >= gameFramesPerSpriteFrame * spriteFramesAmount)
++		if (++itemFrameCounter[slot] >= gameFramesPerSpriteFrame * spriteFramesAmount)\
++		*/
++		itemFrameCounter[slot] += 1 * DrawDeltaTime;
++		if (itemFrameCounter[slot] >= gameFramesPerSpriteFrame * spriteFramesAmount)
+ 			itemFrameCounter[slot] = 0;
+ 	}
+ 
 @@ -33387,12 +_,12 @@
  		}
  
@@ -3110,15 +3286,29 @@
  				spriteBatch.Draw(TextureAssets.EquipPage[7].Value, bottomRight, null, OurFavoriteColor, 0f, rectangle2.Size() + new Vector2(2f), num2, SpriteEffects.None, 0f);
  				if (mouseLeftRelease && mouseLeft) {
  					CloseNPCChatOrSign(quiet: true);
-@@ -34752,7 +_,7 @@
+@@ -34748,14 +_,21 @@
+ 		if (texture == null)
+ 			return;
+ 
++		/*
+ 		int num = npcChatPortraitFrameCounter++;
++		*/
++		float num = npcChatPortraitFrameCounter += 1 * DrawDeltaTime;
  		int num2 = 56;
  		Vector2 vector = npcChatTopLeft + new Vector2(-num2 - 6, num2 + 6);
  		Asset<Texture2D> npcPortraitBackground = TextureAssets.NpcPortraitBackground;
 -		Microsoft.Xna.Framework.Rectangle rectangle = npcPortraitBackground.Frame();
 +		System.Drawing.Rectangle rectangle = npcPortraitBackground.Frame();
  		Vector2 scale = new Vector2(1f, 1f);
++		/*
  		int num3 = num % 120;
  		int num4 = num / 120;
++		*/
++		int num3 = (int)(num % 120);
++		int num4 = (int)(num / 120);
+ 		SpriteEffects spriteEffects = SpriteEffects.None;
+ 		float num5 = 0f;
+ 		bool num6 = num4 == 0;
 @@ -34822,9 +_,9 @@
  			portraitDummy.IsABestiaryIconDummy = true;
  			portraitDummy.IsAPortraitDummy = true;
@@ -3149,6 +3339,15 @@
  			homeTileX = homeTileX * 16 - (int)screenPosition.X + num8 - value2.Width / 2;
  			num3 = (int)num11 - (int)screenPosition.Y + 4;
  			int num13 = -8;
+@@ -35299,7 +_,7 @@
+ 
+ 		HandleIME();
+ 		if (drawingPlayerChat) {
+-			textBlinkerCount++;
++			textBlinkerCount += 1 * DrawDeltaTime;
+ 			if (textBlinkerCount >= 20) {
+ 				if (textBlinkerState == 0)
+ 					textBlinkerState = 1;
 @@ -35313,23 +_,23 @@
  			if (screenWidth > 800) {
  				int num = screenWidth - 300;
@@ -3236,6 +3435,21 @@
  					player[myPlayer].mouseInterface = true;
  					if (mouseLeft && mouseLeftRelease) {
  						player[myPlayer].hideVisibleAccessory[num40] = !player[myPlayer].hideVisibleAccessory[num40];
+@@ -35849,12 +_,12 @@
+ 		if (InReforgeMenu) {
+ 			if (mouseReforge) {
+ 				if (reforgeScale < 1f)
+-					reforgeScale += 0.02f;
++					reforgeScale += 0.02f * DrawDeltaTime;
+ 			}
+ 			else {
+ 				reforgeCooldown = 0;
+ 				if (reforgeScale > 1f)
+-					reforgeScale -= 0.02f;
++					reforgeScale -= 0.02f * DrawDeltaTime;
+ 			}
+ 
+ 			if (player[myPlayer].chest != -1 || npcShop != 0 || player[myPlayer].talkNPC == -1 || InGuideCraftMenu) {
 @@ -36048,7 +_,7 @@
  			Texture2D value5 = TextureAssets.NPCHappiness.Value;
  			float priceAdjustment = LocalPlayer.currentShoppingSettings.PriceAdjustment;
@@ -3538,7 +3752,7 @@
  			spriteBatch.Draw(TextureAssets.GolfBallArrowShadow.Value, vector2 + new Vector2(-4f, 4f) * 1.5f, rectangle, Microsoft.Xna.Framework.Color.White * num, num2, origin, 1.5f, SpriteEffects.None, 0f);
  			float amount = (float)Math.Sin(GlobalTimeWrappedHourly * 4f) * 0.5f + 0.5f;
  			for (float num3 = 0f; num3 < 1f; num3 += 0.25f) {
-@@ -37594,7 +_,18 @@
+@@ -37594,17 +_,30 @@
  		if (player[myPlayer].inventory[player[myPlayer].selectedItem].Name != null && player[myPlayer].inventory[player[myPlayer].selectedItem].Name != "")
  			text = player[myPlayer].inventory[player[myPlayer].selectedItem].AffixName();
  
@@ -3555,8 +3769,22 @@
 +		}
 +
  		int num = 20;
++		float scaling = 0.05f * DrawDeltaTime;
  		for (int i = 0; i < 10; i++) {
  			if (i == LocalPlayer.selectedItem && !LocalPlayer.selectedItemState.HasActiveOverride) {
+ 				if (hotbarScale[i] < 1f)
+-					hotbarScale[i] += 0.05f;
++					hotbarScale[i] += scaling;
+ 			}
+ 			else if ((double)hotbarScale[i] > 0.75) {
+-				hotbarScale[i] -= 0.05f;
++				hotbarScale[i] -= scaling;
+ 			}
+ 
++			hotbarScale[i] = Math.Clamp(hotbarScale[i], 0.75f, 1f);
+ 			float num2 = hotbarScale[i];
+ 			int num3 = (int)(20f + 22f * (1f - num2));
+ 			int a = (int)(75f + 150f * num2);
 @@ -37710,8 +_,8 @@
  		int num5 = num2 + 234;
  		int num6 = num + 18;
@@ -3677,6 +3905,25 @@
  		}
  	}
  
+@@ -39281,14 +_,16 @@
+ 		Vector2 vector2 = FontAssets.MouseText.Value.MeasureString(text);
+ 		Vector2 vector3 = FontAssets.DeathText.Value.MeasureString(text);
+ 		float num = vector.X / vector2.X;
++		float scaling = 0.02f * DrawDeltaTime;
+ 		if (mouseOver) {
+ 			if ((double)scale < 0.96)
+-				scale += 0.02f;
++				scale += scaling;
+ 		}
+ 		else if ((double)scale > 0.8) {
+-			scale -= 0.02f;
++			scale -= scaling;
+ 		}
+ 
++		scale = Math.Clamp(scale, 0.8f, 0.96f);
+ 		UILinkPointNavigator.SetPosition(308, new Vector2(posX, posY));
+ 		for (int i = 0; i < 5; i++) {
+ 			int num2 = 0;
 @@ -39465,7 +_,7 @@
  			}
  
@@ -3891,6 +4138,17 @@
  		Utils.DrawInvBG(spriteBatch, r3, c);
  		spriteBatch.Draw(value, r3.Left() + Vector2.UnitX * num * 8f, null, Microsoft.Xna.Framework.Color.White * invasionProgressAlpha, 0f, new Vector2(0f, value.Height / 2), num * 0.8f, SpriteEffects.None, 0f);
  		Utils.DrawBorderString(spriteBatch, text, r3.Right() + Vector2.UnitX * num * -22f, Microsoft.Xna.Framework.Color.White * invasionProgressAlpha, num * 0.9f, 1f, 0.4f);
+@@ -41399,7 +_,10 @@
+ 		if (gameMenu && alreadyGrabbingSunOrMoon)
+ 			return;
+ 
++		/*
+ 		if (player[myPlayer].dead || player[myPlayer].mouseInterface || IsCameraTrackingObject) {
++		*/
++		if ((player[myPlayer].dead || player[myPlayer].mouseInterface || IsCameraTrackingObject) && CanDoCertainUpdatesThisDraw) {
+ 			ClearSmartInteract();
+ 			TileInteractionLX = (TileInteractionHX = (TileInteractionLY = (TileInteractionHY = -1)));
+ 		}
 @@ -41506,7 +_,7 @@
  				vector *= 1f;
  				vector += Vector2.One * 2f;
@@ -3900,7 +4158,111 @@
  				float scale = cursorScale * 1.1f;
  				if (showGamepadCursor) {
  					if (smart && !flag) {
-@@ -41725,16 +_,16 @@
+@@ -41621,7 +_,7 @@
+ 		}
+ 
+ 		screenPosition.Y = (float)(worldSurface * 16.0 - (double)screenHeight);
+-		MenuXMovement = 4f;
++		MenuXMovement = 4f * DrawDeltaTime;
+ 		if (alreadyGrabbingSunOrMoon) {
+ 			playOldTile = true;
+ 			if (starGame)
+@@ -41642,9 +_,9 @@
+ 		byte b = (byte)((255 + tileColor.R * 2) / 3);
+ 		Microsoft.Xna.Framework.Color color = new Microsoft.Xna.Framework.Color(b, b, b, 255);
+ 		if (WorldGen.remixWorldGen) {
+-			logoRotation += logoRotationSpeed * 4E-05f;
++			logoRotation += logoRotationSpeed * (4E-05f * DrawDeltaTime);
+ 			if ((double)logoRotation < 3.04) {
+-				logoRotation += logoRotationSpeed * 0.0016f;
++				logoRotation += logoRotationSpeed * (0.0016f * DrawDeltaTime);
+ 				if (logoRotationSpeed < 0f)
+ 					logoRotationSpeed = 0f;
+ 			}
+@@ -41655,29 +_,29 @@
+ 				logoRotationDirection = 1f;
+ 
+ 			if (logoRotationSpeed < 20f && logoRotationDirection == 1f)
+-				logoRotationSpeed += 1f;
++				logoRotationSpeed += 1f * DrawDeltaTime;
+ 			else if (logoRotationSpeed > -20f && logoRotationDirection == -1f)
+-				logoRotationSpeed -= 1f;
++				logoRotationSpeed -= 1f * DrawDeltaTime;
+ 
+-			logoScale += logoScaleSpeed * 9E-05f;
++			logoScale += logoScaleSpeed * (9E-05f * DrawDeltaTime);
+ 			if (logoScale > 1f)
+ 				logoScaleDirection = -1f;
+ 			else if (logoScale < 0.9f)
+ 				logoScaleDirection = 1f;
+ 
+ 			if (logoScaleSpeed < 50f && logoScaleDirection == 1f)
+-				logoScaleSpeed += 1f;
++				logoScaleSpeed += 1f * DrawDeltaTime;
+ 			else if (logoScaleSpeed > -50f && logoScaleDirection == -1f)
+-				logoScaleSpeed -= 1f;
++				logoScaleSpeed -= 1f * DrawDeltaTime;
+ 		}
+ 		else if (WorldGen.drunkWorldGen && !WorldGen.notTheBees) {
+-			logoRotation += logoRotationSpeed * 4E-06f;
++			logoRotation += logoRotationSpeed * (4E-06f * DrawDeltaTime);
+ 			if (logoRotationSpeed > 0f)
+-				logoRotationSpeed += 1500f;
++				logoRotationSpeed += 1500f * DrawDeltaTime;
+ 			else
+-				logoRotationSpeed -= 1500f;
++				logoRotationSpeed -= 1500f * DrawDeltaTime;
+ 
+-			logoScale -= 0.05f;
++			logoScale -= 0.05f * DrawDeltaTime;
+ 			if (logoScale < 0f)
+ 				logoScale = 0f;
+ 		}
+@@ -41688,35 +_,35 @@
+ 			}
+ 
+ 			if ((double)logoScale < 0.98)
+-				logoScale *= 1.05f;
++				logoScale *= 1.05f * DrawDeltaTime;
+ 
+ 			if ((double)logoRotation > 0.09) {
+-				logoRotation += logoRotationSpeed * 0.0016f;
++				logoRotation += logoRotationSpeed * (0.0016f * DrawDeltaTime);
+ 				if (logoRotationSpeed > 0f)
+ 					logoRotationSpeed = 0f;
+ 			}
+ 
+-			logoRotation += logoRotationSpeed * 4E-06f;
++			logoRotation += logoRotationSpeed * (4E-06f * DrawDeltaTime);
+ 			if ((double)logoRotation > 0.08)
+ 				logoRotationDirection = -1f;
+ 			else if ((double)logoRotation < -0.08)
+ 				logoRotationDirection = 1f;
+ 
+ 			if (logoRotationSpeed < 20f && logoRotationDirection == 1f)
+-				logoRotationSpeed += 1f;
++				logoRotationSpeed += 1f * DrawDeltaTime;
+ 			else if (logoRotationSpeed > -20f && logoRotationDirection == -1f)
+-				logoRotationSpeed -= 1f;
++				logoRotationSpeed -= 1f * DrawDeltaTime;
+ 
+-			logoScale += logoScaleSpeed * 9E-06f;
++			logoScale += logoScaleSpeed * (9E-06f * DrawDeltaTime);
+ 			if ((double)logoScale > 1.35)
+ 				logoScaleDirection = -1f;
+ 			else if (logoScale < 1f)
+ 				logoScaleDirection = 1f;
+ 
+ 			if (logoScaleSpeed < 50f && logoScaleDirection == 1f)
+-				logoScaleSpeed += 1f;
++				logoScaleSpeed += 1f * DrawDeltaTime;
+ 			else if (logoScaleSpeed > -50f && logoScaleDirection == -1f)
+-				logoScaleSpeed -= 1f;
++				logoScaleSpeed -= 1f * DrawDeltaTime;
+ 		}
+ 
+ 		Microsoft.Xna.Framework.Color color2 = new Microsoft.Xna.Framework.Color((byte)((float)(int)color.R * ((float)LogoA / 255f)), (byte)((float)(int)color.G * ((float)LogoA / 255f)), (byte)((float)(int)color.B * ((float)LogoA / 255f)), (byte)((float)(int)color.A * ((float)LogoA / 255f)));
+@@ -41725,33 +_,33 @@
  			boulderLogo = true;
  
  		if (playOldTile) {
@@ -3923,7 +4285,88 @@
  		}
  
  		if (dayTime && !WorldGen.remixWorldGen) {
-@@ -44887,7 +_,7 @@
+-			LogoA += 2;
++			LogoA += 2 * DrawDeltaTime;
+ 			if (LogoA > 255)
+ 				LogoA = 255;
+ 
+-			LogoB--;
++			LogoB -= 1 * DrawDeltaTime;
+ 			if (LogoB < 0)
+ 				LogoB = 0;
+ 		}
+ 		else {
+-			LogoB += 2;
++			LogoB += 2 * DrawDeltaTime;
+ 			if (LogoB > 255)
+ 				LogoB = 255;
+ 
+-			LogoA--;
++			LogoA -= 1 * DrawDeltaTime;
+ 			if (LogoA < 0) {
+ 				LogoA = 0;
+ 				LogoT = true;
+@@ -41926,7 +_,7 @@
+ 				SoundEngine.PlaySound(12);
+ 
+ 			array9[0] = Lang.menu[3].Value;
+-			textBlinkerCount++;
++			textBlinkerCount += 1 * DrawDeltaTime;
+ 			if (textBlinkerCount >= 20) {
+ 				if (textBlinkerState == 0)
+ 					textBlinkerState = 1;
+@@ -42031,7 +_,7 @@
+ 				SoundEngine.PlaySound(12);
+ 
+ 			array9[0] = Lang.menu[7].Value;
+-			textBlinkerCount++;
++			textBlinkerCount += 1 * DrawDeltaTime;
+ 			if (textBlinkerCount >= 20) {
+ 				if (textBlinkerState == 0)
+ 					textBlinkerState = 1;
+@@ -43995,7 +_,7 @@
+ 					if (selectedMenu == 9 || (!array2[2] && inputTextEnter))
+ 						OnSubmitServerIP(getIP);
+ 
+-					textBlinkerCount++;
++					textBlinkerCount += 1 * DrawDeltaTime;
+ 					if (textBlinkerCount >= 20) {
+ 						if (textBlinkerState == 0)
+ 							textBlinkerState = 1;
+@@ -44039,7 +_,7 @@
+ 						array2[2] = false;
+ 				}
+ 
+-				textBlinkerCount++;
++				textBlinkerCount += 1 * DrawDeltaTime;
+ 				if (textBlinkerCount >= 20) {
+ 					if (textBlinkerState == 0)
+ 						textBlinkerState = 1;
+@@ -44838,13 +_,13 @@
+ 		for (int num112 = 0; num112 < maxMenuItems; num112++) {
+ 			if (num112 == focusMenu) {
+ 				if (menuItemScale[num112] < 1f)
+-					menuItemScale[num112] += 0.02f;
++					menuItemScale[num112] += 0.02f * DrawDeltaTime;
+ 
+ 				if (menuItemScale[num112] > 1f)
+ 					menuItemScale[num112] = 1f;
+ 			}
+ 			else if ((double)menuItemScale[num112] > 0.8) {
+-				menuItemScale[num112] -= 0.02f;
++				menuItemScale[num112] -= 0.02f * DrawDeltaTime;
+ 			}
+ 		}
+ 
+@@ -44880,14 +_,14 @@
+ 		if (fadeCounter > 0) {
+ 			Microsoft.Xna.Framework.Color white = Microsoft.Xna.Framework.Color.White;
+ 			byte b2 = 0;
+-			fadeCounter--;
++			fadeCounter -= 1 * DrawDeltaTime;
+ 			float num114 = (float)fadeCounter / 120f * 255f;
+ 			if (quickSplash)
+ 				num114 = (float)fadeCounter / 75f * 255f;
  
  			b2 = (byte)num114;
  			white = new Microsoft.Xna.Framework.Color(b2, b2, b2, b2);
@@ -4011,6 +4454,15 @@
  	{
  		float uiScaleWanted = _uiScaleWanted;
  		float num = (float)screenHeight / 900f;
+@@ -45441,7 +_,7 @@
+ 			_isAsyncLoadComplete = true;
+ 
+ 		spriteBatch.Begin();
+-		splashCounter++;
++		splashCounter += 1 * DrawDeltaTime;
+ 		Microsoft.Xna.Framework.Color white = Microsoft.Xna.Framework.Color.White;
+ 		byte b = 0;
+ 		int num3 = 90;
 @@ -45526,8 +_,8 @@
  
  	private void DrawSplash_LoadingFlower(Microsoft.Xna.Framework.Color splashColor)
@@ -5379,6 +5831,21 @@
  				}
  
  				if (tile.active()) {
+@@ -51270,12 +_,12 @@
+ 		if (!WorldGen.drunkWorldGen && flag && (double)(screenPosition.Y / 16f) <= worldSurface + 10.0) {
+ 			if (BackgroundEnabled) {
+ 				if (cloudBGActive > 0f) {
+-					cloudBGAlpha += 0.0005f * (float)dayRate;
++					cloudBGAlpha += 0.0005f * (float)(dayRate * DrawDeltaTime);
+ 					if (cloudBGAlpha > 1f)
+ 						cloudBGAlpha = 1f;
+ 				}
+ 				else {
+-					cloudBGAlpha -= 0.0005f * (float)dayRate;
++					cloudBGAlpha -= 0.0005f * (float)(dayRate * DrawDeltaTime);
+ 					if (cloudBGAlpha < 0f)
+ 						cloudBGAlpha = 0f;
+ 				}
 @@ -51309,7 +_,7 @@
  					ColorOfSurfaceBackgroundsModified = colorOfSurfaceBackgroundsBase * num9;
  					SkyManager.Instance.DrawToDepth(spriteBatch, 1f / (float)bgParallax);
@@ -5529,6 +5996,15 @@
  				if (flag4)
  					value.X = (4 + hitter.data[i].crackStyle / 2) * 18;
  
+@@ -53383,6 +_,8 @@
+ 
+ 	private void DoDraw(GameTime gameTime)
+ 	{
++		DrawGameTime = gameTime;
++
+ 		if (showSplash) {
+ 			TimeLogger.StartTimestamp fromTimestamp = TimeLogger.Start();
+ 			DrawSplash(gameTime);
 @@ -53420,7 +_,7 @@
  		TimeLogger.PrepareRequests.AddTime(fromTimestamp3);
  		if (loadMap) {
@@ -5538,6 +6014,33 @@
  		}
  
  		if (Lighting.UpdateEveryFrame)
+@@ -53453,8 +_,12 @@
+ 		}
+ 		else {
+ 			stackCounter++;
++			/*
+-			int num2 = 30;
++			int num2 = 30; 
++			*/
++			float num2 = 30;
+ 			num2 = ((stackDelay == 7) ? 30 : ((stackDelay == 6) ? 25 : ((stackDelay == 5) ? 20 : ((stackDelay == 4) ? 15 : ((stackDelay != 3) ? 5 : 10)))));
++			num2 /= (HighFPSDrawFixes.FixStackSplitSpeed ? DrawDeltaTime : 1);
+ 			if (stackCounter >= num2) {
+ 				stackDelay--;
+ 				if (stackDelay < 2) {
+@@ -53489,9 +_,11 @@
+ 		}
+ 
+ 		ClearHoverItem();
++		// necessary for high fps to not flicker the instrument mouse text
++		ResetMouseTextCache();
+ 		DoDraw_UpdateCameraPosition();
+ 		Cloud.UpdateCloudParallax();
+-		sunCircle += 0.01f;
++		sunCircle += 0.01f * DrawDeltaTime;
+ 		if ((double)sunCircle > 6.285)
+ 			sunCircle -= 6.285f;
+ 
 @@ -53546,7 +_,7 @@
  				updateMap = null;
  			}
@@ -5547,6 +6050,32 @@
  			}
  		}
  
+@@ -53554,7 +_,7 @@
+ 		if (num4 < 1)
+ 			num4 = 1;
+ 
+-		float num5 = 0.0005f * (float)num4;
++		float num5 = ((0.0005f * (float)num4) * DrawDeltaTime);
+ 		if (gameMenu)
+ 			num5 *= 20f;
+ 
+@@ -53587,13 +_,13 @@
+ 		float num7 = SmoothedMushroomLightInfluence;
+ 		if (num6 > 0f) {
+ 			if (num6 > num7)
+-				num7 += 0.01f;
++				num7 += 0.01f * DrawDeltaTime;
+ 
+ 			if (num6 < num7)
+-				num7 -= 0.01f;
++				num7 -= 0.01f * DrawDeltaTime;
+ 		}
+ 		else {
+-			num7 -= 0.02f;
++			num7 -= 0.02f * DrawDeltaTime;
+ 		}
+ 
+ 		if (num7 < 0f)
 @@ -53620,8 +_,8 @@
  		if (DebugOptions.DrawWaitInMs > 0.0)
  			ThreadUtilities.HighPrecisionSleep(DebugOptions.DrawWaitInMs);
@@ -5567,15 +6096,49 @@
  				if (destinationRectangle.Bottom < asset.Height()) {
  					int num10 = asset.Height() - destinationRectangle.Bottom;
  					destinationRectangle.Height += num10;
-@@ -54016,7 +_,7 @@
+@@ -53826,7 +_,7 @@
+ 
+ 		Overlays.Scene.Draw(spriteBatch, RenderLayers.Background);
+ 		ScreenDarkness.DrawBack(spriteBatch);
+-		magmaBGFrameCounter++;
++		magmaBGFrameCounter += 1 * DrawDeltaTime;
+ 		if (magmaBGFrameCounter >= 8) {
+ 			magmaBGFrameCounter = 0;
+ 			magmaBGFrame++;
+@@ -53868,7 +_,7 @@
+ 		spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, DefaultSamplerState, DepthStencilState.None, Rasterizer, null, Transform);
+ 		DrawCachedNPCs(DrawCacheNPCsOverPlayers, behindTiles: false);
+ 		if (!gamePaused) {
+-			essScale += (float)essDir * 0.01f;
++			essScale += (float)essDir * (0.01f * DrawDeltaTime);
+ 			if (essScale > 1f) {
+ 				essDir = -1;
+ 				essScale = 1f;
+@@ -54011,12 +_,12 @@
+ 				if (BlackFadeIn < 0)
+ 					BlackFadeIn = 0;
+ 
+-				int num20 = BlackFadeIn;
++				int num20 = (int)BlackFadeIn;
+ 				if (num20 > 255)
  					num20 = 255;
  
- 				BlackFadeIn -= 25;
+-				BlackFadeIn -= 25;
++				BlackFadeIn -= 25 * DrawDeltaTime;
 -				spriteBatch.Draw(TextureAssets.SplashTexture16x9.Value, new Microsoft.Xna.Framework.Rectangle(0, 0, screenWidth, screenHeight), new Microsoft.Xna.Framework.Color(0, 0, 0, num20));
 +				spriteBatch.Draw(TextureAssets.SplashTexture16x9.Value, new System.Drawing.Rectangle(0, 0, screenWidth, screenHeight), new Microsoft.Xna.Framework.Color(0, 0, 0, num20));
  			}
  
  			spriteBatch.End();
+@@ -54055,7 +_,7 @@
+ 			stackSplit = 0;
+ 
+ 		if (stackSplit > 0)
+-			stackSplit--;
++			stackSplit -= (HighFPSDrawFixes.FixStackSplitSpeed ? 1 * DrawDeltaTime : 1);
+ 
+ 		if (stackSplit == 0)
+ 			quickCraftStackSplit = false;
 @@ -54109,7 +_,7 @@
  			trackedPosition = LocalPlayer.Center;
  		}
@@ -5585,6 +6148,45 @@
  		areaToLight.Inflate(28, 28);
  		SceneMetrics.Scan(new SceneMetricsScanSettings {
  			VisualScanArea = areaToLight,
+@@ -54167,25 +_,25 @@
+ 			cameraX = 0f;
+ 
+ 		if (cameraX > 0f) {
+-			cameraX -= 1f;
++			cameraX -= 1f * DrawDeltaTime;
+ 			if (cameraX < 0f)
+ 				cameraX = 0f;
+ 		}
+ 
+ 		if (cameraX < 0f) {
+-			cameraX += 1f;
++			cameraX += 1f * DrawDeltaTime;
+ 			if (cameraX > 0f)
+ 				cameraX = 0f;
+ 		}
+ 
+ 		if (cameraY > 0f) {
+-			cameraY -= 2f;
++			cameraY -= 2f * DrawDeltaTime;
+ 			if (cameraY < 0f)
+ 				cameraY = 0f;
+ 		}
+ 
+ 		if (cameraY < 0f) {
+-			cameraY += 2f;
++			cameraY += 2f * DrawDeltaTime;
+ 			if (cameraY > 0f)
+ 				cameraY = 0f;
+ 		}
+@@ -54196,7 +_,7 @@
+ 			if (Vector2.Distance(value, screenPosition) - LocalPlayer.velocity.Length() < 0.25f)
+ 				cameraLerp = 0f;
+ 			else
+-				screenPosition = Vector2.Lerp(value, screenPosition, cameraLerp);
++				screenPosition = Vector2.Lerp(value, screenPosition, cameraLerp * (HighFPSDrawFixes.FixScreenLerpSpeed ? DrawDeltaTime : 1));
+ 		}
+ 
+ 		instance.CameraModifiers.ApplyTo(ref screenPosition);
 @@ -54459,17 +_,17 @@
  			moonColor *= num13;
  			Vector2 position = new Vector2(num6, num7 + moonModY);
@@ -5609,6 +6211,15 @@
  		sunModY = (short)((double)sunModY * 0.999);
  		moonModY = (short)((double)moonModY * 0.999);
  		if (gameMenu && netMode != 1) {
+@@ -54603,7 +_,7 @@
+ 				num7 = (int)num8;
+ 
+ 			for (int j = 1; j < num7; j++) {
+-				Vector2 vector3 = theStar.fallSpeed * j * 0.4f;
++				Vector2 vector3 = theStar.fallSpeed * j * (0.4f * DrawDeltaTime);
+ 				float num9 = theStar.scale * (1f - (float)j * 1f / num8);
+ 				Microsoft.Xna.Framework.Color color2 = color;
+ 				_ = theStar.rotation;
 @@ -55289,7 +_,7 @@
  		ColorOfTheSkies = bgColorToSet;
  	}
@@ -5634,6 +6245,65 @@
  			Vector2 input = worldPlayArea.TopLeft() - GameViewMatrix.Translation;
  			Vector2 input2 = worldPlayArea.BottomRight() - Camera.ScaledSize - GameViewMatrix.Translation;
  			input = Utils.Round(input);
+@@ -55355,11 +_,11 @@
+ 		int preferredBGStyleForPlayer = GetPreferredBGStyleForPlayer();
+ 		backgroundLayerTransitionSpeed = 0.05f;
+ 		if (bgDelay < 0)
+-			bgDelay++;
++			bgDelay += 1 * DrawDeltaTime;
+ 		else if (preferredBGStyleForPlayer != bgStyle)
+ 			DrawBG_HandleBackgroundTransition(preferredBGStyleForPlayer);
+ 		else if (bgDelay > 0)
+-			bgDelay--;
++			bgDelay -= 1 * DrawDeltaTime;
+ 
+ 		if (gameMenu) {
+ 			backgroundLayerTransitionSpeed = 0.02f;
+@@ -55384,7 +_,7 @@
+ 		}
+ 
+ 		if (instantBGTransitionCounter > 0) {
+-			instantBGTransitionCounter--;
++			instantBGTransitionCounter -= 1 * DrawDeltaTime;
+ 			bgStyle = preferredBGStyleForPlayer;
+ 			backgroundLayerTransitionSpeed = 1f;
+ 		}
+@@ -55433,7 +_,7 @@
+ 		if (targetBiomeOverride.HasValue)
+ 			value = targetBiomeOverride.Value;
+ 
+-		float value2 = backgroundLayerTransitionSpeed;
++		float value2 = backgroundLayerTransitionSpeed * DrawDeltaTime;
+ 		if (transitionAmountOverride.HasValue)
+ 			value2 = transitionAmountOverride.Value;
+ 
+@@ -55574,7 +_,7 @@
+ 
+ 	private void DrawBG_ModifyBGFarBackLayerAlpha(int desiredBG, int? desiredBG2 = null, float? transitionAmountOverride = null)
+ 	{
+-		float value = backgroundLayerTransitionSpeed;
++		float value = backgroundLayerTransitionSpeed * DrawDeltaTime;
+ 		if (transitionAmountOverride.HasValue)
+ 			value = transitionAmountOverride.Value;
+ 
+@@ -55598,7 +_,7 @@
+ 			float num2 = 0.1f;
+ 			float num3 = 0.9f;
+ 			if (allowPlayerToEmitEffects)
+-				player[i].flameRingScale += 0.004f;
++				player[i].flameRingScale += 0.004f * DrawDeltaTime;
+ 
+ 			if (player[i].flameRingScale < 1f) {
+ 				num = player[i].flameRingScale;
+@@ -55609,7 +_,7 @@
+ 			}
+ 
+ 			if (allowPlayerToEmitEffects)
+-				player[i].flameRingRot += 0.05f;
++				player[i].flameRingRot += 0.05f * DrawDeltaTime;
+ 
+ 			if (player[i].flameRingRot > (float)Math.PI * 2f)
+ 				player[i].flameRingRot -= (float)Math.PI * 2f;
 @@ -55623,7 +_,7 @@
  					num4 -= num2 * 2f;
  

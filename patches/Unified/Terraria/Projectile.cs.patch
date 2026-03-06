@@ -1,5 +1,20 @@
 --- src/TerrariaNetCore/Terraria/Projectile.cs
 +++ src/Unified/Terraria/Projectile.cs
+@@ -137,7 +_,14 @@
+ 	public bool trap;
+ 	public bool npcProj;
+ 	public bool originatedFromActivableTile;
++	/*
+ 	public int frameCounter;
++	*/
++	public float _frameCounter;
++	public int frameCounter {
++		get => (int)_frameCounter;
++		set => _frameCounter = value;
++	}
+ 	public int frame;
+ 	public bool manualDirectionChange;
+ 	public int projUUID = -1;
 @@ -12823,7 +_,7 @@
  		if (localAI[0] == 1f && GetStormLightningExplosionRect().Intersects(targetRect))
  			return true;

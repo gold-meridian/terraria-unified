@@ -9,3 +9,12 @@
  		num *= 25f;
  		num *= 0.25f + 1f * Main.cloudAlpha;
  		if (NPC.AnyDanger(quickBossNPCCheck: true)) {
+@@ -79,7 +_,7 @@
+ 		if (Main.gamePaused)
+ 			return;
+ 
+-		position += velocity;
++		position += velocity * Main.DrawDeltaTime;
+ 		if (Main.gameMenu) {
+ 			if (position.Y > Main.screenPosition.Y + (float)Main.screenHeight + 2000f)
+ 				active = false;

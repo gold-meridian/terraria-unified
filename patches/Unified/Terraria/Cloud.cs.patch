@@ -1,0 +1,48 @@
+--- src/TerrariaNetCore/Terraria/Cloud.cs
++++ src/Unified/Terraria/Cloud.cs
+@@ -307,28 +_,32 @@
+ 			}
+ 		}
+ 
++		float delta = Main.DrawDeltaTime;
++		if (!Main.gameMenu)
++			delta = 1f;
++
+ 		if (scale == 1f)
+ 			scale -= 0.0001f;
+ 
+ 		if ((double)scale == 1.15)
+ 			scale -= 0.0001f;
+ 
+-		position.X += Main.windSpeedCurrent * 9f * GetParallax() * (float)Main.dayRate;
++		position.X += (Main.windSpeedCurrent * 9f * GetParallax() * (float)Main.dayRate) * delta;
+ 		float num = 600f;
+ 		if (Main.bgAlphaFrontLayer[4] == 1f && position.Y > 200f) {
+ 			kill = true;
+-			Alpha -= 0.005f * (float)Main.dayRate;
++			Alpha -= 0.005f * (float)(Main.dayRate * delta);
+ 		}
+ 
+ 		if (!kill) {
+ 			if (Alpha < 1f) {
+-				Alpha += 0.001f * (float)Main.dayRate;
++				Alpha += 0.001f * (float)(Main.dayRate * delta);
+ 				if (Alpha > 1f)
+ 					Alpha = 1f;
+ 			}
+ 		}
+ 		else {
+-			Alpha -= 0.001f * (float)Main.dayRate;
++			Alpha -= 0.001f * (float)(Main.dayRate * delta);
+ 			if (Alpha <= 0f)
+ 				active = false;
+ 		}
+@@ -336,7 +_,7 @@
+ 		if (position.X + (float)TextureAssets.Cloud[type].Width() * scale < 0f - num || position.X > (float)Main.screenWidth + num)
+ 			active = false;
+ 
+-		rSpeed += (float)rand.Next(-10, 11) * 2E-05f;
++		rSpeed += (float)rand.Next(-10, 11) * (2E-05f * delta);
+ 		if ((double)rSpeed > 0.0002)
+ 			rSpeed = 0.0002f;
+ 

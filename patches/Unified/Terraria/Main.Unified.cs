@@ -1,7 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
-using System.Collections.Generic;
 using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.IO;
@@ -20,6 +21,17 @@ partial class Main
 	public static bool Vsync { get; set; } = true;
 
 	internal static List<TitleLinkButton> UnifiedLinks { get; } = [];
+
+	internal static GameTime DrawGameTime { get; set; }
+
+	// mever greater than 1 due to a bug with the game menu
+	// note: the calc of ticks / 166667 is copied directly from FNA and its code that calls for game updating
+	internal static float DrawDeltaTime =>
+		!HighFPSDrawFixes.Enabled || DrawGameTime == null ? 1 : Math.Clamp((float)DrawGameTime.ElapsedGameTime.Ticks / 166667, 0, 1);
+
+	// seems to only work for instruments text draw?
+	internal static bool CanDoCertainUpdatesThisDraw =>
+		!HighFPSDrawFixes.Enabled || DrawGameTime == null ? true : DrawGameTime.ElapsedGameTime.Ticks >= 166667;
 
 	private static void SaveUnifiedSettings(Preferences config)
 	{
@@ -136,5 +148,12 @@ partial class Main
 		base.Content.RootDirectory = vanillaContentFolder;
 
 		// TODO: Fix file casings.
+	}
+
+	// necessary for high fps to not flicker the instrument mouse text
+	private static void ResetMouseTextCache()
+	{
+		instance._mouseTextCache.isValid = false;
+		instance._mouseTextCache.noOverride = false;
 	}
 }

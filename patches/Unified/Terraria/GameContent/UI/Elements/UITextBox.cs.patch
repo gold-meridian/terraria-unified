@@ -1,0 +1,22 @@
+--- src/TerrariaNetCore/Terraria/GameContent/UI/Elements/UITextBox.cs
++++ src/Unified/Terraria/GameContent/UI/Elements/UITextBox.cs
+@@ -9,7 +_,10 @@
+ internal class UITextBox : UITextPanel<string>
+ {
+ 	private int _cursor;
++	/*
+ 	private int _frameCount;
++	*/
++	private float _frameCount;
+ 	private int _maxLength = 20;
+ 	public bool ShowInputTicker = true;
+ 	public bool HideSelf;
+@@ -85,7 +_,7 @@
+ 			DrawText(spriteBatch, compositionString, TextDrawPosition + new Vector2(base.TextSize.X, 0f), Main.imeCompositionStringColor);
+ 		}
+ 
+-		_frameCount++;
++		_frameCount += 1 * Main.DrawDeltaTime;
+ 		if ((_frameCount %= 40) <= 20) {
+ 			textDrawPosition.X += base.Font.MeasureString(base.Text.Substring(0, _cursor)).X * base.TextScale;
+ 			textDrawPosition.X += 6f - (base.IsLarge ? 8f : 4f) * base.TextScale;

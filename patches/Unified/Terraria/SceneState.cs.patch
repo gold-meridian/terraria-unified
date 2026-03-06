@@ -1,0 +1,11 @@
+--- src/TerrariaNetCore/Terraria/SceneState.cs
++++ src/Unified/Terraria/SceneState.cs
+@@ -334,7 +_,7 @@
+ 	private void UpdateGraveyard(SceneMetrics metrics)
+ 	{
+ 		float lerpValue = Utils.GetLerpValue(SceneMetrics.GraveyardTileMin, SceneMetrics.GraveyardTileMax, metrics.GraveyardTileCount, clamped: true);
+-		MoveTowards(ref Main.GraveyardVisualIntensity, lerpValue, 0.02f, 0.1f);
++		MoveTowards(ref Main.GraveyardVisualIntensity, lerpValue, 0.02f * Main.DrawDeltaTime, 0.1f * Main.DrawDeltaTime);
+ 	}
+ 
+ 	private void UpdateRGBPeriheralProbe(SceneMetrics metrics)
