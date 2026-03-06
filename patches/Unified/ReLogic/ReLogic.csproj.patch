@@ -8,7 +8,7 @@
  	<PropertyGroup>
  		<OutputType>Library</OutputType>
  		<Version>1.0.0.0</Version>
-@@ -7,11 +_,21 @@
+@@ -7,11 +_,25 @@
  		<Copyright>Copyright © Re-Logic 2017</Copyright>
  		<RootNamespace>ReLogic</RootNamespace>
  	</PropertyGroup>
@@ -19,6 +19,8 @@
 +        <ProjectReference Include="../../../FNA2/src/FNA/FNA.csproj" />
  		<Reference Include="../Terraria/Libraries/Common/Newtonsoft.Json.dll" />
  		<Reference Include="../Terraria/Libraries/Common/SteelSeriesEngineWrapper.dll" />
+-	</ItemGroup>
+-	<ItemGroup />
 +
 +		<Using Alias="Vector2" Include="System.Numerics.Vector2"/>
 +		<Using Alias="Vector3" Include="System.Numerics.Vector3"/>
@@ -28,7 +30,10 @@
 +		<Using Alias="Rectangle" Include="System.Drawing.Rectangle"/>
 +		<Using Alias="Matrix" Include="System.Numerics.Matrix4x4"/>
 +		<Using Static="true" Include="Microsoft.Xna.Framework.NumericsExtensions"/>
- 	</ItemGroup>
--	<ItemGroup />
++	</ItemGroup>
++	
++	<ItemGroup>
++	  <Folder Include="Content\Readers\" />
++	</ItemGroup>
 +
  </Project>

@@ -15,6 +15,8 @@ ReLogic/Content/IAsyncAssetLoader.cs
 ReLogic/Content/IContentValidator.cs
 ReLogic/Content/LoadAssetDelegate.cs
 ReLogic/Content/Readers/IAssetReader.cs
+ReLogic/Content/Readers/PngReader.cs
+ReLogic/Content/Readers/XnbReader.cs
 ReLogic/Content/RejectedAssetCollection.cs
 ReLogic/Content/Sources/IContentSource.cs
 ReLogic/Content/Sources/XnaContentSource.cs
