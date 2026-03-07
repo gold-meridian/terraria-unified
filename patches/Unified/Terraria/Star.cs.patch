@@ -9,7 +9,96 @@
  		for (int i = 0; i < Main.numStars; i++) {
  			if (!Main.star[i].hidden && !Main.star[i].falling) {
  				float num4 = Math.Abs(Main.star[i].position.X - num3);
-@@ -244,13 +_,13 @@
+@@ -136,16 +_,20 @@
+ 
+ 	public void Update()
+ 	{
++		float delta = Main.DrawDeltaTime;
++		if (!Main.gameMenu)
++			delta = 1f;
++
+ 		if (falling && !hidden) {
+ 			fallTime += Main.dayRate;
+-			position += fallSpeed * (Main.dayRate + 99) / 100f;
++			position += fallSpeed * (Main.dayRate + 99) / 100f * delta;
+ 			if (position.Y > 1500f)
+ 				hidden = true;
+ 
+ 			if (Main.starGame && position.Length() > 99999f)
+ 				hidden = true;
+ 
+-			twinkle += twinkleSpeed * 3f;
++			twinkle += twinkleSpeed * 3f * delta;
+ 			if (twinkle > 1f) {
+ 				twinkle = 1f;
+ 				twinkleSpeed *= -1f;
+@@ -155,7 +_,7 @@
+ 				twinkleSpeed *= -1f;
+ 			}
+ 
+-			rotation += 0.5f;
++			rotation += 0.5f * delta;
+ 			if ((double)rotation > 6.28)
+ 				rotation -= 6.28f;
+ 
+@@ -168,12 +_,12 @@
+ 		if (fadeIn > 0f) {
+ 			float num = 6.1728395E-05f * (float)Main.dayRate;
+ 			num *= 10f;
+-			fadeIn -= num;
++			fadeIn -= num * delta;
+ 			if (fadeIn < 0f)
+ 				fadeIn = 0f;
+ 		}
+ 
+-		twinkle += twinkleSpeed;
++		twinkle += twinkleSpeed * delta;
+ 		if (twinkle > 1f) {
+ 			twinkle = 1f;
+ 			twinkleSpeed *= -1f;
+@@ -183,7 +_,7 @@
+ 			twinkleSpeed *= -1f;
+ 		}
+ 
+-		rotation += rotationSpeed;
++		rotation += rotationSpeed * delta;
+ 		if ((double)rotation > 6.28)
+ 			rotation -= 6.28f;
+ 
+@@ -213,6 +_,12 @@
+ 		if (!Main.gameMenu || !WorldGen.generatingWorld || !WorldGen.SecretSeed.anySecretSeedIsActive)
+ 			return;
+ 
++		float delta = Main.DrawDeltaTime;
++		/*
++		if (!Main.gameMenu)
++			delta = 1f;
++		*/
++
+ 		for (int k = 0; k < Main.numStars; k++) {
+ 			if (Main.star[k].falling || Main.star[k].hidden || !(Main.star[k].scale > 0f))
+ 				continue;
+@@ -226,10 +_,10 @@
+ 				vector *= 0.005f * Main.star[l].scale;
+ 				if (num != 0f) {
+ 					if (vector.X != 0f)
+-						Main.star[k].velocity.X += vector.X / num / Main.star[k].scale;
++						Main.star[k].velocity.X += vector.X / num / Main.star[k].scale * delta;
+ 
+ 					if (vector.Y != 0f)
+-						Main.star[k].velocity.Y += vector.Y / num / Main.star[k].scale;
++						Main.star[k].velocity.Y += vector.Y / num / Main.star[k].scale * delta;
+ 				}
+ 
+ 				if (float.IsNaN(Main.star[k].velocity.X) || float.IsInfinity(Main.star[k].velocity.X) || float.IsNaN(Main.star[k].velocity.Y) || float.IsInfinity(Main.star[k].velocity.Y)) {
+@@ -239,18 +_,18 @@
+ 				}
+ 			}
+ 
+-			Main.star[k].position += Main.star[k].velocity;
++			Main.star[k].position += Main.star[k].velocity * delta;
+-			Main.star[k].rotation += Main.star[k].velocity.X * 0.02f;
++			Main.star[k].rotation += Main.star[k].velocity.X * 0.02f * delta;
  			if (Main.star[k].position.X < 0f)
  				Main.star[k].velocity.X = Math.Abs(Main.star[k].velocity.X);
  
