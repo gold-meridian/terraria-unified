@@ -1,17 +1,16 @@
 ﻿using System.Runtime.CompilerServices;
-using static Terraria.Unified.Time.DeltaTimeProviderExtensions;
 
 namespace Terraria.Unified.Time;
 
 // Stored as a float for obvious reasons.
 public struct DeltaInt<TProvider>(float value)
-	where TProvider : IDeltaTimeProvider<TProvider>
+	where TProvider : IDeltaFactorProvider<TProvider>
 {
 	public float Value = value;
 
-	public static float Dt {
+	public static float Factor {
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		get => DeltaTimeOverrider<TProvider>.OverrideDeltaTime ?? TProvider.ActualDeltaTime;
+		get => TProvider.DeltaFactor;
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -29,28 +28,28 @@ public struct DeltaInt<TProvider>(float value)
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static DeltaInt<TProvider> operator +(DeltaInt<TProvider> a, int b)
 	{
-		a.Value += b * Dt;
+		a.Value += b * Factor;
 		return a;
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static DeltaInt<TProvider> operator -(DeltaInt<TProvider> a, int b)
 	{
-		a.Value -= b * Dt;
+		a.Value -= b * Factor;
 		return a;
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static DeltaInt<TProvider> operator ++(DeltaInt<TProvider> a)
 	{
-		a.Value += 1f * Dt;
+		a.Value += 1f * Factor;
 		return a;
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static DeltaInt<TProvider> operator --(DeltaInt<TProvider> a)
 	{
-		a.Value -= 1f * Dt;
+		a.Value -= 1f * Factor;
 		return a;
 	}
 
@@ -72,13 +71,13 @@ public struct DeltaInt<TProvider>(float value)
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public void Add(int perTick)
 	{
-		Value += perTick * Dt;
+		Value += perTick * Factor;
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public void Sub(int perTick)
 	{
-		Value -= perTick * Dt;
+		Value -= perTick * Factor;
 	}
 
 	public override string ToString()

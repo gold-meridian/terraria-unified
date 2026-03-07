@@ -1,16 +1,15 @@
 ﻿using System.Runtime.CompilerServices;
-using static Terraria.Unified.Time.DeltaTimeProviderExtensions;
 
 namespace Terraria.Unified.Time;
 
 public struct DeltaDouble<TProvider>(double value)
-	where TProvider : IDeltaTimeProvider<TProvider>
+	where TProvider : IDeltaFactorProvider<TProvider>
 {
 	public double Value = value;
 
-	public static float Dt {
+	public static float Factor {
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		get => DeltaTimeOverrider<TProvider>.OverrideDeltaTime ?? TProvider.ActualDeltaTime;
+		get => TProvider.DeltaFactor;
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -28,42 +27,42 @@ public struct DeltaDouble<TProvider>(double value)
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static DeltaDouble<TProvider> operator +(DeltaDouble<TProvider> a, double b)
 	{
-		a.Value += b * Dt;
+		a.Value += b * Factor;
 		return a;
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static DeltaDouble<TProvider> operator -(DeltaDouble<TProvider> a, double b)
 	{
-		a.Value -= b * Dt;
+		a.Value -= b * Factor;
 		return a;
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static DeltaDouble<TProvider> operator ++(DeltaDouble<TProvider> a)
 	{
-		a.Value += 1f * Dt;
+		a.Value += 1f * Factor;
 		return a;
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static DeltaDouble<TProvider> operator --(DeltaDouble<TProvider> a)
 	{
-		a.Value -= 1f * Dt;
+		a.Value -= 1f * Factor;
 		return a;
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static DeltaDouble<TProvider> operator *(DeltaDouble<TProvider> a, double b)
 	{
-		a.Value *= b * Dt;
+		a.Value *= b * Factor;
 		return a;
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static DeltaDouble<TProvider> operator /(DeltaDouble<TProvider> a, double b)
 	{
-		a.Value /= b * Dt;
+		a.Value /= b * Factor;
 		return a;
 	}
 
@@ -71,13 +70,13 @@ public struct DeltaDouble<TProvider>(double value)
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public void Add(double perTick)
 	{
-		Value += perTick * Dt;
+		Value += perTick * Factor;
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public void Sub(double perTick)
 	{
-		Value -= perTick * Dt;
+		Value -= perTick * Factor;
 	}
 
 	public override string ToString()

@@ -24,7 +24,7 @@
  	public int lifeMax;
  	public Rectangle targetRect;
 -	public double frameCounter;
-+	public DeltaDouble<NpcFrameCounter> frameCounter;
++	public DeltaDouble<CurrentDelta> frameCounter;
  	public Rectangle frame;
  	public Color color;
  	public int alpha;
