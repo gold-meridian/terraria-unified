@@ -8,7 +8,7 @@
  using Microsoft.Xna.Framework;
  using Microsoft.Xna.Framework.Graphics;
  using Newtonsoft.Json.Linq;
-@@ -11,31 +_,56 @@
+@@ -11,35 +_,61 @@
  using Terraria.GameContent;
  using Terraria.ID;
  using Terraria.IO;
@@ -37,8 +37,10 @@
 +		assetReaderCollection.RegisterReader(new FxcReader(Main.instance.Services.Get<IGraphicsDeviceService>().GraphicsDevice), ".fxc");
 +
 +		var assetPipeline = new AssetPipeline([], assetReaderCollection, 1, services);
++		var assetRepository = (IAssetRepository)assetPipeline;
++		assetRepository.AssetValueUpdatedHandler = (AssetValueUpdated)Delegate.Combine(assetRepository.AssetValueUpdatedHandler, new AssetValueUpdated(TagAsset));
 +		services.AddService(typeof(AssetReaderCollection), assetReaderCollection);
-+		services.AddService(typeof(IAssetRepository), assetPipeline);
++		services.AddService(typeof(IAssetRepository), assetRepository);
 +
 +		/*
  		AssetReaderCollection assetReaderCollection = new AssetReaderCollection();
@@ -62,15 +64,12 @@
 +		*/
  	}
  
-+	/*
- 	private static void TagAsset(IAsset asset, object value)
+-	private static void TagAsset(IAsset asset, object value)
++	private static void TagAsset(AssetRecord asset, object value)
  	{
  		if (value is GraphicsResource graphicsResource) {
-@@ -43,6 +_,7 @@
+-			graphicsResource.Name = asset.Name;
++			graphicsResource.Name = asset.Key.Path;
  			graphicsResource.Tag = asset;
  		}
  	}
-+	*/
- 
- 	public static ResourcePackList CreateResourcePackList(IServiceProvider services)
- 	{

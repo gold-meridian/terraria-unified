@@ -5,7 +5,7 @@ using ReLogic.Content.Sources;
 
 namespace ReLogic.Content;
 
-internal readonly record struct PreparedAsset(
+public readonly record struct PreparedAsset(
 	AssetRecord Record,
 	IAssetReader Reader,
 	AssetLoadPlan Plan,

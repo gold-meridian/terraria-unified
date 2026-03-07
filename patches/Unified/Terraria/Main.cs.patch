@@ -289,7 +289,7 @@
  		ClientInitialize();
  		base.Initialize();
  	}
-@@ -9707,7 +_,7 @@
+@@ -9707,20 +_,20 @@
  	{
  	}
  
@@ -298,6 +298,23 @@
  	{
  		FancyErrorPrinter.ShowFailedToLoadAssetError(e, assetPath);
  	}
+ 
+-	private void AssetWatcherValueUpdated(IAsset asset)
++	private void AssetWatcherValueUpdated(AssetRecord asset)
+ 	{
+-		NewTextMultiline(Language.GetTextValue("HotReload.Updated", asset.Name), force: false, new Microsoft.Xna.Framework.Color(250, 250, 0));
++		NewTextMultiline(Language.GetTextValue("HotReload.Updated", asset.Key.Path), force: false, new Microsoft.Xna.Framework.Color(250, 250, 0));
+ 		_resetContentThatNeedsRenderTargetsNextFrame = true;
+ 	}
+ 
+-	private void AssetWatcherUpdateFailed(IAsset asset, Exception e)
++	private void AssetWatcherUpdateFailed(AssetRecord asset, Exception e)
+ 	{
+-		NewTextMultiline(Language.GetTextValue("HotReload.ErrorUpdating", asset.Name, e.Message), force: false, new Microsoft.Xna.Framework.Color(250, 50, 0));
++		NewTextMultiline(Language.GetTextValue("HotReload.ErrorUpdating", asset.Key.Path, e.Message), force: false, new Microsoft.Xna.Framework.Color(250, 50, 0));
+ 	}
+ 
+ 	internal void ContentFileUpdated(IContentSource contentSource, string path, string fullPath)
 @@ -9736,6 +_,11 @@
  
  	protected override void LoadContent()
