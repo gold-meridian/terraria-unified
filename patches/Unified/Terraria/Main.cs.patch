@@ -313,6 +313,15 @@
  	};
  	private static bool _cannotDrawAccessoriesHorizontally = false;
  	public static Microsoft.Xna.Framework.Color selColor = Microsoft.Xna.Framework.Color.White;
+@@ -2134,7 +_,7 @@
+ 	private bool _needsMenuUIRecalculation;
+ 	public static float MenuXMovement = 0f;
+ 	public RejectionMenuInfo RejectionMenuInfo;
+-	private float _splashFrameCount;
++	private DeltaFloat<DrawDelta> _splashFrameCount;
+ 	private bool quickSplash;
+ 	private float hellBlackBoxBottom;
+ 	private Microsoft.Xna.Framework.Color[] _drawbackground_colorSlices = new Microsoft.Xna.Framework.Color[9];
 @@ -2542,7 +_,7 @@
  		}
  	}

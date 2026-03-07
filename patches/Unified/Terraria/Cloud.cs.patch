@@ -28,12 +28,3 @@
  	public bool kill;
  	private static UnifiedRandom rand = new UnifiedRandom();
  	public static Vector2? lastCameraCenter;
-@@ -313,7 +_,7 @@
- 		if ((double)scale == 1.15)
- 			scale -= 0.0001f;
- 
--		position.X += Main.windSpeedCurrent * 9f * GetParallax() * (float)Main.dayRate;
-+		position.X += (Main.windSpeedCurrent * 9f * GetParallax() * (float)Main.dayRate);
- 		float num = 600f;
- 		if (Main.bgAlphaFrontLayer[4] == 1f && position.Y > 200f) {
- 			kill = true;
