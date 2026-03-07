@@ -4,7 +4,7 @@
  			}
  		}
  
-+		float delta = Main.DrawDeltaTime;
++		float delta = Main.DrawFactor;
 +		if (!Main.gameMenu)
 +			delta = 1f;
 +

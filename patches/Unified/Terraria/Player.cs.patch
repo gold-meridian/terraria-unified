@@ -230,7 +230,7 @@
  			miscCounter = 0;
 +		*/
 +
-+		_miscCounter += (!Main.gameMenu ? 1 : Main.DrawDeltaTime);
++		_miscCounter += (!Main.gameMenu ? 1 : Main.DrawFactor);
 +		if (_miscCounter >= 300) {
 +			_miscCounter = 0;
 +		}

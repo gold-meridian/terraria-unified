@@ -16,7 +16,7 @@
  		}
  
 -		_frameCount++;
-+		_frameCount += 1 * Main.DrawDeltaTime;
++		_frameCount += 1 * Main.DrawFactor;
  		if ((_frameCount %= 40) <= 20) {
  			textDrawPosition.X += base.Font.MeasureString(base.Text.Substring(0, _cursor)).X * base.TextScale;
  			textDrawPosition.X += 6f - (base.IsLarge ? 8f : 4f) * base.TextScale;

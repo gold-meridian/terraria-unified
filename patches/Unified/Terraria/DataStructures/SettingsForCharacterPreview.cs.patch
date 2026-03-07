@@ -6,12 +6,3 @@
  
  namespace Terraria.DataStructures;
  
-@@ -15,6 +_,8 @@
- 
- 		public void ApplyTo(Projectile proj)
- 		{
-+			using var _ = ProjectileFrameCounter.Override(Main.DrawDeltaTime);
-+
- 			if (FrameCount != 0) {
- 				if (proj.frame < StartFrame)
- 					proj.frame = StartFrame;

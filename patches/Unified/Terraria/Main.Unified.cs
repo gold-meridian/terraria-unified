@@ -22,15 +22,18 @@ partial class Main
 
 	internal static List<TitleLinkButton> UnifiedLinks { get; } = [];
 
-	internal static GameTime DrawGameTime { get; set; }
+	// Set to UpdateFactor during the update loop and DrawFactor during the
+	// draw loop.  Otherwise, set to 1.
+	public static float CurrentFactor { get; set; } = 1f;
 
-	// note: the calc of ticks / 166667 is copied directly from FNA and its code that calls for game updating
-	internal static float DrawDeltaTime =>
-		!HighFPSDrawFixes.Enabled || DrawGameTime == null ? 1 : (float)DrawGameTime.ElapsedGameTime.Ticks / 166667;
+	// For now, always set to 1f.
+	public static float UpdateFactor => 1f;
 
-	// seems to only work for instruments text draw?
+	// Set at the start of Draw.
+	public static float DrawFactor { get; set; } = 1f;
+
 	internal static bool CanDoCertainUpdatesThisDraw =>
-		!HighFPSDrawFixes.Enabled || DrawGameTime == null || DrawGameTime.ElapsedGameTime.Ticks >= 166667;
+		!HighFPSDrawFixes.Enabled || DrawFactor >= 1f;
 
 	private static void SaveUnifiedSettings(Preferences config)
 	{

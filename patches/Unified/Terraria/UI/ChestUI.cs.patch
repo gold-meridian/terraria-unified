@@ -4,7 +4,7 @@
  
  	public static void UpdateHover(int ID, bool hovering)
  	{
-+		float scaling = 0.05f * Main.DrawDeltaTime;
++		float scaling = 0.05f * Main.DrawFactor;
  		if (hovering) {
  			if (!ButtonHovered[ID])
  				SoundEngine.PlaySound(12);
@@ -40,7 +40,7 @@
 +			/*
  			if (++Main.instance.textBlinkerCount >= 20) {
 +			*/
-+			Main.instance.textBlinkerCount += 1 * Main.DrawDeltaTime;
++			Main.instance.textBlinkerCount += 1 * Main.DrawFactor;
 +			if (Main.instance.textBlinkerCount >= 20) {
  				Main.instance.textBlinkerState = ((Main.instance.textBlinkerState == 0) ? 1 : 0);
  				Main.instance.textBlinkerCount = 0;

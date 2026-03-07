@@ -8,11 +8,3 @@
  
  namespace Terraria.GameContent.Animations;
  
-@@ -229,6 +_,7 @@
- 			float localTimeForObject = info.TimeInAnimation - _targetTime;
- 			ProcessActions(_npc, localTimeForObject);
- 			if (_npc.alpha < 255) {
-+				using (NpcFrameCounter.Override(Main.DrawDeltaTime))
- 				_npc.FindFrame();
- 				if (TownNPCProfiles.Instance.GetProfile(_npc.type, out var profile))
- 					TextureAssets.Npc[_npc.type] = profile.GetTextureNPCShouldUse(_npc);

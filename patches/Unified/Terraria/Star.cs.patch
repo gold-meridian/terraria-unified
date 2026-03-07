@@ -13,7 +13,7 @@
  
  	public void Update()
  	{
-+		float delta = Main.DrawDeltaTime;
++		float delta = Main.DrawFactor;
 +		if (!Main.gameMenu)
 +			delta = 1f;
 +
@@ -69,7 +69,7 @@
  		if (!Main.gameMenu || !WorldGen.generatingWorld || !WorldGen.SecretSeed.anySecretSeedIsActive)
  			return;
  
-+		float delta = Main.DrawDeltaTime;
++		float delta = Main.DrawFactor;
 +		/*
 +		if (!Main.gameMenu)
 +			delta = 1f;

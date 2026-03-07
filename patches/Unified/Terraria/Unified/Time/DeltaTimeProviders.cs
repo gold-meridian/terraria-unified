@@ -44,15 +44,15 @@ public static class DeltaTimeProviderExtensions
 
 public readonly struct MainDelta : IDeltaTimeProvider<MainDelta>
 {
-	public static float ActualDeltaTime => Main.DrawDeltaTime;
+	public static float ActualDeltaTime => Main.CurrentFactor;
 }
 
 public readonly struct NpcFrameCounter : IDeltaTimeProvider<NpcFrameCounter>
 {
-	public static float ActualDeltaTime => 1f;
+	public static float ActualDeltaTime => Main.CurrentFactor;
 }
 
 public readonly struct ProjectileFrameCounter : IDeltaTimeProvider<ProjectileFrameCounter>
 {
-	public static float ActualDeltaTime => 1f;
+	public static float ActualDeltaTime => Main.CurrentFactor;
 }
