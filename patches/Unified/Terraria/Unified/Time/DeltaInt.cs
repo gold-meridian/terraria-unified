@@ -3,7 +3,8 @@ using static Terraria.Unified.Time.DeltaTimeProviderExtensions;
 
 namespace Terraria.Unified.Time;
 
-public struct DeltaFloat<TProvider>(float value)
+// Stored as a float for obvious reasons.
+public struct DeltaInt<TProvider>(float value)
 	where TProvider : IDeltaTimeProvider<TProvider>
 {
 	public float Value = value;
@@ -14,68 +15,68 @@ public struct DeltaFloat<TProvider>(float value)
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static implicit operator float(DeltaFloat<TProvider> v)
+	public static implicit operator int(DeltaInt<TProvider> v)
 	{
-		return v.Value;
+		return (int)v.Value;
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static implicit operator DeltaFloat<TProvider>(float v)
+	public static implicit operator DeltaInt<TProvider>(int v)
 	{
 		return new(v);
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static DeltaFloat<TProvider> operator +(DeltaFloat<TProvider> a, float b)
+	public static DeltaInt<TProvider> operator +(DeltaInt<TProvider> a, int b)
 	{
 		a.Value += b * Dt;
 		return a;
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static DeltaFloat<TProvider> operator -(DeltaFloat<TProvider> a, float b)
+	public static DeltaInt<TProvider> operator -(DeltaInt<TProvider> a, int b)
 	{
 		a.Value -= b * Dt;
 		return a;
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static DeltaFloat<TProvider> operator ++(DeltaFloat<TProvider> a)
+	public static DeltaInt<TProvider> operator ++(DeltaInt<TProvider> a)
 	{
 		a.Value += 1f * Dt;
 		return a;
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static DeltaFloat<TProvider> operator --(DeltaFloat<TProvider> a)
+	public static DeltaInt<TProvider> operator --(DeltaInt<TProvider> a)
 	{
 		a.Value -= 1f * Dt;
 		return a;
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static DeltaFloat<TProvider> operator *(DeltaFloat<TProvider> a, float b)
+	public static DeltaInt<TProvider> operator *(DeltaInt<TProvider> a, int b)
 	{
-		a.Value *= b * Dt;
+		a.Value *= b;
 		return a;
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static DeltaFloat<TProvider> operator /(DeltaFloat<TProvider> a, float b)
+	public static DeltaInt<TProvider> operator /(DeltaInt<TProvider> a, int b)
 	{
-		a.Value /= b * Dt;
+		a.Value /= b;
 		return a;
 	}
 
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public void Add(float perTick)
+	public void Add(int perTick)
 	{
 		Value += perTick * Dt;
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public void Sub(float perTick)
+	public void Sub(int perTick)
 	{
 		Value -= perTick * Dt;
 	}

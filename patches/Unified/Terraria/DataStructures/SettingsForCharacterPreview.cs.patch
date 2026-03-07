@@ -1,37 +1,17 @@
 --- src/TerrariaNetCore/Terraria/DataStructures/SettingsForCharacterPreview.cs
 +++ src/Unified/Terraria/DataStructures/SettingsForCharacterPreview.cs
-@@ -19,20 +_,34 @@
+@@ -1,4 +_,5 @@
+ using Microsoft.Xna.Framework;
++using Terraria.Unified.Time;
+ 
+ namespace Terraria.DataStructures;
+ 
+@@ -15,6 +_,8 @@
+ 
+ 		public void ApplyTo(Projectile proj)
+ 		{
++			using var _ = ProjectileFrameCounter.Override(Main.DrawDeltaTime);
++
+ 			if (FrameCount != 0) {
  				if (proj.frame < StartFrame)
  					proj.frame = StartFrame;
- 
-+				/*
- 				int num = proj.frame - StartFrame;
-+				*/
-+				float num = proj.frame - StartFrame;
- 				int num2 = FrameCount * DelayPerFrame;
- 				int num3 = num2;
- 				if (BounceLoop)
- 					num3 = num2 * 2 - DelayPerFrame * 2;
- 
-+				/*
- 				if (++proj.frameCounter >= num3)
- 					proj.frameCounter = 0;
- 
- 				num = proj.frameCounter / DelayPerFrame;
-+				*/
-+
-+				proj._frameCounter += 1 * Main.DrawDeltaTime;
-+				if (proj._frameCounter >= num3)
-+					proj._frameCounter = 0;
-+
-+				num = proj._frameCounter / DelayPerFrame;
- 				if (BounceLoop && num >= FrameCount)
- 					num = FrameCount * 2 - num - 2;
- 
-+				/*
- 				proj.frame = StartFrame + num;
-+				*/
-+				proj.frame = StartFrame + (int)num;
- 			}
- 		}
- 	}

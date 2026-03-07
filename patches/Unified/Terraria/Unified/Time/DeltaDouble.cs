@@ -15,11 +15,15 @@ public struct DeltaDouble<TProvider>(double value)
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static implicit operator double(DeltaDouble<TProvider> v)
-		=> v.Value;
+	{
+		return v.Value;
+	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static implicit operator DeltaDouble<TProvider>(double v)
-		=> new(v);
+	{
+		return new(v);
+	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static DeltaDouble<TProvider> operator +(DeltaDouble<TProvider> a, double b)
@@ -32,6 +36,20 @@ public struct DeltaDouble<TProvider>(double value)
 	public static DeltaDouble<TProvider> operator -(DeltaDouble<TProvider> a, double b)
 	{
 		a.Value -= b * Dt;
+		return a;
+	}
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static DeltaDouble<TProvider> operator ++(DeltaDouble<TProvider> a)
+	{
+		a.Value += 1f * Dt;
+		return a;
+	}
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static DeltaDouble<TProvider> operator --(DeltaDouble<TProvider> a)
+	{
+		a.Value -= 1f * Dt;
 		return a;
 	}
 

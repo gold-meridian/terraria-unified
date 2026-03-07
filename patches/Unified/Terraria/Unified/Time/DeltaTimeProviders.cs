@@ -51,3 +51,8 @@ public readonly struct NpcFrameCounter : IDeltaTimeProvider<NpcFrameCounter>
 {
 	public static float ActualDeltaTime => 1f;
 }
+
+public readonly struct ProjectileFrameCounter : IDeltaTimeProvider<ProjectileFrameCounter>
+{
+	public static float ActualDeltaTime => 1f;
+}
