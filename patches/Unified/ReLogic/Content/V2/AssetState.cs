@@ -1,9 +1,11 @@
+using System;
+
 namespace ReLogic.Content;
 
 /// <summary>
 ///		Represents the asset loading state.
 /// </summary>
-internal enum AssetState
+public enum AssetState
 {
 	/// <summary>
 	///		The asset is unloaded and is not being prepared to be loaded.
@@ -36,4 +38,7 @@ internal enum AssetState
 	///		For whatever reason, the asset failed to load.
 	/// </summary>
 	Failed,
+
+	[Obsolete]
+	NotLoaded = Unloaded,
 }

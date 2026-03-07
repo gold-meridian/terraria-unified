@@ -46,16 +46,15 @@ public sealed class AssetPipeline(
 
 		var record = records.GetOrAdd(
 			key,
-			static (k, defaultValue) => {
+			static k => {
 				var record = new AssetRecord {
 					Key = k, AssetWrapper = null!, State = AssetState.Unloaded, IsTracked = true,
 				};
-				var asset = new Asset<T>(record, defaultValue);
+				var asset = new Asset<T>(record);
 				record.AssetWrapper = asset;
 
 				return record;
-			},
-			GetDefaultValue<T>()
+			}
 		);
 
 		lock (record.Sync) {
@@ -85,7 +84,7 @@ public sealed class AssetPipeline(
 			IsTracked = false,
 			LoadPlan = BuildUntrackedPlan(extension, streamFactory),
 		};
-		var asset = new Asset<T>(record, GetDefaultValue<T>());
+		var asset = new Asset<T>(record);
 		record.AssetWrapper = asset;
 
 		EnsureScheduled(record, record.LoadPlan, mode);
@@ -499,10 +498,5 @@ public sealed class AssetPipeline(
 	private static string NormalizePath(string path)
 	{
 		return path.Replace('\\', '/');
-	}
-
-	private static T GetDefaultValue<T>() where T : class
-	{
-		return null!;
 	}
 }

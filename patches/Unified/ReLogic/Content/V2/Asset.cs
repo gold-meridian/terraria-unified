@@ -10,11 +10,17 @@ public sealed class Asset<T> where T : class
 {
 	private readonly AssetRecord record;
 
+	public static Asset<T> Empty { get; } = new(
+		new AssetRecord {
+			Key = new AssetKey(typeof(T), ""), AssetWrapper = null!, State = AssetState.Unloaded, IsTracked = false,
+		}
+	);
+
 	/// <summary>
 	///		The default, fallback asset value (for when the asset is not yet
 	///		loaded).
 	/// </summary>
-	public T DefaultValue { get; }
+	public static T? DefaultValue { get; set; }
 
 	/// <summary>
 	///		Whether the asset has been loaded and has its real value.
@@ -23,11 +29,13 @@ public sealed class Asset<T> where T : class
 
 	public string Name => record.Key.Path;
 
+	public AssetState State => record.State;
+
 	/// <summary>
 	///		Fetches the asset's value, falling back to the
 	///		<see cref="DefaultValue"/> if it's not yet loaded.
 	/// </summary>
-	public T Value {
+	public T? Value {
 		get {
 			if (record.Value is T value) {
 				return value;
@@ -41,9 +49,8 @@ public sealed class Asset<T> where T : class
 	///		A typed wrapper over an <see cref="AssetRecord"/> providing mechanisms
 	///		for retrieving and working with its stored value.
 	/// </summary>
-	internal Asset(AssetRecord record, T defaultValue)
+	internal Asset(AssetRecord record)
 	{
 		this.record = record;
-		DefaultValue = defaultValue;
 	}
 }

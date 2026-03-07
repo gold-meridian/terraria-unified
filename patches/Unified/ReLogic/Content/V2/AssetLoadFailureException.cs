@@ -6,13 +6,13 @@ using ReLogic.Content.Sources;
 
 namespace ReLogic.Content;
 
-internal readonly record struct AssetCandidateFailure(
+public readonly record struct AssetCandidateFailure(
 	AssetLoadCandidate Candidate,
 	string? Reason,
 	Exception? Exception
 );
 
-internal sealed class AssetLoadFailureException(
+public sealed class AssetLoadFailureException(
 	string assetPath,
 	Type assetType,
 	IReadOnlyList<AssetCandidateFailure> failures

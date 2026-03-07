@@ -1,0 +1,11 @@
+--- src/TerrariaNetCore/Terraria/UI/FancyErrorPrinter.cs
++++ src/Unified/Terraria/UI/FancyErrorPrinter.cs
+@@ -21,7 +_,7 @@
+ 		if (exception is DirectoryNotFoundException)
+ 			flag = true;
+ 
+-		if (exception is AssetLoadException)
++		if (exception is AssetLoadFailureException)
+ 			flag = true;
+ 
+ 		if (flag) {
