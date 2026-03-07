@@ -143,8 +143,7 @@
  	public static bool resetClouds = true;
  	public static float SmoothedMushroomLightInfluence;
 +	/*
--	public static int fadeCounter;
-+	public static int fadeCounter; 
+ 	public static int fadeCounter;
 +	*/
 +	public static float fadeCounter;
  	public static float invAlpha = 1f;
@@ -592,18 +591,20 @@
  		int num = 220;
  		int num2 = 72;
  		int num3 = -1;
-@@ -18193,7 +_,11 @@
+@@ -18209,6 +_,13 @@
+ 			}
  
- 	internal void DrawFPS()
- 	{
-+		// todo - dont modify debugWords
-+		debugWords = "";
- 		if (showFrameRate) {
-+			debugWords = $"DrawDeltaTime {DrawDeltaTime} ({DrawGameTime.ElapsedGameTime.Ticks} / 166667)";
+ 			string text2 = text + " " + debugWords;
++			if (HighFPSDrawFixes.Enabled) {
++				text2 += $"dT {DrawDeltaTime:0.000}";
 +
- 			string text = frameRate + "fps " + updateRate + "ups";
- 			text = text + " (" + (Liquid.numLiquid + LiquidBuffer.numLiquidBuffer) + ")";
- 			text = text + " (" + (int)(gfxQuality * 100f) + "%)";
++				if (frameRate > 0) {
++					text2 += $" ({(60f / frameRate):0.000})";
++				}
++			}
+ 			int num = 4;
+ 			if (!gameMenu)
+ 				num = screenHeight - 24;
 @@ -18522,13 +_,13 @@
  			if (flag) {
  				LoadGore(gore[i].type);
@@ -4342,19 +4343,27 @@
  				if (textBlinkerCount >= 20) {
  					if (textBlinkerState == 0)
  						textBlinkerState = 1;
-@@ -44838,13 +_,13 @@
+@@ -44838,13 +_,23 @@
  		for (int num112 = 0; num112 < maxMenuItems; num112++) {
  			if (num112 == focusMenu) {
  				if (menuItemScale[num112] < 1f)
--					menuItemScale[num112] += 0.02f;
++					/*
+ 					menuItemScale[num112] += 0.02f;
++					*/
 +					menuItemScale[num112] += 0.02f * DrawDeltaTime;
  
  				if (menuItemScale[num112] > 1f)
  					menuItemScale[num112] = 1f;
  			}
  			else if ((double)menuItemScale[num112] > 0.8) {
--				menuItemScale[num112] -= 0.02f;
++				/*
+ 				menuItemScale[num112] -= 0.02f;
++				*/
 +				menuItemScale[num112] -= 0.02f * DrawDeltaTime;
++
++				if (menuItemScale[num112] < 0.8f) {
++					menuItemScale[num112] = 0.8f;
++				}
  			}
  		}
  
