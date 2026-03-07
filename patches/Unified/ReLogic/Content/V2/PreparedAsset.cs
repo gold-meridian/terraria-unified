@@ -8,8 +8,8 @@ namespace ReLogic.Content;
 internal readonly record struct PreparedAsset(
 	AssetRecord Record,
 	IAssetReader Reader,
-	IContentSource Source,
-	int SourceIndex,
+	AssetLoadPlan Plan,
+	int CandidateIndex,
 	object PreparedData,
 	int Version
 );

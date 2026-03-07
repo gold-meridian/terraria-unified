@@ -25,10 +25,13 @@ public interface IContentSource
 	/// </summary>
 	string? GetExtension(string assetName);
 
+	/*
 	/// <summary>
 	///		Asynchronously opens the stream to the requested asset.
 	/// </summary>
 	ValueTask<Stream> OpenStreamAsync(string path, CancellationToken cancellationToken);
+	*/
+	Stream OpenStream(string path);
 
 	/// <summary>
 	///		Refreshes the assets known to this content source by triggering it

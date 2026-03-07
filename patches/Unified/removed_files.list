@@ -6,12 +6,15 @@ ReLogic/Content/Asset.cs
 ReLogic/Content/AssetLoader.cs
 ReLogic/Content/AssetLoadException.cs
 ReLogic/Content/AssetPathHelper.cs
+ReLogic/Content/AssetReaderCollection.cs
 ReLogic/Content/AssetRepository.cs
 ReLogic/Content/AssetRequestMode.cs
 ReLogic/Content/AssetState.cs
 ReLogic/Content/AsyncAssetLoader.cs
 ReLogic/Content/ContentRejectionFromFailedLoad_ByAssetExtensionType.cs
+ReLogic/Content/FailedToLoadAssetCustomAction.cs
 ReLogic/Content/IAsset.cs
+ReLogic/Content/IAssetLoader.cs
 ReLogic/Content/IAsyncAssetLoader.cs
 ReLogic/Content/IContentValidator.cs
 ReLogic/Content/IRejectionReason.cs

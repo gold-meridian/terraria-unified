@@ -37,7 +37,7 @@ public sealed class XnbReader<T>(IServiceProvider services) : IAssetReader<T, Xn
 	{
 		var content = contentLoader.Value!;
 
-		var stream = await context.OpenOwnedStreamAsync(cancellationToken);
+		var stream = context.OpenOwnedStream();
 		if (LoadOnMainThread) {
 			return AssetPrepareResult<StreamHandle>.Success(
 				new StreamHandle(

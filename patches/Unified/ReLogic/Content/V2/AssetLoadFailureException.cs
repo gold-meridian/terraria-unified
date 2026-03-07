@@ -6,8 +6,8 @@ using ReLogic.Content.Sources;
 
 namespace ReLogic.Content;
 
-internal readonly record struct AssetSourceFailure(
-	IContentSource? Source,
+internal readonly record struct AssetCandidateFailure(
+	AssetLoadCandidate Candidate,
 	string? Reason,
 	Exception? Exception
 );
@@ -15,8 +15,8 @@ internal readonly record struct AssetSourceFailure(
 internal sealed class AssetLoadFailureException(
 	string assetPath,
 	Type assetType,
-	IReadOnlyList<AssetSourceFailure> failures
+	IReadOnlyList<AssetCandidateFailure> failures
 ) : Exception($"Failed to load asset '{assetPath}' as '{assetType.Name}' from all content sources.")
 {
-	public IReadOnlyList<AssetSourceFailure> Failures { get; } = failures;
+	public IReadOnlyList<AssetCandidateFailure> Failures { get; } = failures;
 }

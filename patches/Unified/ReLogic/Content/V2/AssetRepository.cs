@@ -18,8 +18,8 @@ public sealed class AssetRepository(AssetPipeline pipeline)
 		pipeline.SetSources(sources);
 	}
 
-	public Asset<T> CreateUntracked<T>(Stream stream) where T : class
+	public Asset<T> CreateUntracked<T>(Stream stream, string extension, AssetRequestMode mode = AssetRequestMode.ImmediateLoad) where T : class
 	{
-		return pipeline.CreateUntracked<T>(stream);
+		return pipeline.CreateUntracked<T>(stream, extension, mode);
 	}
 }

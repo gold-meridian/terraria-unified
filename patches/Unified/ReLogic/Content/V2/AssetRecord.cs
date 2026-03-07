@@ -24,9 +24,10 @@ internal sealed class AssetRecord
 	public Exception? Error;
 
 	public Task<PreparedAsset?>? PrepareTask;
-	public IAssetReader? Reader;
+	public AssetLoadPlan? LoadPlan;
+	public bool IsTracked;
 	public int Version;
 
-	public readonly List<AssetSourceFailure> Failures = [];
+	public readonly List<AssetCandidateFailure> Failures = [];
 	public readonly object Sync = new();
 }

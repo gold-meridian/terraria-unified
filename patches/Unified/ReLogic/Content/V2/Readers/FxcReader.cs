@@ -13,7 +13,7 @@ public sealed class FxcReader(GraphicsDevice graphicsDevice) : IAssetReader<Effe
 
 	public async ValueTask<AssetPrepareResult<MemoryStream>> PrepareAsync(AssetLoadContext context, CancellationToken cancellationToken)
 	{
-		await using var stream = await context.OpenOwnedStreamAsync(cancellationToken);
+		await using var stream = context.OpenOwnedStream();
 
 		var ms = new MemoryStream();
 		{
