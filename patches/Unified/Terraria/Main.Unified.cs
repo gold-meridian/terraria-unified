@@ -18,20 +18,19 @@ partial class Main
 
 	internal static bool UnifiedBranding => true;
 
-	public static bool Vsync { get; set; } = true;
+	public static bool Vsync { get; set; } = false;
 
 	internal static List<TitleLinkButton> UnifiedLinks { get; } = [];
 
 	internal static GameTime DrawGameTime { get; set; }
 
-	// mever greater than 1 due to a bug with the game menu
 	// note: the calc of ticks / 166667 is copied directly from FNA and its code that calls for game updating
 	internal static float DrawDeltaTime =>
-		!HighFPSDrawFixes.Enabled || DrawGameTime == null ? 1 : Math.Clamp((float)DrawGameTime.ElapsedGameTime.Ticks / 166667, 0, 1);
+		!HighFPSDrawFixes.Enabled || DrawGameTime == null ? 1 : (float)DrawGameTime.ElapsedGameTime.Ticks / 166667;
 
 	// seems to only work for instruments text draw?
 	internal static bool CanDoCertainUpdatesThisDraw =>
-		!HighFPSDrawFixes.Enabled || DrawGameTime == null ? true : DrawGameTime.ElapsedGameTime.Ticks >= 166667;
+		!HighFPSDrawFixes.Enabled || DrawGameTime == null || DrawGameTime.ElapsedGameTime.Ticks >= 166667;
 
 	private static void SaveUnifiedSettings(Preferences config)
 	{
