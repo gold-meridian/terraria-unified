@@ -37,12 +37,12 @@
  			if (Alpha <= 0f)
  				active = false;
  		}
-@@ -336,7 +_,7 @@
- 		if (position.X + (float)TextureAssets.Cloud[type].Width() * scale < 0f - num || position.X > (float)Main.screenWidth + num)
- 			active = false;
+@@ -349,7 +_,7 @@
+ 		if ((double)rotation < -0.02)
+ 			rotation = -0.02f;
  
--		rSpeed += (float)rand.Next(-10, 11) * 2E-05f;
-+		rSpeed += (float)rand.Next(-10, 11) * (2E-05f * delta);
- 		if ((double)rSpeed > 0.0002)
- 			rSpeed = 0.0002f;
- 
+-		rotation += rSpeed;
++		rotation += rSpeed * delta;
+ 		width = (int)((float)TextureAssets.Cloud[type].Width() * scale);
+ 		height = (int)((float)TextureAssets.Cloud[type].Height() * scale);
+ 		if (type >= 9 && type <= 13 && (Main.cloudAlpha > 0f || Main.cloudBGActive >= 1f))
