@@ -22,4 +22,9 @@ public sealed class AssetRepository(AssetPipeline pipeline)
 	{
 		return pipeline.CreateUntracked<T>(stream, extension, mode);
 	}
+
+	public void TransferCompletedAssets()
+	{
+		pipeline.ProcessMainThread();
+	}
 }
