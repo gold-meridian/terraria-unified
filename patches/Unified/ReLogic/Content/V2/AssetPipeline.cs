@@ -12,21 +12,93 @@ using ReLogic.Content.Sources;
 
 namespace ReLogic.Content;
 
+public delegate void AssetValueUpdated(IAsset asset, object value);
+
+public delegate void AssetWatcherUpdateFailed(IAsset asset, Exception e);
+
+public delegate void AssetWatcherValueUpdated(IAsset asset);
+
+public delegate void ContentFileUpdated(IContentSource contentSource, string path, string fullPath);
+
+public delegate void FailedToLoadAssetCustomAction(string assetName, Exception e);
+
+// This interface exists purely for compatibility with old vanilla code.
+public interface IAssetRepository : IDisposable
+{
+	int PendingAssets { get; }
+
+	AssetValueUpdated? AssetValueUpdatedHandler { get; set; }
+
+	FailedToLoadAssetCustomAction? AssetLoadFailHandler { get; set; }
+
+	AssetWatcherValueUpdated? AssetWatcherValueUpdatedHandler { get; set; }
+
+	AssetWatcherUpdateFailed? AssetWatcherUpdateFailedHandler { get; set; }
+
+	ContentFileUpdated? ContentFileUpdatedHandler { get; set; }
+
+	Asset<T> Request<T>(
+		string assetName,
+		AssetRequestMode mode = AssetRequestMode.ImmediateLoad
+	) where T : class;
+
+	Asset<T> CreateUntracked<T>(
+		Stream stream,
+		string extension,
+		AssetRequestMode mode = AssetRequestMode.ImmediateLoad
+	) where T : class;
+
+	void TransferCompletedAssets();
+
+	void EnableAssetWatcher();
+}
+
 public sealed class AssetPipeline(
 	IContentSource[] sources,
 	AssetReaderCollection readers,
 	int maxConcurrentPrepares,
 	IServiceProvider? services = null
-)
+) : IAssetRepository
 {
 	private readonly ConcurrentDictionary<AssetKey, AssetRecord> records = [];
 	private readonly ConcurrentQueue<Action> preparedQueue = [];
 	private readonly SemaphoreSlim prepareGate = new(maxConcurrentPrepares, maxConcurrentPrepares);
+	private bool isDisposed;
 
 	private IContentSource[] sources = sources;
 
+	int IAssetRepository.PendingAssets {
+		get {
+			var count = 0;
+
+			foreach (var pair in records) {
+				switch (pair.Value.State) {
+					case AssetState.Queued:
+					case AssetState.Preparing:
+					case AssetState.WaitingForMainThread:
+						count++;
+						break;
+				}
+			}
+
+			return count;
+		}
+	}
+
+	AssetValueUpdated? IAssetRepository.AssetValueUpdatedHandler { get; set; }
+
+	FailedToLoadAssetCustomAction? IAssetRepository.AssetLoadFailHandler { get; set; }
+
+	AssetWatcherValueUpdated? IAssetRepository.AssetWatcherValueUpdatedHandler { get; set; }
+
+	AssetWatcherUpdateFailed? IAssetRepository.AssetWatcherUpdateFailedHandler { get; set; }
+
+	ContentFileUpdated? IAssetRepository.ContentFileUpdatedHandler { get; set; }
+
 	public void SetSources(IReadOnlyList<IContentSource> newSources)
 	{
+		ThrowIfDisposed();
+
 		sources = newSources.ToArray();
 
 		foreach (var (_, record) in records) {
@@ -62,6 +134,8 @@ public sealed class AssetPipeline(
 
 	public Asset<T> Request<T>(string path, AssetRequestMode mode) where T : class
 	{
+		ThrowIfDisposed();
+
 		var normalizedPath = NormalizePath(path);
 		var key = new AssetKey(typeof(T), normalizedPath);
 
@@ -91,7 +165,7 @@ public sealed class AssetPipeline(
 			*/
 		}
 
-		EnsureScheduled<T>(record, record.LoadPlan!, mode);
+		EnsureScheduled<T>(record, record.LoadPlan, mode);
 		return (Asset<T>)record.AssetWrapper;
 	}
 
@@ -101,6 +175,8 @@ public sealed class AssetPipeline(
 		AssetRequestMode mode
 	) where T : class
 	{
+		ThrowIfDisposed();
+
 		var key = new AssetKey(typeof(T), "<untracked>");
 		var record = new AssetRecord {
 			Key = key,
@@ -118,6 +194,8 @@ public sealed class AssetPipeline(
 
 	public Asset<T> CreateUntracked<T>(Stream stream, string extension, AssetRequestMode mode) where T : class
 	{
+		ThrowIfDisposed();
+
 		var consumed = 0;
 		return CreateUntracked<T>(
 			() => {
@@ -132,8 +210,15 @@ public sealed class AssetPipeline(
 		);
 	}
 
+	void IAssetRepository.TransferCompletedAssets()
+	{
+		ProcessMainThread();
+	}
+
 	public void ProcessMainThread(int maxFinalizations = int.MaxValue)
 	{
+		ThrowIfDisposed();
+
 		for (var i = 0; i < maxFinalizations; i++) {
 			if (!preparedQueue.TryDequeue(out var preparedAction)) {
 				break;
@@ -267,7 +352,7 @@ public sealed class AssetPipeline(
 						}
 
 						var finalizedAsset = finalizeResult.Asset!;
-						if (plan.IsTracked && !ValidateTrackedAsset<T>(candidate, (T)finalizedAsset, out var validationRejection)) {
+						if (plan.IsTracked && !ValidateTrackedAsset(candidate, (T)finalizedAsset, out var validationRejection)) {
 							RejectCandidate(candidate, validationRejection!);
 							RecordFailure(record, version, candidate, validationRejection!.GetReason(), null);
 							reader.Dispose(finalizedAsset);
@@ -296,6 +381,7 @@ public sealed class AssetPipeline(
 						}
 
 						record.State = AssetState.WaitingForMainThread;
+						record.Reader = reader;
 					}
 
 					var prepared = new PreparedAsset(
@@ -357,7 +443,7 @@ public sealed class AssetPipeline(
 			if (finalizeResult.Succeeded) {
 				var assetValue = finalizeResult.Asset!;
 
-				if (prepared.Plan.IsTracked && !ValidateTrackedAsset<T>(candidate, (T)assetValue, out var validationRejection)) {
+				if (prepared.Plan.IsTracked && !ValidateTrackedAsset(candidate, (T)assetValue, out var validationRejection)) {
 					RejectCandidate(candidate, validationRejection!);
 					prepared.Reader.Dispose(assetValue);
 					ContinueFromNextCandidate<T>(
@@ -474,8 +560,7 @@ public sealed class AssetPipeline(
 		AssetLoadPlan plan,
 		int startCandidateIndex,
 		out object? loadedValue
-	)
-		where T : class
+	) where T : class
 	{
 		loadedValue = null;
 
@@ -510,7 +595,7 @@ public sealed class AssetPipeline(
 				}
 
 				var finalizedAsset = finalizeResult.Asset!;
-				if (plan.IsTracked && !ValidateTrackedAsset<T>(candidate, (T)finalizedAsset, out var validationRejection)) {
+				if (plan.IsTracked && !ValidateTrackedAsset(candidate, (T)finalizedAsset, out var validationRejection)) {
 					RejectCandidate(candidate, validationRejection!);
 					RecordFailure(record, version, candidate, validationRejection!.GetReason(), null);
 					reader.Dispose(finalizedAsset);
@@ -523,6 +608,7 @@ public sealed class AssetPipeline(
 						return;
 					}
 
+					record.Reader = reader;
 					record.Value = finalizedAsset;
 					record.Error = null;
 					record.State = AssetState.Loaded;
@@ -621,6 +707,48 @@ public sealed class AssetPipeline(
 			false,
 			[candidate]
 		);
+	}
+
+	public void EnableAssetWatcher()
+	{
+		// TODO
+	}
+
+	public void Dispose()
+	{
+		if (isDisposed) {
+			return;
+		}
+
+		isDisposed = true;
+
+		while (preparedQueue.TryDequeue(out _)) { }
+
+		foreach (var (_, record) in records) {
+			object? value;
+			lock (record.Sync) {
+				record.Version++;
+				value = record.Value;
+				record.Value = null;
+				record.Error = null;
+				record.Failures.Clear();
+				record.State = AssetState.Unloaded;
+			}
+
+			if (value is null) {
+				continue;
+			}
+
+			record.Reader?.Dispose(value);
+		}
+
+		records.Clear();
+		prepareGate.Dispose();
+	}
+
+	private void ThrowIfDisposed()
+	{
+		ObjectDisposedException.ThrowIf(isDisposed, this);
 	}
 
 	private static string NormalizePath(string path)

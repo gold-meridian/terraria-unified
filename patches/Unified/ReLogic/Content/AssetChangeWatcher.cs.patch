@@ -1,0 +1,26 @@
+--- src/TerrariaNetCore/ReLogic/Content/AssetChangeWatcher.cs
++++ src/Unified/ReLogic/Content/AssetChangeWatcher.cs
+@@ -6,9 +_,9 @@
+ 
+ namespace ReLogic.Content;
+ 
+-public sealed class AssetChangeWatcher : FileChangeWatcher<IContentSource>
++public sealed class AssetChangeWatcher : FileChangeWatcher<IWatchableContentSource>
+ {
+-	private readonly Dictionary<FileSystemWatcher, IContentSource> _watchers = new Dictionary<FileSystemWatcher, IContentSource>();
++	private readonly Dictionary<FileSystemWatcher, IWatchableContentSource> _watchers = new Dictionary<FileSystemWatcher, IWatchableContentSource>();
+ 
+ 	public void UpdateSources(IEnumerable<IContentSource> sources)
+ 	{
+@@ -18,7 +_,10 @@
+ 
+ 			List<FileSystemWatcher> list = _watchers.Keys.ToList();
+ 			_watchers.Clear();
+-			foreach (IContentSource source in sources) {
++			foreach (IContentSource sourceCandidate in sources) {
++				if (sourceCandidate is not IWatchableContentSource source) {
++					continue;
++				}
+ 				string path = source.FileWatcherPath;
+ 				if (path != null && Directory.Exists(path)) {
+ 					FileSystemWatcher fileSystemWatcher = list.FirstOrDefault((FileSystemWatcher e) => e.Path == path);
