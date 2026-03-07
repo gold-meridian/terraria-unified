@@ -7,7 +7,7 @@ namespace Terraria.Unified;
 
 internal static class ContentSources
 {
-	public static AssetRepository ManifestAssets { get; set; }
+	public static IAssetRepository ManifestAssets { get; set; }
 
 	public static AssemblyContentSource ManifestContentSource { get; set; }
 
@@ -18,8 +18,7 @@ internal static class ContentSources
 			excludedStartingPaths: []
 		);
 
-		ManifestAssets = new AssetRepository(AssetInitializer.assetReaderCollection, [ManifestContentSource]) {
-			AssetLoadFailHandler = Main.instance.OnceFailedLoadingAnAsset,
-		};
+		ManifestAssets = new AssetPipeline([ManifestContentSource], AssetInitializer.assetReaderCollection, 1);
+		ManifestAssets.AssetLoadFailHandler = Main.instance.OnceFailedLoadingAnAsset;
 	}
 }

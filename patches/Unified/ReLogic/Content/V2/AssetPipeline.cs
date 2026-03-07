@@ -12,11 +12,11 @@ using ReLogic.Content.Sources;
 
 namespace ReLogic.Content;
 
-public delegate void AssetValueUpdated(IAsset asset, object value);
+public delegate void AssetValueUpdated(AssetRecord asset, object value);
 
-public delegate void AssetWatcherUpdateFailed(IAsset asset, Exception e);
+public delegate void AssetWatcherUpdateFailed(AssetRecord asset, Exception e);
 
-public delegate void AssetWatcherValueUpdated(IAsset asset);
+public delegate void AssetWatcherValueUpdated(AssetRecord asset);
 
 public delegate void ContentFileUpdated(IContentSource contentSource, string path, string fullPath);
 
@@ -47,6 +47,8 @@ public interface IAssetRepository : IDisposable
 		string extension,
 		AssetRequestMode mode = AssetRequestMode.ImmediateLoad
 	) where T : class;
+
+	void SetSources(IReadOnlyList<IContentSource> newSources);
 
 	void TransferCompletedAssets();
 

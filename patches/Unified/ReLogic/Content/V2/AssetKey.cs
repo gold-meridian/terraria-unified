@@ -7,7 +7,7 @@ namespace ReLogic.Content;
 /// <summary>
 ///		Identifies an <see cref="AssetRecord"/>
 /// </summary>
-internal readonly record struct AssetKey(
+public readonly record struct AssetKey(
 	Type AssetType,
 	string Path
 );

@@ -8,7 +8,7 @@
  using Microsoft.Xna.Framework;
  using Microsoft.Xna.Framework.Graphics;
  using Newtonsoft.Json.Linq;
-@@ -11,31 +_,57 @@
+@@ -11,31 +_,56 @@
  using Terraria.GameContent;
  using Terraria.ID;
  using Terraria.IO;
@@ -37,9 +37,8 @@
 +		assetReaderCollection.RegisterReader(new FxcReader(Main.instance.Services.Get<IGraphicsDeviceService>().GraphicsDevice), ".fxc");
 +
 +		var assetPipeline = new AssetPipeline([], assetReaderCollection, 1, services);
-+		var assetRepository = new AssetRepository(assetPipeline);
 +		services.AddService(typeof(AssetReaderCollection), assetReaderCollection);
-+		services.AddService(typeof(IAssetRepository), assetRepository);
++		services.AddService(typeof(IAssetRepository), assetPipeline);
 +
 +		/*
  		AssetReaderCollection assetReaderCollection = new AssetReaderCollection();

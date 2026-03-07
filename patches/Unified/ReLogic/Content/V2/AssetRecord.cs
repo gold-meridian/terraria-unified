@@ -10,7 +10,7 @@ namespace ReLogic.Content;
 /// <summary>
 ///		The canonical representation of an asset.
 /// </summary>
-internal sealed class AssetRecord
+public sealed class AssetRecord
 {
 	/// <summary>
 	///		The unique identifier for the asset.
