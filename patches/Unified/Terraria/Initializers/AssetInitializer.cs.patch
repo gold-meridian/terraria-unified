@@ -8,7 +8,7 @@
  using Microsoft.Xna.Framework;
  using Microsoft.Xna.Framework.Graphics;
  using Newtonsoft.Json.Linq;
-@@ -11,26 +_,43 @@
+@@ -11,31 +_,57 @@
  using Terraria.GameContent;
  using Terraria.ID;
  using Terraria.IO;
@@ -23,8 +23,26 @@
 +
  	public static void CreateAssetServices(GameServiceContainer services)
  	{
--		AssetReaderCollection assetReaderCollection = new AssetReaderCollection();
++		XnbReader<Texture2D>.LoadOnMainThread = true;
++		XnbReader<DynamicSpriteFont>.LoadOnMainThread = true;
++		XnbReader<SpriteFont>.LoadOnMainThread = true;
++		XnbReader<Effect>.LoadOnMainThread = true;
++
 +		assetReaderCollection = new AssetReaderCollection();
++		assetReaderCollection.RegisterReader(new PngReader(services.Get<IGraphicsDeviceService>().GraphicsDevice), ".png");
++		assetReaderCollection.RegisterReader(new XnbReader<Texture2D>(services), ".xnb");
++		assetReaderCollection.RegisterReader(new XnbReader<DynamicSpriteFont>(services), ".xnb");
++		assetReaderCollection.RegisterReader(new XnbReader<SpriteFont>(services), ".xnb");
++		assetReaderCollection.RegisterReader(new XnbReader<Effect>(services), ".xnb");
++		assetReaderCollection.RegisterReader(new FxcReader(Main.instance.Services.Get<IGraphicsDeviceService>().GraphicsDevice), ".fxc");
++
++		var assetPipeline = new AssetPipeline([], assetReaderCollection, 1, services);
++		var assetRepository = new AssetRepository(assetPipeline);
++		services.AddService(typeof(AssetReaderCollection), assetReaderCollection);
++		services.AddService(typeof(IAssetRepository), assetRepository);
++
++		/*
+ 		AssetReaderCollection assetReaderCollection = new AssetReaderCollection();
  		assetReaderCollection.RegisterReader(new PngReader(services.Get<IGraphicsDeviceService>().GraphicsDevice), ".png");
  		assetReaderCollection.RegisterReader(new XnbReader(services), ".xnb");
  #if XNA && !SERVER
@@ -33,24 +51,27 @@
 +
 +		assetReaderCollection.RegisterReader(new FxcReader(Main.instance.Services.Get<IGraphicsDeviceService>().GraphicsDevice), ".fxc");
 +
-+		/*
  		AsyncAssetLoader asyncAssetLoader = new AsyncAssetLoader(assetReaderCollection, 20);
  		asyncAssetLoader.RequireTypeCreationOnTransfer(typeof(Texture2D));
  		asyncAssetLoader.RequireTypeCreationOnTransfer(typeof(DynamicSpriteFont));
  		asyncAssetLoader.RequireTypeCreationOnTransfer(typeof(SpriteFont));
-+		*/
 +
-+		XnbReader.LoadOnMainThread<Texture2D>.Value = true;
-+		XnbReader.LoadOnMainThread<DynamicSpriteFont>.Value = true;
-+		XnbReader.LoadOnMainThread<SpriteFont>.Value = true;
-+		XnbReader.LoadOnMainThread<Effect>.Value = true;
-+
-+		AssetRepository.SetMainThread();
-+
-+		/*
  		IAssetRepository assetRepository = new AssetRepository(new AssetLoader(assetReaderCollection), asyncAssetLoader);
-+		*/
-+		var assetRepository = new AssetRepository(assetReaderCollection);
  		assetRepository.AssetValueUpdatedHandler = (AssetValueUpdated)Delegate.Combine(assetRepository.AssetValueUpdatedHandler, new AssetValueUpdated(TagAsset));
  		services.AddService(typeof(AssetReaderCollection), assetReaderCollection);
  		services.AddService(typeof(IAssetRepository), assetRepository);
++		*/
+ 	}
+ 
++	/*
+ 	private static void TagAsset(IAsset asset, object value)
+ 	{
+ 		if (value is GraphicsResource graphicsResource) {
+@@ -43,6 +_,7 @@
+ 			graphicsResource.Tag = asset;
+ 		}
+ 	}
++	*/
+ 
+ 	public static ResourcePackList CreateResourcePackList(IServiceProvider services)
+ 	{

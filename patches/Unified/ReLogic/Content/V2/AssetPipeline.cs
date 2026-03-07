@@ -20,7 +20,7 @@ public sealed class AssetPipeline(
 )
 {
 	private readonly ConcurrentDictionary<AssetKey, AssetRecord> records = [];
-	private readonly ConcurrentQueue<PreparedAsset> preparedQueue = [];
+	private readonly ConcurrentQueue<Action> preparedQueue = [];
 	private readonly SemaphoreSlim prepareGate = new(maxConcurrentPrepares, maxConcurrentPrepares);
 
 	private IContentSource[] sources = sources;
@@ -35,7 +35,28 @@ public sealed class AssetPipeline(
 			}
 
 			var plan = BuildTrackedPlan(record.Key);
-			ReloadImmediately(record, plan);
+
+			// TODO: One day we might want to support async or no-op?  Async
+			//       would be useful to avoid freezing the game and instead
+			//       displaying a loading screen...
+			/*
+			if (mode == AssetRequestMode.DoNotLoad)
+			{
+				lock (record.Sync)
+				{
+					record.LoadPlan = plan;
+					record.Error = null;
+					record.Failures.Clear();
+					record.Version++;
+					record.State = AssetState.Unloaded;
+					record.Value = null;
+				}
+
+				continue;
+			}
+			*/
+
+			record.ImmediateReloadAction?.Invoke(this, record, plan);
 		}
 	}
 
@@ -48,7 +69,11 @@ public sealed class AssetPipeline(
 			key,
 			static k => {
 				var record = new AssetRecord {
-					Key = k, AssetWrapper = null!, State = AssetState.Unloaded, IsTracked = true,
+					Key = k,
+					AssetWrapper = null!,
+					State = AssetState.Unloaded,
+					IsTracked = true,
+					ImmediateReloadAction = static (pipeline, record, plan) => pipeline.ReloadImmediately<T>(record, plan),
 				};
 				var asset = new Asset<T>(record);
 				record.AssetWrapper = asset;
@@ -66,7 +91,7 @@ public sealed class AssetPipeline(
 			*/
 		}
 
-		EnsureScheduled(record, record.LoadPlan!, mode);
+		EnsureScheduled<T>(record, record.LoadPlan!, mode);
 		return (Asset<T>)record.AssetWrapper;
 	}
 
@@ -87,7 +112,7 @@ public sealed class AssetPipeline(
 		var asset = new Asset<T>(record);
 		record.AssetWrapper = asset;
 
-		EnsureScheduled(record, record.LoadPlan, mode);
+		EnsureScheduled<T>(record, record.LoadPlan, mode);
 		return asset;
 	}
 
@@ -110,22 +135,27 @@ public sealed class AssetPipeline(
 	public void ProcessMainThread(int maxFinalizations = int.MaxValue)
 	{
 		for (var i = 0; i < maxFinalizations; i++) {
-			if (!preparedQueue.TryDequeue(out var prepared)) {
+			if (!preparedQueue.TryDequeue(out var preparedAction)) {
 				break;
 			}
 
-			FinalizePrepared(prepared);
+			preparedAction.Invoke();
 		}
 	}
 
-	private void EnsureScheduled(AssetRecord record, AssetLoadPlan plan, AssetRequestMode mode)
+	private void EnsureScheduled<T>(
+		AssetRecord record,
+		AssetLoadPlan plan,
+		AssetRequestMode mode
+	)
+		where T : class
 	{
 		lock (record.Sync) {
 			record.LoadPlan = plan;
 
 			if (record.State is AssetState.Loaded or AssetState.Preparing or AssetState.WaitingForMainThread) {
 				if (mode == AssetRequestMode.ImmediateLoad) {
-					TryCompleteImmediately(record);
+					TryCompleteImmediately<T>(record);
 				}
 
 				return;
@@ -137,15 +167,16 @@ public sealed class AssetPipeline(
 			record.Version++;
 
 			var version = record.Version;
-			record.PrepareTask = Task.Run(() => PrepareAsync(record, version, plan, 0));
+			record.PrepareTask = Task.Run(() => PrepareAsync<T>(record, version, plan, 0));
 		}
 
 		if (mode == AssetRequestMode.ImmediateLoad) {
-			TryCompleteImmediately(record);
+			TryCompleteImmediately<T>(record);
 		}
 	}
 
-	private void ReloadImmediately(AssetRecord record, AssetLoadPlan plan)
+	private void ReloadImmediately<T>(AssetRecord record, AssetLoadPlan plan)
+		where T : class
 	{
 		object? oldValue;
 		lock (record.Sync) {
@@ -159,7 +190,7 @@ public sealed class AssetPipeline(
 		}
 
 		try {
-			LoadSynchronously(record, record.Version, plan, 0, out var newValue);
+			LoadSynchronously<T>(record, record.Version, plan, 0, out var newValue);
 
 			lock (record.Sync) {
 				if (record.State == AssetState.Loaded && oldValue is IDisposable disposable && !ReferenceEquals(oldValue, newValue)) {
@@ -176,7 +207,8 @@ public sealed class AssetPipeline(
 		}
 	}
 
-	private void TryCompleteImmediately(AssetRecord record)
+	private void TryCompleteImmediately<T>(AssetRecord record)
+		where T : class
 	{
 		var prepareTask = record.PrepareTask;
 		if (prepareTask is null) {
@@ -185,11 +217,16 @@ public sealed class AssetPipeline(
 
 		var prepared = prepareTask.GetAwaiter().GetResult();
 		if (prepared is { } pending) {
-			FinalizePrepared(pending);
+			FinalizePrepared<T>(pending);
 		}
 	}
 
-	private async Task<PreparedAsset?> PrepareAsync(AssetRecord record, int version, AssetLoadPlan plan, int startCandidateIndex)
+	private async Task<PreparedAsset?> PrepareAsync<T>(
+		AssetRecord record,
+		int version,
+		AssetLoadPlan plan,
+		int startCandidateIndex
+	) where T : class
 	{
 		await prepareGate.WaitAsync().ConfigureAwait(false);
 
@@ -204,7 +241,12 @@ public sealed class AssetPipeline(
 
 			for (var candidateIndex = startCandidateIndex; candidateIndex < plan.Candidates.Count; candidateIndex++) {
 				var candidate = plan.Candidates[candidateIndex];
-				if (!readers.TryGetReader(candidate.Extension, out var reader)) {
+
+				if (plan.IsTracked && IsCandidateRejected(candidate)) {
+					continue;
+				}
+
+				if (!readers.TryGetReader(record.Key.AssetType, candidate.Extension, out var reader)) {
 					continue;
 				}
 
@@ -221,6 +263,14 @@ public sealed class AssetPipeline(
 						var finalizeResult = reader.Finalize(context, prepareResult.PreparedData!);
 						if (!finalizeResult.Succeeded) {
 							RecordFailure(record, version, candidate, finalizeResult.Reason, finalizeResult.Error);
+							continue;
+						}
+
+						var finalizedAsset = finalizeResult.Asset!;
+						if (plan.IsTracked && !ValidateTrackedAsset<T>(candidate, (T)finalizedAsset, out var validationRejection)) {
+							RejectCandidate(candidate, validationRejection!);
+							RecordFailure(record, version, candidate, validationRejection!.GetReason(), null);
+							reader.Dispose(finalizedAsset);
 							continue;
 						}
 
@@ -256,7 +306,7 @@ public sealed class AssetPipeline(
 						prepareResult.PreparedData!,
 						version
 					);
-					preparedQueue.Enqueue(prepared);
+					preparedQueue.Enqueue(() => FinalizePrepared<T>(prepared));
 					return prepared;
 				}
 				catch (Exception ex) {
@@ -284,7 +334,8 @@ public sealed class AssetPipeline(
 		}
 	}
 
-	private void FinalizePrepared(PreparedAsset prepared)
+	private void FinalizePrepared<T>(PreparedAsset prepared)
+		where T : class
 	{
 		var record = prepared.Record;
 
@@ -306,6 +357,22 @@ public sealed class AssetPipeline(
 			if (finalizeResult.Succeeded) {
 				var assetValue = finalizeResult.Asset!;
 
+				if (prepared.Plan.IsTracked && !ValidateTrackedAsset<T>(candidate, (T)assetValue, out var validationRejection)) {
+					RejectCandidate(candidate, validationRejection!);
+					prepared.Reader.Dispose(assetValue);
+					ContinueFromNextCandidate<T>(
+						record,
+						prepared.Version,
+						prepared.Plan,
+						prepared.CandidateIndex,
+						candidate,
+						validationRejection!.GetReason(),
+						null
+					);
+					return;
+				}
+
+				object? oldValue;
 				lock (record.Sync) {
 					if (record.Version != prepared.Version) {
 						prepared.Reader.Dispose(assetValue);
@@ -319,15 +386,20 @@ public sealed class AssetPipeline(
 						return;
 					}
 
+					oldValue = record.Value;
 					record.Value = assetValue;
 					record.Error = null;
 					record.State = AssetState.Loaded;
 				}
 
+				if (oldValue is not null && !ReferenceEquals(oldValue, assetValue)) {
+					prepared.Reader.Dispose(oldValue);
+				}
+
 				return;
 			}
 
-			ContinueFromNextCandidate(
+			ContinueFromNextCandidate<T>(
 				record,
 				prepared.Version,
 				prepared.Plan,
@@ -338,7 +410,7 @@ public sealed class AssetPipeline(
 			);
 		}
 		catch (Exception e) {
-			ContinueFromNextCandidate(
+			ContinueFromNextCandidate<T>(
 				record,
 				prepared.Version,
 				prepared.Plan,
@@ -350,7 +422,7 @@ public sealed class AssetPipeline(
 		}
 	}
 
-	private void ContinueFromNextCandidate(
+	private void ContinueFromNextCandidate<T>(
 		AssetRecord record,
 		int version,
 		AssetLoadPlan plan,
@@ -358,7 +430,7 @@ public sealed class AssetPipeline(
 		AssetLoadCandidate failedCandidate,
 		string? reason,
 		Exception? exception
-	)
+	) where T : class
 	{
 		lock (record.Sync) {
 			if (record.Version != version) {
@@ -375,7 +447,7 @@ public sealed class AssetPipeline(
 			}
 
 			record.State = AssetState.Queued;
-			record.PrepareTask = Task.Run(() => PrepareAsync(record, version, plan, nextCandidateIndex));
+			record.PrepareTask = Task.Run(() => PrepareAsync<T>(record, version, plan, nextCandidateIndex));
 		}
 	}
 
@@ -396,7 +468,14 @@ public sealed class AssetPipeline(
 		}
 	}
 
-	private void LoadSynchronously(AssetRecord record, int version, AssetLoadPlan plan, int startCandidateIndex, out object? loadedValue)
+	private void LoadSynchronously<T>(
+		AssetRecord record,
+		int version,
+		AssetLoadPlan plan,
+		int startCandidateIndex,
+		out object? loadedValue
+	)
+		where T : class
 	{
 		loadedValue = null;
 
@@ -406,7 +485,12 @@ public sealed class AssetPipeline(
 
 		for (var candidateIndex = startCandidateIndex; candidateIndex < plan.Candidates.Count; candidateIndex++) {
 			var candidate = plan.Candidates[candidateIndex];
-			if (!readers.TryGetReader(candidate.Extension, out var reader)) {
+
+			if (plan.IsTracked && IsCandidateRejected(candidate)) {
+				continue;
+			}
+
+			if (!readers.TryGetReader(record.Key.AssetType, candidate.Extension, out var reader)) {
 				continue;
 			}
 
@@ -425,17 +509,26 @@ public sealed class AssetPipeline(
 					continue;
 				}
 
+				var finalizedAsset = finalizeResult.Asset!;
+				if (plan.IsTracked && !ValidateTrackedAsset<T>(candidate, (T)finalizedAsset, out var validationRejection)) {
+					RejectCandidate(candidate, validationRejection!);
+					RecordFailure(record, version, candidate, validationRejection!.GetReason(), null);
+					reader.Dispose(finalizedAsset);
+					continue;
+				}
+
 				lock (record.Sync) {
 					if (record.Version != version) {
+						reader.Dispose(finalizedAsset);
 						return;
 					}
 
-					record.Value = finalizeResult.Asset;
+					record.Value = finalizedAsset;
 					record.Error = null;
 					record.State = AssetState.Loaded;
 				}
 
-				loadedValue = finalizeResult.Asset;
+				loadedValue = finalizedAsset;
 				return;
 			}
 			catch (Exception ex) {
@@ -453,6 +546,41 @@ public sealed class AssetPipeline(
 		}
 	}
 
+	private static IContentSource? GetCandidateSource(AssetLoadCandidate candidate)
+	{
+		return candidate.SourceTag as IContentSource;
+	}
+
+	private static bool IsCandidateRejected(AssetLoadCandidate candidate)
+	{
+		var source = GetCandidateSource(candidate);
+		return source is not null && source.Rejections.IsRejected(candidate.Name);
+	}
+
+	private static void RejectCandidate(
+		AssetLoadCandidate candidate,
+		IRejectionReason rejectionReason
+	)
+	{
+		var source = GetCandidateSource(candidate);
+		source?.Rejections.Reject(candidate.Name, rejectionReason);
+	}
+
+	private static bool ValidateTrackedAsset<T>(
+		AssetLoadCandidate candidate,
+		T asset,
+		out IRejectionReason? rejectionReason
+	) where T : class
+	{
+		var source = GetCandidateSource(candidate);
+		if (source?.ContentValidator is null) {
+			rejectionReason = null;
+			return true;
+		}
+
+		return source.ContentValidator.AssetIsValid(asset, candidate.Name, out rejectionReason);
+	}
+
 	private AssetLoadPlan BuildTrackedPlan(AssetKey key)
 	{
 		var candidates = new List<AssetLoadCandidate>(sources.Length);
@@ -462,7 +590,7 @@ public sealed class AssetPipeline(
 				continue;
 			}
 
-			if (!readers.TryGetReader(ext, out var reader)) {
+			if (!readers.TryGetReader(key.AssetType, ext, out _)) {
 				continue;
 			}
 

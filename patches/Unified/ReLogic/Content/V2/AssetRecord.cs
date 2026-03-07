@@ -25,6 +25,7 @@ internal sealed class AssetRecord
 
 	public Task<PreparedAsset?>? PrepareTask;
 	public AssetLoadPlan? LoadPlan;
+	public Action<AssetPipeline, AssetRecord, AssetLoadPlan>? ImmediateReloadAction;
 	public bool IsTracked;
 	public int Version;
 

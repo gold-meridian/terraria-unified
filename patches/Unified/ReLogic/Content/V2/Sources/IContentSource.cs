@@ -12,6 +12,10 @@ namespace ReLogic.Content.Sources;
 /// </summary>
 public interface IContentSource
 {
+	RejectedAssetCollection Rejections { get; }
+
+	IContentValidator? ContentValidator { get; set; }
+
 	/// <summary>
 	///		Enumerates every known asset.
 	/// </summary>

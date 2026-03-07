@@ -13,6 +13,10 @@ public abstract class AbstractContentSource : IContentSource
 
 	protected Dictionary<string, string> AssetExtensions { get; } = new();
 
+	public RejectedAssetCollection Rejections { get; } = new();
+
+	public IContentValidator? ContentValidator { get; set; }
+
 	public IEnumerable<string> EnumerateAssets()
 	{
 		return AssetPaths;

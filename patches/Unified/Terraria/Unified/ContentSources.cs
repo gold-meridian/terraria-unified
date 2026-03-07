@@ -9,11 +9,11 @@ internal static class ContentSources
 {
 	public static AssetRepository ManifestAssets { get; set; }
 
-	public static AssemblyResourcesContentSource ManifestContentSource { get; set; }
+	public static AssemblyContentSource ManifestContentSource { get; set; }
 
 	public static void PrepareAssets()
 	{
-		ManifestContentSource = new AssemblyResourcesContentSource(
+		ManifestContentSource = new AssemblyContentSource(
 			Assembly.GetExecutingAssembly(),
 			excludedStartingPaths: []
 		);
