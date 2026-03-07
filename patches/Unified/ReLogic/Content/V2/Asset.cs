@@ -6,7 +6,7 @@ namespace ReLogic.Content;
 ///		A typed wrapper over an <see cref="AssetRecord"/> providing mechanisms
 ///		for retrieving and working with its stored value.
 /// </summary>
-public readonly struct Asset<T> where T : class
+public sealed class Asset<T> where T : class
 {
 	private readonly AssetRecord record;
 
@@ -20,6 +20,8 @@ public readonly struct Asset<T> where T : class
 	///		Whether the asset has been loaded and has its real value.
 	/// </summary>
 	public bool IsLoaded => record.State == AssetState.Loaded;
+
+	public string Name => record.Key.Path;
 
 	/// <summary>
 	///		Fetches the asset's value, falling back to the

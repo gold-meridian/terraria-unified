@@ -23,8 +23,11 @@ ReLogic/Content/Readers/IAssetReader.cs
 ReLogic/Content/Readers/PngReader.cs
 ReLogic/Content/Readers/XnbReader.cs
 ReLogic/Content/RejectedAssetCollection.cs
+ReLogic/Content/Sources/FileSystemContentSource.cs
 ReLogic/Content/Sources/IContentSource.cs
 ReLogic/Content/Sources/XnaContentSource.cs
+ReLogic/Content/Sources/XnaDirectContentSource.cs
+ReLogic/Content/Sources/ZipContentSource.cs
 ReLogic/IO/ConsoleOutputMirror.cs
 Terraria/MonoLaunch.cs
 Terraria/Program.cs
