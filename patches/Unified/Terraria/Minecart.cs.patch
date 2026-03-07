@@ -9,3 +9,29 @@
  		bool flag = false;
  		bool flag2 = true;
  		int num2 = -1;
+@@ -566,10 +_,12 @@
+ 					flag8 = true;
+ 
+ 				tile = Main.tile[num5, num6];
++				/*
+ 				if (tile == null) {
+ 					tile = new Tile();
+ 					Main.tile[num5, num6] = tile;
+ 				}
++				*/
+ 
+ 				flag = ((tile.nactive() && tile.type == 314) ? true : false);
+ 			}
+@@ -859,10 +_,12 @@
+ 			return false;
+ 
+ 		Tile tile = Main.tile[i, j];
++		/*
+ 		if (tile == null) {
+ 			tile = new Tile();
+ 			Main.tile[i, j] = tile;
+ 		}
++		*/
+ 
+ 		if (mute && tile.type != 314)
+ 			return false;

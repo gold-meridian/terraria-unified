@@ -1,0 +1,20 @@
+--- src/TerrariaNetCore/Terraria/Graphics/Light/TileLightScanner.cs
++++ src/Unified/Terraria/Graphics/Light/TileLightScanner.cs
+@@ -36,6 +_,7 @@
+ 
+ 	private bool IsTileNullOrTouchingNull(int x, int y)
+ 	{
++		/*
+ 		if (WorldGen.InWorld(x, y, 1)) {
+ 			if (Main.tile[x, y] != null && Main.tile[x + 1, y] != null && Main.tile[x - 1, y] != null && Main.tile[x, y - 1] != null)
+ 				return Main.tile[x, y + 1] == null;
+@@ -44,6 +_,9 @@
+ 		}
+ 
+ 		return true;
++		*/
++
++		return !WorldGen.InWorld(x, y, 1);
+ 	}
+ 
+ 	public void Update()

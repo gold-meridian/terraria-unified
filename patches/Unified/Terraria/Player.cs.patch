@@ -21,6 +21,21 @@
  	public int infernoCounter;
  	public int insanityShadowCooldown;
  	public int starCloakCooldown;
+@@ -15494,11 +_,14 @@
+ 			return;
+ 
+ 		float num3 = position.Y;
++
++		/*
+ 		if (Main.tile[num, num2 - 1] == null)
+ 			Main.tile[num, num2 - 1] = new Tile();
+ 
+ 		if (Main.tile[num, num2 + 1] == null)
+ 			Main.tile[num, num2 + 1] = new Tile();
++		*/
+ 
+ 		if ((!Main.tile[num, num2 - 1].active() || !Main.tileRope[Main.tile[num, num2 - 1].type]) && (!Main.tile[num, num2 + 1].active() || !Main.tileRope[Main.tile[num, num2 + 1].type]))
+ 			num3 = num2 * 16 + 22;
 @@ -17682,7 +_,7 @@
  			Hurt(PlayerDeathReason.LegacyDefault(), attackDamage_ScaledByDifficulty, Main.npc[Main.wofNPCIndex].direction);
  		}
@@ -30,6 +45,17 @@
  			AddBuff(37, 10);
  			SoundEngine.PlaySound(4, (int)Main.npc[Main.wofNPCIndex].position.X, (int)Main.npc[Main.wofNPCIndex].position.Y, 10);
  		}
+@@ -18419,8 +_,10 @@
+ 
+ 				int num3 = (int)((position.Y + (float)num2 - 44f * gravDir) / 16f);
+ 				if (Main.tile[num, num3] != null && Main.tile[num, num3].liquid < 128) {
++					/*
+ 					if (Main.tile[num, num3] == null)
+ 						Main.tile[num, num3] = new Tile();
++					*/
+ 
+ 					if (!Main.tile[num, num3].active() || !Main.tileSolid[Main.tile[num, num3].type] || Main.tileSolidTop[Main.tile[num, num3].type])
+ 						flag = false;
 @@ -18846,10 +_,17 @@
  		if (gravDir == -1f)
  			num2 = (int)(position.Y - 0.1f) / 16;
@@ -59,7 +85,7 @@
  	}
  
  	public void ResetFloorFlags()
-@@ -18880,9 +_,12 @@
+@@ -18880,9 +_,14 @@
  		runningOnSand = false;
  	}
  
@@ -70,9 +96,19 @@
  	{
 -		Tile result = null;
 +		Tile? result = null;
++
++		/*
  		if (Main.tile[x - 1, y] == null)
  			Main.tile[x - 1, y] = new Tile();
  
+@@ -18891,6 +_,7 @@
+ 
+ 		if (Main.tile[x, y] == null)
+ 			Main.tile[x, y] = new Tile();
++		*/
+ 
+ 		if (Main.tile[x, y].nactive() && Main.tileSolid[Main.tile[x, y].type])
+ 			result = Main.tile[x, y];
 @@ -19129,9 +_,16 @@
  		if (position.Y < Main.topWorld + (float)num) {
  			Main.cameraY = 0f;
@@ -131,7 +167,60 @@
  			HandleBeingInChestRange();
  			tileEntityAnchor.GetTileEntity()?.OnPlayerUpdate(this);
  		}
-@@ -23234,9 +_,14 @@
+@@ -20207,6 +_,7 @@
+ 		if (tileTargetY < 5)
+ 			tileTargetY = 5;
+ 
++		/*
+ 		if (Main.tile[tileTargetX - 1, tileTargetY] == null)
+ 			Main.tile[tileTargetX - 1, tileTargetY] = new Tile();
+ 
+@@ -20215,6 +_,7 @@
+ 
+ 		if (Main.tile[tileTargetX, tileTargetY] == null)
+ 			Main.tile[tileTargetX, tileTargetY] = new Tile();
++		*/
+ 
+ 		if (inventory[selectedItem].axe > 0 && !Main.tile[tileTargetX, tileTargetY].active() && inventory[selectedItem].createWall <= 0 && (inventory[selectedItem].hammer <= 0 || inventory[selectedItem].axe != 0)) {
+ 			if (Main.tile[tileTargetX - 1, tileTargetY].active() && Main.tile[tileTargetX - 1, tileTargetY].type == 323) {
+@@ -20826,11 +_,14 @@
+ 					int num33 = num32 * 16 + 8 - width / 2;
+ 					float y2 = position.Y;
+ 					y2 = num30 * 16 + 22;
++
++					/*
+ 					if (Main.tile[num32, num30 - 1] == null)
+ 						Main.tile[num32, num30 - 1] = new Tile();
+ 
+ 					if (Main.tile[num32, num30 + 1] == null)
+ 						Main.tile[num32, num30 + 1] = new Tile();
++					*/
+ 
+ 					if (WorldGen.IsRope(num32, num30 - 1) || WorldGen.IsRope(num32, num30 + 1))
+ 						y2 = num30 * 16 + 22;
+@@ -20863,8 +_,10 @@
+ 			if (velocity.X != 0f)
+ 				pulley = false;
+ 
++			/*
+ 			if (Main.tile[num29, num30] == null)
+ 				Main.tile[num29, num30] = new Tile();
++			*/
+ 
+ 			if (!WorldGen.IsRope(num29, num30))
+ 				pulley = false;
+@@ -20908,8 +_,10 @@
+ 			if (WorldGen.IsRope(num34, num36 - 1) || WorldGen.IsRope(num34, num36 + 1))
+ 				flag17 = true;
+ 
++			/*
+ 			if (Main.tile[num34, num35] == null)
+ 				Main.tile[num34, num35] = new Tile();
++			*/
+ 
+ 			if (!WorldGen.IsRope(num34, num35)) {
+ 				flag16 = false;
+@@ -23234,9 +_,16 @@
  
  	public void UpdateMiscCounter()
  	{
@@ -140,12 +229,25 @@
  		if (miscCounter >= 300)
  			miscCounter = 0;
 +		*/
++
 +		_miscCounter += (!Main.gameMenu ? 1 : Main.DrawDeltaTime);
-+		if (_miscCounter >= 300)
++		if (_miscCounter >= 300) {
 +			_miscCounter = 0;
++		}
  	}
  
  	private void WingAirLogicTweaks()
+@@ -25627,8 +_,10 @@
+ 
+ 	public void TileInteractionsCheck(int myX, int myY)
+ 	{
++		/*
+ 		if (Main.tile[myX, myY] == null)
+ 			Main.tile[myX, myY] = new Tile();
++		*/
+ 
+ 		if (Main.tile[myX, myY].active()) {
+ 			TileInteractionsMouseOver(myX, myY);
 @@ -28746,6 +_,8 @@
  
  	public void AdjTiles()
@@ -261,3 +363,15 @@
  		worldRect = WorldUtils.ClampToWorldBorders(worldRect);
  		Vector2 vector = worldRect.Center.ToVector2();
  		Vector2 vector2 = pointPosition - vector;
+@@ -40842,8 +_,11 @@
+ 				if (whoAmI == Main.myPlayer && flag) {
+ 					int num7 = (int)(itemLocation.X + (float)heldItemFrame.Width * 0.8f * (float)direction) / 16;
+ 					int num8 = (int)(itemLocation.Y + mountOffset + (float)(heldItemFrame.Height / 2)) / 16;
++
++					/*
+ 					if (Main.tile[num7, num8] == null)
+ 						Main.tile[num7, num8] = new Tile();
++					*/
+ 
+ 					if (Main.tile[num7, num8].active() && TileID.Sets.Campfires[Main.tile[num7, num8].type] && Main.tile[num7, num8].frameY < 54) {
+ 						miscTimer++;

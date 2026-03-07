@@ -8,7 +8,18 @@
  
  namespace Terraria;
  
-@@ -1128,7 +_,7 @@
+@@ -944,8 +_,10 @@
+ 				if (!WorldGen.InWorld(num145, num146, 3))
+ 					break;
+ 
++				/*
+ 				if (Main.tile[num145, num146] == null)
+ 					Main.tile[num145, num146] = new Tile();
++				*/
+ 
+ 				if (Main.netMode == 2) {
+ 					if (!flag12) {
+@@ -1128,11 +_,13 @@
  				BitsByte bitsByte5 = (byte)0;
  				BitsByte bitsByte6 = (byte)0;
  				BitsByte bitsByte7 = (byte)0;
@@ -16,7 +27,13 @@
 +				Tile tile4 = default;
  				for (int l = num62; l < num62 + num64; l++) {
  					for (int m = num63; m < num63 + num65; m++) {
++						/*
  						if (Main.tile[l, m] == null)
+ 							Main.tile[l, m] = new Tile();
++						*/
+ 
+ 						tile4 = Main.tile[l, m];
+ 						bool flag4 = tile4.active();
 @@ -1653,10 +_,19 @@
  				int num43 = reader.ReadByte();
  				string name = string.Empty;
@@ -37,9 +54,14 @@
  				}
  
  				if (Main.netMode == 1) {
-@@ -2065,7 +_,7 @@
+@@ -2062,10 +_,12 @@
+ 						Netplay.Clients[whoAmI].SpamWater += 1f;
+ 				}
+ 
++				/*
  				if (Main.tile[num14, num15] == null)
  					Main.tile[num14, num15] = new Tile();
++				*/
  
 -				lock (Main.tile[num14, num15]) {
 +				// lock (Main.tile[num14, num15]) {

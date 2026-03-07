@@ -15,7 +15,7 @@
  using Terraria.Utilities;
  
  namespace Terraria.GameContent.Drawing;
-@@ -426,8 +_,17 @@
+@@ -426,19 +_,34 @@
  			TileType = -1
  		};
  
@@ -31,9 +31,15 @@
 +		for (int j = firstTileX - 2; j < lastTileX + 2; j++) {
 +			for (int i = firstTileY; i < lastTileY + 4; i++) {
  				Tile tile = Main.tile[j, i];
++				/*
  				if (tile == null) {
  					tile = new Tile();
-@@ -438,7 +_,10 @@
+ 					Main.tile[j, i] = tile;
++				*/
++				if (Main.netMode == NetmodeID.MultiplayerClient && !Main.sectionManager.TileLoaded(j, i)) {
+ 					Main.mapTime += 60;
+ 				}
+ 				else {
  					if (!tile.active() || IsTileDrawLayerSolid(tile.type) != solidLayer || (DebugOptions.ShowUnbreakableWall && tile.wall == 350))
  						continue;
  
@@ -190,6 +196,33 @@
  		if (drawData.tileFrameY != -1)
  			Main.tileBatch.Draw(tileDrawTexture, new Vector2(tileX * 16 - (int)screenPosition.X, tileY * 16 - (int)screenPosition.Y) + screenOffset, Minecart.GetSourceRect(drawData.tileFrameY, Main.tileFrame[314]), drawData.tileLight, default(Vector2), 1f, drawData.tileSpriteEffect);
  
+@@ -3409,6 +_,8 @@
+ 		Tile tile2 = Main.tile[tileX - 1, tileY];
+ 		Tile tile3 = Main.tile[tileX, tileY - 1];
+ 		Tile tile4 = Main.tile[tileX, tileY + 1];
++
++		/*
+ 		if (tile == null) {
+ 			tile = new Tile();
+ 			Main.tile[tileX + 1, tileY] = tile;
+@@ -3428,7 +_,9 @@
+ 			tile4 = new Tile();
+ 			Main.tile[tileX, tileY + 1] = tile4;
+ 		}
++		*/
+ 
++		/*
+ 		if (tile.type == 379)
+ 			tile = new Tile();
+ 
+@@ -3440,6 +_,7 @@
+ 
+ 		if (tile4.type == 379)
+ 			tile4 = new Tile();
++		*/
+ 
+ 		if (DebugOptions.hideWater || !tileCache.active() || tileCache.inActive() || _tileSolidTop[tileCache.type] || (tileCache.halfBrick() && (tile2.liquid > 160 || tile.liquid > 160) && Main.instance.waterfallManager.CheckForWaterfall(tileX, tileY)) || (TileID.Sets.BlocksWaterDrawingBehindSelf[tileCache.type] && tileCache.slope() == 0))
+ 			return;
 @@ -3803,7 +_,7 @@
  		}
  	}

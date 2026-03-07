@@ -1,0 +1,98 @@
+--- src/TerrariaNetCore/Terraria/Collision.cs
++++ src/Unified/Terraria/Collision.cs
+@@ -1254,6 +_,7 @@
+ 		if (!WorldGen.InWorld(X, Y, 10))
+ 			return false;
+ 
++		/*
+ 		if (Main.tile[X, Y - 2] == null)
+ 			Main.tile[X, Y - 2] = new Tile();
+ 
+@@ -1265,6 +_,7 @@
+ 
+ 		if (Main.tile[X, Y + 1] == null)
+ 			Main.tile[X, Y + 1] = new Tile();
++		*/
+ 
+ 		if (Main.tile[X, Y - 2].liquid > 0)
+ 			return false;
+@@ -1300,8 +_,10 @@
+ 		}
+ 
+ 		Y++;
++		/*
+ 		if (Main.tile[X, Y] == null)
+ 			Main.tile[X, Y] = new Tile();
++		*/
+ 
+ 		if (Main.tile[X, Y].liquid > 0) {
+ 			waterLineHeight = Y * 16;
+@@ -1431,8 +_,10 @@
+ 
+ 		for (int i = value; i <= value2; i++) {
+ 			for (int j = value3; j <= value3 + 1; j++) {
++				/*
+ 				if (Main.tile[i, j] == null)
+ 					Main.tile[i, j] = new Tile();
++				*/
+ 
+ 				if (!Main.tile[i, j].nactive() || (!Main.tileSolid[Main.tile[i, j].type] && !Main.tileSolidTop[Main.tile[i, j].type]))
+ 					continue;
+@@ -1995,8 +_,10 @@
+ 					}
+ 				}
+ 				else if (vector3.X + (float)Width <= vector4.X && !Main.tileSolidTop[Main.tile[i, j].type]) {
++					/*
+ 					if (i >= 1 && Main.tile[i - 1, j] == null)
+ 						Main.tile[i - 1, j] = new Tile();
++					*/
+ 
+ 					if (!hoik || i < 1 || (Main.tile[i - 1, j].slope() != 2 && Main.tile[i - 1, j].slope() != 4)) {
+ 						num = i;
+@@ -2009,8 +_,10 @@
+ 					}
+ 				}
+ 				else if (vector3.X >= vector4.X + 16f && !Main.tileSolidTop[Main.tile[i, j].type]) {
++					/*
+ 					if (Main.tile[i + 1, j] == null)
+ 						Main.tile[i + 1, j] = new Tile();
++					*/
+ 
+ 					if (!hoik || (Main.tile[i + 1, j].slope() != 1 && Main.tile[i + 1, j].slope() != 3)) {
+ 						num = i;
+@@ -2973,11 +_,13 @@
+ 				if (!WorldGen.InWorld(i, j, 1))
+ 					continue;
+ 
++				/*
+ 				if (Main.tile[i, j] == null)
+ 					Main.tile[i, j] = new Tile();
+ 
+ 				if (Main.tile[i, j - 1] == null)
+ 					Main.tile[i, j - 1] = new Tile();
++				*/
+ 
+ 				if (waterWalk && Main.tile[i, j].liquid > 0 && Main.tile[i, j - 1].liquid == 0) {
+ 					int num7 = (int)Main.tile[i, j].liquid / 32 * 2 + 2;
+@@ -3745,8 +_,10 @@
+ 					}
+ 				}
+ 				else if (vector3.X + (float)Width <= vector4.X && !Main.tileSolidTop[tile.type]) {
++					/*
+ 					if (Main.tile[i - 1, j] == null)
+ 						Main.tile[i - 1, j] = new Tile();
++					*/
+ 
+ 					if (Main.tile[i - 1, j].slope() != 2 && Main.tile[i - 1, j].slope() != 4) {
+ 						num = i;
+@@ -3759,8 +_,10 @@
+ 					}
+ 				}
+ 				else if (vector3.X >= vector4.X + 16f && !Main.tileSolidTop[tile.type]) {
++					/*
+ 					if (Main.tile[i + 1, j] == null)
+ 						Main.tile[i + 1, j] = new Tile();
++					*/
+ 
+ 					if (Main.tile[i + 1, j].slope() != 1 && Main.tile[i + 1, j].slope() != 3) {
+ 						num = i;

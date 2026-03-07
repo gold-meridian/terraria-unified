@@ -74,3 +74,21 @@
  
  					continue;
  				}
+@@ -2023,6 +_,8 @@
+ 				byte b;
+ 				byte b3 = (b2 = (b = 0));
+ 				tile = Main.tile[j, i];
++
++				/*
+ 				if (tile == null) {
+ 					tile = new Tile();
+ 					Main.tile[j, i] = tile;
+@@ -2030,6 +_,8 @@
+ 				else {
+ 					tile.ClearEverything();
+ 				}
++				*/
++				tile.ClearEverything();
+ 
+ 				byte b4 = reader.ReadByte();
+ 				bool flag = false;

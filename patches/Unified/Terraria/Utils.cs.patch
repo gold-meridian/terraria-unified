@@ -1,5 +1,27 @@
 --- src/TerrariaNetCore/Terraria/Utils.cs
 +++ src/Unified/Terraria/Utils.cs
+@@ -395,8 +_,10 @@
+ 			if (Collision.SolidCollision(vector, num6, num2))
+ 				continue;
+ 
++			/*
+ 			if (Main.tile[num4, num5] == null)
+ 				Main.tile[num4, num5] = new Tile();
++			*/
+ 
+ 			Tile tile = Main.tile[num4, num5];
+ 			if ((settings.avoidWalls && tile.wall > 0) || (tile.wall == 87 && (double)num5 > Main.worldSurface && !NPC.downedPlantBoss) || (Main.wallDungeon[tile.wall] && (double)num5 > Main.worldSurface && !NPC.downedBoss3) || !CheckForGoodTeleportationSpot_CheckNoInvalidTiles(num4, num5, settings))
+@@ -410,8 +_,10 @@
+ 					break;
+ 				}
+ 
++				/*
+ 				if (Main.tile[num4, num5 + num8] == null)
+ 					Main.tile[num4, num5 + num8] = new Tile();
++				*/
+ 
+ 				Tile tile2 = Main.tile[num4, num5 + num8];
+ 				vector = new Vector2(num4, num5 + num8) * 16f + new Vector2(-num6 / 2 + 8, -num2);
 @@ -1122,7 +_,7 @@
  	public static Vector2D TopRightDouble(this Rectangle r) => new Vector2D(r.X + r.Width, r.Y);
  	public static Vector2D BottomLeftDouble(this Rectangle r) => new Vector2D(r.X, r.Y + r.Height);

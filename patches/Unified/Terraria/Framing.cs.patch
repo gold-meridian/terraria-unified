@@ -1,0 +1,15 @@
+--- src/TerrariaNetCore/Terraria/Framing.cs
++++ src/Unified/Terraria/Framing.cs
+@@ -400,10 +_,12 @@
+ 			return new Tile();
+ 
+ 		Tile tile = Main.tile[i, j];
++		/*
+ 		if (tile == null) {
+ 			tile = new Tile();
+ 			Main.tile[i, j] = tile;
+ 		}
++		*/
+ 
+ 		return tile;
+ 	}

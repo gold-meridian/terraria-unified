@@ -4699,7 +4699,17 @@
  	}
  
  	private void DrawBackground_DirtBackground(float localShimmerAlpha, int q1, int q2, ref Vector2 drawOffset, ref Vector3 backgroundColor)
-@@ -46264,7 +_,7 @@
+@@ -46256,15 +_,17 @@
+ 						if (!WorldGen.InWorld(num4, num5))
+ 							continue;
+ 
++						/*
+ 						if (tile[num4, num5] == null)
+ 							tile[num4, num5] = new Tile();
++						*/
+ 
+ 						if (localShimmerAlpha == 0f && (color.R > 0 || color.G > 0 || color.B > 0)) {
+ 							if (!drawToScreen) {
  								Lighting.GetCornerColors(num4, num5, out var vertices);
  								vertices.BottomLeftColor = new Microsoft.Xna.Framework.Color(vertices.BottomLeftColor.ToVector3() * backgroundColor);
  								vertices.BottomRightColor = new Microsoft.Xna.Framework.Color(vertices.BottomRightColor.ToVector3() * backgroundColor);
@@ -4777,6 +4787,17 @@
  						}
  					}
  				}
+@@ -46439,8 +_,10 @@
+ 							int num16 = (int)((num14 + screenPosition.Y) / 16f);
+ 							if (WorldGen.InWorld(num15, num16)) {
+ 								Microsoft.Xna.Framework.Color color9 = Lighting.GetColor(num15, num16);
++								/*
+ 								if (tile[num15, num16] == null)
+ 									tile[num15, num16] = new Tile();
++								*/
+ 
+ 								if (color9.R > 0 || color9.G > 0 || color9.B > 0) {
+ 									Lighting.GetCornerColors(num15, num16, out var vertices2, ugBackTransition);
 @@ -46449,7 +_,7 @@
  									vertices2.BottomRightColor.A = a;
  									vertices2.TopLeftColor.A = a;
@@ -4838,7 +4859,15 @@
  				}
  			}
  		}
-@@ -47122,7 +_,7 @@
+@@ -47116,13 +_,15 @@
+ 							int num23 = (int)(((float)(bgStartX + num3 * n + num20 * 16 + 8) + screenPosition.X) / 16f);
+ 							int num24 = (int)((num22 + screenPosition.Y) / 16f);
+ 							Microsoft.Xna.Framework.Color color3 = Lighting.GetColor(num23, num24);
++							/*
+ 							if (tile[num23, num24] == null)
+ 								tile[num23, num24] = new Tile();
++							*/
+ 
  							if (color3.R > 0 || color3.G > 0 || color3.B > 0) {
  								if (!drawToScreen) {
  									Lighting.GetCornerColors(num23, num24, out var vertices);
@@ -4916,6 +4945,17 @@
  							}
  						}
  					}
+@@ -47286,8 +_,10 @@
+ 								int num36 = (int)(((float)(bgStartX + num3 * num31 + num33 * 16 + 8) + screenPosition.X) / 16f);
+ 								int num37 = (int)((num35 + screenPosition.Y) / 16f);
+ 								Microsoft.Xna.Framework.Color color11 = Lighting.GetColor(num36, num37);
++								/*
+ 								if (tile[num36, num37] == null)
+ 									tile[num36, num37] = new Tile();
++								*/
+ 
+ 								if (color11.R > 0 || color11.G > 0 || color11.B > 0) {
+ 									Lighting.GetCornerColors(num36, num37, out var vertices2, ugBackTransition);
 @@ -47296,7 +_,7 @@
  									vertices2.BottomRightColor.A = a;
  									vertices2.TopLeftColor.A = a;
@@ -5061,6 +5101,26 @@
  							}
  						}
  					}
+@@ -47709,15 +_,19 @@
+ 
+ 	private static bool ShouldDrawBackgroundTileAt(int i, int j)
+ 	{
++		/*
+ 		if (tile[i, j] == null)
+ 			tile[i, j] = new Tile();
++		*/
+ 
+ 		if (caveParallax != 0f) {
++			/*
+ 			if (tile[i - 1, j] == null)
+ 				tile[i - 1, j] = new Tile();
+ 
+ 			if (tile[i + 1, j] == null)
+ 				tile[i + 1, j] = new Tile();
++			*/
+ 
+ 			if (WallLightAt(i, j) || WallLightAt(i - 1, j) || WallLightAt(i + 1, j))
+ 				return true;
 @@ -47973,6 +_,9 @@
  			float num28 = num2;
  			float num29 = TextureAssets.Map.Width();
@@ -5370,6 +5430,17 @@
  			Texture2D tileDrawTexture = instance.TilesRenderer.GetTileDrawTexture(Main.tile[x, y], x, y);
  			spriteBatch.Draw(tileDrawTexture, new Vector2(x * 16, y * 16 - num) + drawOffset, value, Lighting.GetColor(x, y), 0f, default(Vector2), 1f, SpriteEffects.None, 0f);
  		}
+@@ -49807,8 +_,10 @@
+ 
+ 		for (int i = num9; i < num10 + 4; i++) {
+ 			for (int j = num7 - 2; j < num8 + 2; j++) {
++				/*
+ 				if (tile[j, i] == null)
+ 					tile[j, i] = new Tile();
++				*/
+ 
+ 				if (tile[j, i].liquid <= 0 || (tile[j, i].nactive() && tileSolid[tile[j, i].type] && !tileSolidTop[tile[j, i].type]) || !(Lighting.Brightness(j, i) > 0f || bg))
+ 					continue;
 @@ -49866,7 +_,7 @@
  
  				DrawTileInWater(-screenPosition + vector, j, i);

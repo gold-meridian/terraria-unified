@@ -264,12 +264,6 @@ public readonly partial struct Tile
 	public override int GetHashCode() => (int)TileId;
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static bool operator ==(Tile tile, Tile tile2) => tile.TileId == tile2.TileId;
-
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static bool operator !=(Tile tile, Tile tile2) => tile.TileId != tile2.TileId;
-
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator ==(Tile tile, ArgumentException justSoYouCanCompareWithNull) => false;
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]

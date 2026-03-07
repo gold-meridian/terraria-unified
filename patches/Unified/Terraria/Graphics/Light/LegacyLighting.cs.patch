@@ -39,6 +39,20 @@
  		if (_states != null && _states.Length >= num && _states[0].Length >= num2)
  			return;
  
+@@ -349,10 +_,13 @@
+ 			for (int j = num3; j < num4; j++) {
+ 				LightingState lightingState = array[j - _expandedRectTop];
+ 				Tile tile = Main.tile[i, j];
++
++				/*
+ 				if (tile == null) {
+ 					tile = new Tile();
+ 					Main.tile[i, j] = tile;
+ 				}
++				*/
+ 
+ 				if ((!tile.active() || !Main.tileNoSunLight[tile.type]) && lightingState.R < _skyColor && tile.liquid < 200 && (Main.wallLight[tile.wall] || tile.wall == 73)) {
+ 					lightingState.R = tileR;
 @@ -362,6 +_,8 @@
  					if (lightingState.B < _skyColor)
  						lightingState.B = tileB;
@@ -81,3 +95,17 @@
  	}
  
  	private void PreRenderPhase()
+@@ -591,10 +_,13 @@
+ 			for (int n = num3; n < num4; n++) {
+ 				LightingState lightingState2 = array3[n - _expandedRectTop];
+ 				Tile tile = Main.tile[m, n];
++
++				/*
+ 				if (tile == null) {
+ 					tile = new Tile();
+ 					Main.tile[m, n] = tile;
+ 				}
++				*/
+ 
+ 				_lightMap.GetLight(m - num, n - num3, out var color);
+ 				if (_rgb) {

@@ -48,6 +48,88 @@
  
  			if (WorldGen.ActiveAndWalkableTile(p.X, p.Y)) {
  				Vector2 vector = p.ToWorldCoordinates(8f, 0f);
+@@ -42124,8 +_,10 @@
+ 			Vector2 vector5 = default(Vector2);
+ 			for (int i = num10; i < num11; i++) {
+ 				for (int j = num12; j < num13; j++) {
++					/*
+ 					if (Main.tile[i, j] == null)
+ 						Main.tile[i, j] = new Tile();
++					*/
+ 
+ 					vector5.X = i * 16;
+ 					vector5.Y = j * 16;
+@@ -42254,8 +_,11 @@
+ 		}
+ 		else if (ai[0] == 2f) {
+ 			Point point3 = base.Center.ToTileCoordinates();
++
++			/*
+ 			if (Main.tile[point3.X, point3.Y] == null)
+ 				Main.tile[point3.X, point3.Y] = new Tile();
++			*/
+ 
+ 			bool flag = true;
+ 			if (AI_007_GrapplingHooks_CanTileBeLatchedOnTo(Main.tile[point3.X, point3.Y]))
+@@ -42830,11 +_,14 @@
+ 			int num4 = (int)(base.Center.Y / 16f);
+ 			_ = position.Y / 16f;
+ 			int num5 = (int)((position.Y + (float)height) / 16f);
++
++			/*
+ 			if (Main.tile[num3, num4] == null)
+ 				Main.tile[num3, num4] = new Tile();
+ 
+ 			if (Main.tile[num3, num5] == null)
+ 				Main.tile[num3, num5] = new Tile();
++			*/
+ 
+ 			if (velocity.Y > 0f)
+ 				velocity.Y *= 0.5f;
+@@ -43041,11 +_,14 @@
+ 			int num8 = (int)(base.Center.Y / 16f);
+ 			_ = position.Y / 16f;
+ 			int num9 = (int)((position.Y + (float)height) / 16f);
++
++			/*
+ 			if (Main.tile[num7, num8] == null)
+ 				Main.tile[num7, num8] = new Tile();
+ 
+ 			if (Main.tile[num7, num9] == null)
+ 				Main.tile[num7, num9] = new Tile();
++			*/
+ 
+ 			if (velocity.Y > 0f)
+ 				velocity.Y *= 0.5f;
+@@ -43123,6 +_,8 @@
+ 	private float AI_061_FishingBobber_GetWaterLine(int X, int Y)
+ 	{
+ 		float result = position.Y + (float)height;
++
++		/*
+ 		if (Main.tile[X, Y - 1] == null)
+ 			Main.tile[X, Y - 1] = new Tile();
+ 
+@@ -43131,6 +_,7 @@
+ 
+ 		if (Main.tile[X, Y + 1] == null)
+ 			Main.tile[X, Y + 1] = new Tile();
++		*/
+ 
+ 		if (Main.tile[X, Y - 1].liquid > 0) {
+ 			result = Y * 16;
+@@ -61099,8 +_,11 @@
+ 
+ 				int num696 = (int)position.X / 16;
+ 				int num697 = (int)position.Y / 16;
++
++				/*
+ 				if (Main.tile[num696, num697] == null)
+ 					Main.tile[num696, num697] = new Tile();
++				*/
+ 
+ 				if (Main.tile[num696, num697].type == 127 && Main.tile[num696, num697].active())
+ 					WorldGen.KillTile(num696, num697);
 @@ -63756,7 +_,7 @@
  
  					if (type == 109) {
