@@ -1,0 +1,29 @@
+--- src/TerrariaNetCore/Terraria/DataStructures/PlayerDrawLayers.cs
++++ src/Unified/Terraria/DataStructures/PlayerDrawLayers.cs
+@@ -106,7 +_,7 @@
+ 
+ 		if (context == CompositePlayerDrawContext.FrontArm && bodyIndex == 205) {
+ 			Color immuneAlphaPure = drawinfo.drawPlayer.GetImmuneAlphaPure(new Color(100, 100, 100, 0), drawinfo.shadow);
+-			ulong seed = (ulong)(drawinfo.drawPlayer.miscCounter / 4);
++			ulong seed = (ulong)(int)(drawinfo.drawPlayer.miscCounter / 4);
+ 			int num = 4;
+ 			for (int k = 0; k < num; k++) {
+ 				float num2 = (float)Utils.RandomInt(ref seed, -10, 11) * 0.2f;
+@@ -2146,7 +_,7 @@
+ 
+ 					if (drawinfo.drawPlayer.head == 211) {
+ 						Color color5 = new Color(100, 100, 100, 0);
+-						ulong seed = (ulong)(drawinfo.drawPlayer.miscCounter / 4 + 100);
++						ulong seed = (ulong)(int)(drawinfo.drawPlayer.miscCounter / 4 + 100);
+ 						int num21 = 4;
+ 						for (int k = 0; k < num21; k++) {
+ 							float x3 = (float)Utils.RandomInt(ref seed, -10, 11) * 0.2f;
+@@ -3254,7 +_,7 @@
+ 
+ 			if (drawinfo.drawPlayer.body == 205) {
+ 				Color color = new Color(100, 100, 100, 0);
+-				ulong seed = (ulong)(drawinfo.drawPlayer.miscCounter / 4);
++				ulong seed = (ulong)(int)(drawinfo.drawPlayer.miscCounter / 4);
+ 				int num2 = 4;
+ 				for (int i = 0; i < num2; i++) {
+ 					float num3 = (float)Utils.RandomInt(ref seed, -10, 11) * 0.2f;

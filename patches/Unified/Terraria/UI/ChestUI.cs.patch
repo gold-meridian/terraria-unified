@@ -1,27 +1,22 @@
 --- src/TerrariaNetCore/Terraria/UI/ChestUI.cs
 +++ src/Unified/Terraria/UI/ChestUI.cs
-@@ -39,18 +_,19 @@
+@@ -12,6 +_,7 @@
+ using Terraria.GameInput;
+ using Terraria.UI.Chat;
+ using Terraria.UI.Gamepad;
++using Terraria.Unified.Time;
  
- 	public static void UpdateHover(int ID, bool hovering)
- 	{
-+		float scaling = 0.05f * Main.DrawFactor;
- 		if (hovering) {
- 			if (!ButtonHovered[ID])
- 				SoundEngine.PlaySound(12);
+ namespace Terraria.UI;
  
- 			ButtonHovered[ID] = true;
--			ButtonScale[ID] += 0.05f;
-+			ButtonScale[ID] += scaling;
- 			if (ButtonScale[ID] > 1f)
- 				ButtonScale[ID] = 1f;
- 		}
- 		else {
- 			ButtonHovered[ID] = false;
--			ButtonScale[ID] -= 0.05f;
-+			ButtonScale[ID] -= scaling;
- 			if (ButtonScale[ID] < 0.75f)
- 				ButtonScale[ID] = 0.75f;
- 		}
+@@ -31,7 +_,7 @@
+ 
+ 	public const float buttonScaleMinimum = 0.75f;
+ 	public const float buttonScaleMaximum = 1f;
+-	public static float[] ButtonScale = new float[ButtonID.Count];
++	public static DeltaFloat<DrawDelta>[] ButtonScale = new DeltaFloat<DrawDelta>[ButtonID.Count];
+ 	public static bool[] ButtonHovered = new bool[ButtonID.Count];
+ 	public static int StartingRowForDrawing = 0;
+ 	public static int LastHighestChestRow = 0;
 @@ -119,7 +_,10 @@
  		Vector2 vector = new Vector2(504f, Main.instance.invBottom);
  		ChatManager.DrawColorCodedStringWithShadow(spritebatch, value, text, vector, color, 0f, Vector2.Zero, Vector2.One, -1f, 1.5f);
@@ -33,15 +28,3 @@
  			Main.instance.SetIMEPanelAnchor(vector + new Vector2(0f, 56f), 0f);
  			string compositionString = Platform.Get<IImeService>().CompositionString;
  			if (compositionString != null && compositionString.Length > 0) {
-@@ -127,7 +_,11 @@
- 				vector.X += value.MeasureString(compositionString).X;
- 			}
- 
-+			/*
- 			if (++Main.instance.textBlinkerCount >= 20) {
-+			*/
-+			Main.instance.textBlinkerCount += 1 * Main.DrawFactor;
-+			if (Main.instance.textBlinkerCount >= 20) {
- 				Main.instance.textBlinkerState = ((Main.instance.textBlinkerState == 0) ? 1 : 0);
- 				Main.instance.textBlinkerCount = 0;
- 			}

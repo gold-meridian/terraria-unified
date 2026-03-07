@@ -1,48 +1,39 @@
 --- src/TerrariaNetCore/Terraria/Cloud.cs
 +++ src/Unified/Terraria/Cloud.cs
-@@ -307,28 +_,32 @@
- 			}
- 		}
+@@ -1,15 +_,16 @@
+ using Microsoft.Xna.Framework;
+ using Microsoft.Xna.Framework.Graphics;
+ using Terraria.GameContent;
++using Terraria.Unified.Time;
+ using Terraria.Utilities;
  
-+		float delta = Main.DrawFactor;
-+		if (!Main.gameMenu)
-+			delta = 1f;
-+
- 		if (scale == 1f)
- 			scale -= 0.0001f;
+ namespace Terraria;
  
+ public class Cloud
+ {
+-	public Vector2 position;
++	public DeltaVector2<CurrentDelta> position;
+ 	public float scale;
+-	public float rotation;
++	public DeltaFloat<CurrentDelta> rotation;
+ 	public float rSpeed;
+ 	public float sSpeed;
+ 	public bool active;
+@@ -17,7 +_,7 @@
+ 	public int type;
+ 	public int width;
+ 	public int height;
+-	public float Alpha;
++	public DeltaFloat<CurrentDelta> Alpha;
+ 	public bool kill;
+ 	private static UnifiedRandom rand = new UnifiedRandom();
+ 	public static Vector2? lastCameraCenter;
+@@ -313,7 +_,7 @@
  		if ((double)scale == 1.15)
  			scale -= 0.0001f;
  
 -		position.X += Main.windSpeedCurrent * 9f * GetParallax() * (float)Main.dayRate;
-+		position.X += (Main.windSpeedCurrent * 9f * GetParallax() * (float)Main.dayRate) * delta;
++		position.X += (Main.windSpeedCurrent * 9f * GetParallax() * (float)Main.dayRate);
  		float num = 600f;
  		if (Main.bgAlphaFrontLayer[4] == 1f && position.Y > 200f) {
  			kill = true;
--			Alpha -= 0.005f * (float)Main.dayRate;
-+			Alpha -= 0.005f * (float)(Main.dayRate * delta);
- 		}
- 
- 		if (!kill) {
- 			if (Alpha < 1f) {
--				Alpha += 0.001f * (float)Main.dayRate;
-+				Alpha += 0.001f * (float)(Main.dayRate * delta);
- 				if (Alpha > 1f)
- 					Alpha = 1f;
- 			}
- 		}
- 		else {
--			Alpha -= 0.001f * (float)Main.dayRate;
-+			Alpha -= 0.001f * (float)(Main.dayRate * delta);
- 			if (Alpha <= 0f)
- 				active = false;
- 		}
-@@ -349,7 +_,7 @@
- 		if ((double)rotation < -0.02)
- 			rotation = -0.02f;
- 
--		rotation += rSpeed;
-+		rotation += rSpeed * delta;
- 		width = (int)((float)TextureAssets.Cloud[type].Width() * scale);
- 		height = (int)((float)TextureAssets.Cloud[type].Height() * scale);
- 		if (type >= 9 && type <= 13 && (Main.cloudAlpha > 0f || Main.cloudBGActive >= 1f))

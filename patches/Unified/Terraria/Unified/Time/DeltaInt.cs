@@ -26,17 +26,27 @@ public struct DeltaInt<TProvider>(float value)
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static DeltaInt<TProvider> operator +(DeltaInt<TProvider> a, int b)
+	public void operator +=(int b)
 	{
-		a.Value += b * Factor;
-		return a;
+		Value += b * Factor;
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static DeltaInt<TProvider> operator -(DeltaInt<TProvider> a, int b)
+	public void operator -=(int b)
 	{
-		a.Value -= b * Factor;
-		return a;
+		Value -= b * Factor;
+	}
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public void operator *=(int b)
+	{
+		Value *= b * Factor;
+	}
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public void operator /=(int b)
+	{
+		Value /= b * Factor;
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -54,21 +64,6 @@ public struct DeltaInt<TProvider>(float value)
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static DeltaInt<TProvider> operator *(DeltaInt<TProvider> a, int b)
-	{
-		a.Value *= b;
-		return a;
-	}
-
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static DeltaInt<TProvider> operator /(DeltaInt<TProvider> a, int b)
-	{
-		a.Value /= b;
-		return a;
-	}
-
-
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public void Add(int perTick)
 	{
 		Value += perTick * Factor;
@@ -78,6 +73,42 @@ public struct DeltaInt<TProvider>(float value)
 	public void Sub(int perTick)
 	{
 		Value -= perTick * Factor;
+	}
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator ==(DeltaInt<TProvider> a, DeltaInt<TProvider> b)
+	{
+		return a.Value == b.Value;
+	}
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator !=(DeltaInt<TProvider> a, DeltaInt<TProvider> b)
+	{
+		return a.Value == b.Value;
+	}
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator ==(DeltaInt<TProvider> a, int b)
+	{
+		return (int)a.Value == b;
+	}
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator !=(DeltaInt<TProvider> a, int b)
+	{
+		return (int)a.Value == b;
+	}
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator ==(int a, DeltaInt<TProvider> b)
+	{
+		return a == (int)b.Value;
+	}
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator !=(int a, DeltaInt<TProvider> b)
+	{
+		return a == (int)b.Value;
 	}
 
 	public override string ToString()

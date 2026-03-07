@@ -1,5 +1,19 @@
 --- src/TerrariaNetCore/Terraria/Rain.cs
 +++ src/Unified/Terraria/Rain.cs
+@@ -1,11 +_,12 @@
+ using System;
+ using Microsoft.Xna.Framework;
++using Terraria.Unified.Time;
+ 
+ namespace Terraria;
+ 
+ public class Rain
+ {
+-	public Vector2 position;
++	public DeltaVector2<DrawDelta> position;
+ 	public Vector2 velocity;
+ 	public float scale;
+ 	public float rotation;
 @@ -25,7 +_,7 @@
  		if (Main.netMode == 2 || Main.gamePaused || Main.gameMenu || !Main.SceneMetrics.ZoneRain || Main.shimmerAlpha > 0f)
  			return;
@@ -9,12 +23,3 @@
  		num *= 25f;
  		num *= 0.25f + 1f * Main.cloudAlpha;
  		if (NPC.AnyDanger(quickBossNPCCheck: true)) {
-@@ -79,7 +_,7 @@
- 		if (Main.gamePaused)
- 			return;
- 
--		position += velocity;
-+		position += velocity * Main.DrawFactor;
- 		if (Main.gameMenu) {
- 			if (position.Y > Main.screenPosition.Y + (float)Main.screenHeight + 2000f)
- 				active = false;

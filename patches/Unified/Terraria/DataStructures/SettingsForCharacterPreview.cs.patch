@@ -1,8 +1,0 @@
---- src/TerrariaNetCore/Terraria/DataStructures/SettingsForCharacterPreview.cs
-+++ src/Unified/Terraria/DataStructures/SettingsForCharacterPreview.cs
-@@ -1,4 +_,5 @@
- using Microsoft.Xna.Framework;
-+using Terraria.Unified.Time;
- 
- namespace Terraria.DataStructures;
- 
