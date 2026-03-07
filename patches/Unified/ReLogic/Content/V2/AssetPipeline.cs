@@ -686,7 +686,7 @@ public sealed class AssetPipeline(
 				new AssetLoadCandidate(
 					key.Path,
 					ext,
-					() => source.OpenStream(key.Path),
+					() => source.OpenStream(key.Path + ext),
 					source
 				)
 			);

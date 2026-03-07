@@ -36,7 +36,7 @@
 +		assetReaderCollection.RegisterReader(new XnbReader<Effect>(services), ".xnb");
 +		assetReaderCollection.RegisterReader(new FxcReader(Main.instance.Services.Get<IGraphicsDeviceService>().GraphicsDevice), ".fxc");
 +
-+		var assetPipeline = new AssetPipeline([], assetReaderCollection, 1, services);
++		var assetPipeline = new AssetPipeline([], assetReaderCollection, Math.Clamp(Environment.ProcessorCount / 2, 2, 4), services);
 +		var assetRepository = (IAssetRepository)assetPipeline;
 +		assetRepository.AssetValueUpdatedHandler = (AssetValueUpdated)Delegate.Combine(assetRepository.AssetValueUpdatedHandler, new AssetValueUpdated(TagAsset));
 +		services.AddService(typeof(AssetReaderCollection), assetReaderCollection);
