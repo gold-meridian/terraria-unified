@@ -6126,6 +6126,25 @@
  		if (transitionAmountOverride.HasValue)
  			value = transitionAmountOverride.Value;
  
+@@ -55611,11 +_,18 @@
+ 			if (allowPlayerToEmitEffects)
+ 				player[i].flameRingRot += 0.05f;
+ 
++			/*
+ 			if (player[i].flameRingRot > (float)Math.PI * 2f)
+ 				player[i].flameRingRot -= (float)Math.PI * 2f;
+ 
+ 			if (player[i].flameRingRot < (float)Math.PI * -2f)
+ 				player[i].flameRingRot += (float)Math.PI * 2f;
++			*/
++			if (player[i].flameRingRot > MathF.Tau)
++				player[i].flameRingRot = player[i].flameRingRot - MathF.Tau;
++
++			if (player[i].flameRingRot < -MathF.Tau)
++				player[i].flameRingRot = player[i].flameRingRot + MathF.Tau;
+ 
+ 			for (int j = 0; j < 3; j++) {
+ 				float num4 = num + num2 * (float)j;
 @@ -55623,7 +_,7 @@
  					num4 -= num2 * 2f;
  
