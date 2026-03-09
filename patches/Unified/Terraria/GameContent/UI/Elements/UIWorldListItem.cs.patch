@@ -1,0 +1,11 @@
+--- src/TerrariaNetCore/Terraria/GameContent/UI/Elements/UIWorldListItem.cs
++++ src/Unified/Terraria/GameContent/UI/Elements/UIWorldListItem.cs
+@@ -464,6 +_,8 @@
+ 
+ 		DrawPanel(spriteBatch, vector, num3);
+ 		string textValue = Language.GetTextValue("UI.WorldSizeFormat", _data.WorldSizeName);
++		if (_data.unusualWorldSize)
++			textValue = $"{_data.WorldSizeX}x{_data.WorldSizeY}";
+ 		float x3 = FontAssets.MouseText.Value.MeasureString(textValue).X;
+ 		float x4 = num3 * 0.5f - x3 * 0.5f;
+ 		Utils.DrawBorderString(spriteBatch, textValue, vector + new Vector2(x4, 3f), Color.White);

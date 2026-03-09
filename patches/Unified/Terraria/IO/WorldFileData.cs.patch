@@ -1,0 +1,18 @@
+--- src/TerrariaNetCore/Terraria/IO/WorldFileData.cs
++++ src/Unified/Terraria/IO/WorldFileData.cs
+@@ -28,6 +_,7 @@
+ 	public Guid UniqueId;
+ 	public int WorldId;
+ 	public LocalizedText _worldSizeName;
++	public bool unusualWorldSize;
+ 	public int GameMode;
+ 	public bool DrunkWorld;
+ 	public bool NotTheBees;
+@@ -292,6 +_,7 @@
+ 				break;
+ 			default:
+ 				_worldSizeName = Language.GetText("UI.WorldSizeUnknown");
++				unusualWorldSize = true;
+ 				break;
+ 		}
+ 	}
