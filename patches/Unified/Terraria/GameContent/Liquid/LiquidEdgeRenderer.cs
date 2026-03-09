@@ -38,14 +38,14 @@ public static class LiquidEdgeRenderer
 	/// <summary>
 	/// Turns all pixels with alpha above zero white, and all others transparent.
 	/// </summary>
-	public static Effect MaskShader => (maskShaderAsset ??= ContentSources.ManifestAssets.Request<Effect>("Terraria.GameContent.Liquid.LiquidMask", AssetRequestMode.ImmediateLoad)).Value;
+	public static Effect MaskShader => (maskShaderAsset ??= Main.Assets.Request<Effect>("Effects/LiquidMask", AssetRequestMode.ImmediateLoad)).Value;
 
 	private static Asset<Effect>? maskShaderAsset;
 
 	/// <summary>
 	/// The default liquid mask tile for tiles in <see cref="TileID.Sets.BlocksWaterDrawingBehindSelf"/>.
 	/// </summary>
-	public static Texture2D DefaultLiquidMask => (_defaultLiquidMask ??= ContentSources.ManifestAssets.Request<Texture2D>("Terraria.GameContent.Liquid.DefaultTileLiquidMask", AssetRequestMode.ImmediateLoad)).Value;
+	public static Texture2D DefaultLiquidMask => (_defaultLiquidMask ??= Main.Assets.Request<Texture2D>("Images/DefaultTileLiquidMask", AssetRequestMode.ImmediateLoad)).Value;
 
 	private static Asset<Texture2D>? _defaultLiquidMask;
 

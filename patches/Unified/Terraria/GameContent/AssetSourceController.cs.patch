@@ -1,10 +1,12 @@
 --- src/TerrariaNetCore/Terraria/GameContent/AssetSourceController.cs
 +++ src/Unified/Terraria/GameContent/AssetSourceController.cs
-@@ -11,6 +_,8 @@
+@@ -11,6 +_,10 @@
  
  public class AssetSourceController
  {
++	/*
 +	internal IContentSource StaticSource => _staticSources.Single();
++	*/
 +
  	private readonly List<IContentSource> _staticSources;
  	private readonly IAssetRepository _assetRepository;

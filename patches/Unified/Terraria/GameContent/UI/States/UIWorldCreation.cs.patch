@@ -105,12 +105,12 @@
  
 -		string[] array5 = new string[3] {
 +		string[] array5 = new string[] {
-+			"Images/UI/WorldCreation/IconSizeSmall",
++			"Images/UI/WorldCreation/IconSizeExtraSmall",
  			"Images/UI/WorldCreation/IconSizeSmall",
  			"Images/UI/WorldCreation/IconSizeMedium",
 -			"Images/UI/WorldCreation/IconSizeLarge"
 +			"Images/UI/WorldCreation/IconSizeLarge",
-+			"Images/UI/WorldCreation/IconSizeLarge",
++			"Images/UI/WorldCreation/IconSizeExtraLarge",
  		};
  
 -		GroupOptionButton<WorldSizeId>[] array6 = new GroupOptionButton<WorldSizeId>[array.Length];

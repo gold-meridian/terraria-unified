@@ -310,24 +310,24 @@
  		if (base.Services.Get<IAssetRepository>() == null)
  			AssetInitializer.CreateAssetServices(base.Services);
  
-@@ -9756,7 +_,11 @@
+@@ -9755,9 +_,13 @@
+ 		BackgroundViewMatrix = new SpriteViewMatrix(base.GraphicsDevice);
  		audioSystem = SoundEngine.Initialize();
  		audioSystem.SetPlayCallback(102, RainbowBoulderMusicPlayCallback);
++
++		ContentSources.PrepareAssets();
++		/*
  		AssetSourceController = new AssetSourceController(Assets, new IContentSource[1] {
-+			/*
  			new XnaContentSource(base.Content.RootDirectory)
-+			*/
-+			// new XnaDirectContentSource(((UnifiedContentManager)Content).RootDirectories)
-+			new XnaDirectContentSource([base.Content.RootDirectory])
  		});
++		*/
  
  		VanillaContentValidator.Instance = new VanillaContentValidator("Terraria.IO.Data.ResourcePacksDefaultInfo.tsv");
-@@ -9768,6 +_,9 @@
+ 		if (SocialAPI.Workshop != null)
+@@ -9768,6 +_,7 @@
  		AssetInitializer.LoadSplashAssets();
  		ChromaInitializer.Load();
  		_gameContentLoadProcess = LoadContent_Deferred();
-+
-+		ContentSources.PrepareAssets();
 +
  		if (Setting_AssetFileWatcherEnabled)
  			Assets.EnableAssetWatcher();
