@@ -1,0 +1,19 @@
+--- src/TerrariaNetCore/Terraria/GameContent/ExtraSpawnPointManager.cs
++++ src/Unified/Terraria/GameContent/ExtraSpawnPointManager.cs
+@@ -199,14 +_,14 @@
+ 				return false;
+ 
+ 			if (settings.remix) {
+-				if (WorldGen.GetWorldSize() == 0)
++				if (WorldGen.GetWorldSize() <= WorldSize.Small)
+ 					num2 = 150;
+ 
+ 				if (y < GenVars.remixSurfaceLayerLow || y > GenVars.remixMushroomLayerHigh)
+ 					return false;
+ 			}
+ 
+-			if (settings.roundLandmass && WorldGen.GetWorldSize() == 0)
++			if (settings.roundLandmass && WorldGen.GetWorldSize() <= WorldSize.Small)
+ 				num2 = 150;
+ 
+ 			for (int i = 0; i < spawnPoints.Count; i++) {

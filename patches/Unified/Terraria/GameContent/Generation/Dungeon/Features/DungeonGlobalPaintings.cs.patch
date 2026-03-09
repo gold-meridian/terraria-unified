@@ -1,0 +1,19 @@
+--- src/TerrariaNetCore/Terraria/GameContent/Generation/Dungeon/Features/DungeonGlobalPaintings.cs
++++ src/Unified/Terraria/GameContent/Generation/Dungeon/Features/DungeonGlobalPaintings.cs
+@@ -30,13 +_,13 @@
+ 		float num = (float)Main.maxTilesX / 4200f;
+ 		lihzahrdPaintingsPlaced = 0;
+ 		switch (WorldGen.GetWorldSize()) {
+-			default:
++			case <= WorldSize.Small:
+ 				lihzahrdPaintingsMax = 1;
+ 				break;
+-			case 1:
++			case WorldSize.Medium:
+ 				lihzahrdPaintingsMax = 2;
+ 				break;
+-			case 2:
++			case >= WorldSize.Large:
+ 				lihzahrdPaintingsMax = 2 + genRand.Next(2);
+ 				break;
+ 		}

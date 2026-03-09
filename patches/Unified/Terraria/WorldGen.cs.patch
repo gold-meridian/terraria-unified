@@ -132,6 +132,25 @@
  				}
  			}
  		}
+@@ -3427,12 +_,18 @@
+ 	private static Stack<Point> _roomCheckStack = new Stack<Point>();
+ 	public static TownNPCRoomCheckFailureReason roomCheckFailureReason = TownNPCRoomCheckFailureReason.None;
+ 	public static int meteorShowerCount;
++	// Values taken from the 3DS (Normal)/Mobile (Tiny).
++	public const int WorldSizeExtraSmallX = 1750;
++	public const int WorldSizeExtraSmallY = 900;
+ 	public const int WorldSizeSmallX = 4200;
+ 	public const int WorldSizeSmallY = 1200;
+ 	public const int WorldSizeMediumX = 6400;
+ 	public const int WorldSizeMediumY = 1800;
+ 	public const int WorldSizeLargeX = 8400;
+ 	public const int WorldSizeLargeY = 2400;
++	// Values taken from tModLoader 64bit, scales with existing world sizes.
++	public const int WorldSizeExtraLargeX = 16800;
++	public const int WorldSizeExtraLargeY = 3600;
+ 	public const int InfectionAndGrassSpreadOuterWorldBuffer = 10;
+ 	public static bool generatingWorld = false;
+ 	[ThreadStatic]
 @@ -3833,7 +_,7 @@
  			return false;
  
@@ -141,7 +160,7 @@
  		NPC nPC = Main.npc[n];
  		Rectangle value = new Rectangle(nPC.homeTileX * 16, nPC.homeTileY * 16, 16, 16);
  		return hitbox.Intersects(value);
-@@ -5301,6 +_,11 @@
+@@ -5301,8 +_,14 @@
  		Main.rightWorld = Main.maxTilesX * 16;
  		Main.maxSectionsX = Main.maxTilesX / 200;
  		Main.maxSectionsY = Main.maxTilesY / 150;
@@ -152,7 +171,104 @@
 +		Main.ResizeWorldMap();
  	}
  
++	/*
  	public static int GetWorldSize()
+ 	{
+ 		if (Main.maxTilesX <= 4200)
+@@ -5313,7 +_,49 @@
+ 
+ 		return 2;
+ 	}
++	*/
+ 
++	public static WorldSize GetWorldSize()
++	{
++		return GetWorldSize(Main.maxTilesX);
++	}
++
++	public static WorldSize GetWorldSize(int maxTilesX)
++	{
++		// Ridiculous edge case but it's better to display Super Small than
++		// Super Large for such case.
++		if (maxTilesX <= 0) {
++			return WorldSize.SuperSmall;
++		}
++
++		if (maxTilesX < WorldSizeExtraSmallX) {
++			return WorldSize.SuperSmall;
++		}
++
++		if (maxTilesX == WorldSizeExtraSmallX) {
++			return WorldSize.ExtraSmall;
++		}
++
++		if (maxTilesX <= WorldSizeSmallX) {
++			return WorldSize.Small;
++		}
++
++		if (maxTilesX <= WorldSizeMediumX) {
++			return WorldSize.Medium;
++		}
++
++		if (maxTilesX <= WorldSizeLargeX) {
++			return WorldSize.Large;
++		}
++
++		if (maxTilesX <= WorldSizeExtraLargeX) {
++			return WorldSize.ExtraLarge;
++		}
++
++		return WorldSize.SuperLarge;
++	}
++
++	/*
+ 	public static void SetWorldSize(int size)
+ 	{
+ 		switch (size) {
+@@ -5331,6 +_,43 @@
+ 				break;
+ 		}
+ 	}
++	*/
++
++	public static void SetWorldSize(WorldSize size)
++	{
++		// Super Small/Large are not generatable so give them sane defaults.
++		// They are labels for sizes that don't fit our pre-generated options,
++		// and this API won't ever be called on them.
++		switch (size) {
++			case WorldSize.SuperSmall:
++			case WorldSize.ExtraSmall:
++				SetWorldSize(WorldSizeExtraSmallX, WorldSizeExtraSmallY);
++				break;
++
++			case WorldSize.Small:
++				SetWorldSize(WorldSizeSmallX, WorldSizeSmallY);
++				break;
++
++			case WorldSize.Medium:
++				SetWorldSize(WorldSizeMediumX, WorldSizeMediumY);
++				break;
++
++			case WorldSize.Large:
++				SetWorldSize(WorldSizeLargeX, WorldSizeLargeX);
++				break;
++
++			case WorldSize.ExtraLarge:
++			case WorldSize.SuperLarge:
++				SetWorldSize(WorldSizeExtraLargeX, WorldSizeExtraLargeX);
++				break;
++		}
++	}
++
++	public static void SetWorldSize(int sizeX, int sizeY)
++	{
++		Main.maxTilesX = sizeX;
++		Main.maxTilesY = sizeY;
++	}
+ 
+ 	public static void worldGenCallback(GenerationProgress customProgressObject, WorldGenerator.Controller customGenController, WorldGenerationFinishCallback afterGeneration)
+ 	{
 @@ -5831,6 +_,7 @@
  		Main.treeStyle[3] = 0;
  		Liquid.numLiquid = 0;
@@ -185,6 +301,23 @@
  
  		for (int n = 0; n < Main.countsAsHostForGameplay.Length; n++) {
  			Main.countsAsHostForGameplay[n] = false;
+@@ -7652,13 +_,13 @@
+ 			case 1: {
+ 				int num3;
+ 				switch (GetWorldSize()) {
+-					default:
++					case <= WorldSize.Small:
+ 						num3 = 2;
+ 						break;
+-					case 1:
++					case WorldSize.Medium:
+ 						num3 = 4;
+ 						break;
+-					case 2:
++					case >= WorldSize.Large:
+ 						num3 = 6;
+ 						break;
+ 				}
 @@ -9236,6 +_,7 @@
  		generatingWorldOnThisThread = true;
  		bool flag = false;
@@ -202,6 +335,23 @@
  			Finish();
  			return flag;
  		}
+@@ -18623,13 +_,13 @@
+ 			int num16 = 0;
+ 			int num17 = 3;
+ 			switch (GetWorldSize()) {
+-				default:
++				case <= WorldSize.Small:
+ 					num17 = 3;
+ 					break;
+-				case 1:
++				case WorldSize.Medium:
+ 					num17 = 6;
+ 					break;
+-				case 2:
++				case >= WorldSize.Large:
+ 					num17 = 9;
+ 					break;
+ 			}
 @@ -19654,7 +_,9 @@
  			}
  
@@ -212,6 +362,23 @@
  				Main.tile[i, j].active(active: true);
  				Main.tile[i, j].type = 57;
  			}
+@@ -20069,13 +_,13 @@
+ 		int num = Main.maxTilesX / 2;
+ 		int num2 = 3;
+ 		switch (GetWorldSize()) {
+-			case 0:
++			case <= WorldSize.Small:
+ 				num2 = 3;
+ 				break;
+-			case 1:
++			case WorldSize.Medium:
+ 				num2 = 5;
+ 				break;
+-			case 2:
++			case >= WorldSize.Large:
+ 				num2 = 7;
+ 				break;
+ 		}
 @@ -24214,7 +_,7 @@
  	{
  		int treeHeight = 1;
@@ -664,6 +831,28 @@
  
  		Tile tile = Main.tile[x, y];
  		Tile tile2 = Main.tile[x, y + 1];
+@@ -38595,17 +_,17 @@
+ 
+ 	private static void PlaceChilletEggs()
+ 	{
+-		int worldSize = GetWorldSize();
++		WorldSize worldSize = GetWorldSize();
+ 		int num = 100;
+ 		int num2 = 8;
+ 		switch (worldSize) {
+-			default:
++			case <= WorldSize.Small:
+ 				num2 = 6;
+ 				break;
+-			case 1:
++			case WorldSize.Medium:
+ 				num2 = 9;
+ 				break;
+-			case 2:
++			case >= WorldSize.Large:
+ 				num2 = 12;
+ 				break;
+ 		}
 @@ -38860,11 +_,13 @@
  
  	public static void CheckAlch(int x, int y)

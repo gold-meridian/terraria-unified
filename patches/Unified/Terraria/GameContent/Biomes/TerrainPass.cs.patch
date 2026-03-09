@@ -1,0 +1,11 @@
+--- src/TerrariaNetCore/Terraria/GameContent/Biomes/TerrainPass.cs
++++ src/Unified/Terraria/GameContent/Biomes/TerrainPass.cs
+@@ -113,7 +_,7 @@
+ 				num11 = 0.28;
+ 			}
+ 
+-			if (WorldGen.GetWorldSize() == 0)
++			if (WorldGen.GetWorldSize() <= WorldSize.Small)
+ 				num10 += 0.02;
+ 
+ 			if (!WorldGen.SecretSeed.noSurface.Enabled) {

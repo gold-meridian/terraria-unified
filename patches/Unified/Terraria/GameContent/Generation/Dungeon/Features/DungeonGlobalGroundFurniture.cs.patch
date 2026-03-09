@@ -1,0 +1,36 @@
+--- src/TerrariaNetCore/Terraria/GameContent/Generation/Dungeon/Features/DungeonGlobalGroundFurniture.cs
++++ src/Unified/Terraria/GameContent/Generation/Dungeon/Features/DungeonGlobalGroundFurniture.cs
+@@ -50,13 +_,13 @@
+ 		int minimumWaterCandles = -1;
+ 		if (data.Type == DungeonType.DualDungeon) {
+ 			switch (WorldGen.GetWorldSize()) {
+-				default:
++				case <= WorldSize.Small:
+ 					minimumWaterCandles = 5;
+ 					break;
+-				case 1:
++				case WorldSize.Medium:
+ 					minimumWaterCandles = 10;
+ 					break;
+-				case 2:
++				case >= WorldSize.Large:
+ 					minimumWaterCandles = 15;
+ 					break;
+ 			}
+@@ -186,13 +_,13 @@
+ 		int minimumWaterCandles = -1;
+ 		if (data.Type == DungeonType.DualDungeon) {
+ 			switch (WorldGen.GetWorldSize()) {
+-				default:
++				case <= WorldSize.Small:
+ 					minimumWaterCandles = 5;
+ 					break;
+-				case 1:
++				case WorldSize.Medium:
+ 					minimumWaterCandles = 10;
+ 					break;
+-				case 2:
++				case >= WorldSize.Large:
+ 					minimumWaterCandles = 15;
+ 					break;
+ 			}

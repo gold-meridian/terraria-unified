@@ -1,0 +1,19 @@
+--- src/TerrariaNetCore/Terraria/GameContent/Generation/Dungeon/Features/DungeonGlobalBookshelves.cs
++++ src/Unified/Terraria/GameContent/Generation/Dungeon/Features/DungeonGlobalBookshelves.cs
+@@ -30,13 +_,13 @@
+ 		int num4 = -1;
+ 		if (data.Type == DungeonType.DualDungeon) {
+ 			switch (WorldGen.GetWorldSize()) {
+-				default:
++				case <= WorldSize.Small:
+ 					num4 = 5;
+ 					break;
+-				case 1:
++				case WorldSize.Medium:
+ 					num4 = 10;
+ 					break;
+-				case 2:
++				case >= WorldSize.Large:
+ 					num4 = 15;
+ 					break;
+ 			}

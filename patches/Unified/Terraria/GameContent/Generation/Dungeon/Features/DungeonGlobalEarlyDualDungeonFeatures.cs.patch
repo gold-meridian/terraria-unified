@@ -1,0 +1,46 @@
+--- src/TerrariaNetCore/Terraria/GameContent/Generation/Dungeon/Features/DungeonGlobalEarlyDualDungeonFeatures.cs
++++ src/Unified/Terraria/GameContent/Generation/Dungeon/Features/DungeonGlobalEarlyDualDungeonFeatures.cs
+@@ -35,7 +_,7 @@
+ 		int num7 = 40;
+ 		int num8 = 40;
+ 		switch (WorldGen.GetWorldSize()) {
+-			case 0:
++			case <= WorldSize.Small:
+ 				num = 20;
+ 				num2 = 8;
+ 				num3 = 8;
+@@ -45,7 +_,7 @@
+ 				num7 = 40;
+ 				num8 = 40;
+ 				break;
+-			case 1:
++			case WorldSize.Medium:
+ 				num = 30;
+ 				num2 = 14;
+ 				num3 = 12;
+@@ -55,7 +_,7 @@
+ 				num7 = 60;
+ 				num8 = 60;
+ 				break;
+-			case 2:
++			case >= WorldSize.Large:
+ 				num = 40;
+ 				num2 = 18;
+ 				num3 = 16;
+@@ -173,13 +_,13 @@
+ 				int num15 = num6;
+ 				int num16 = 2;
+ 				switch (WorldGen.GetWorldSize()) {
+-					default:
++					case <= WorldSize.Small:
+ 						num16 = 2;
+ 						break;
+-					case 1:
++					case WorldSize.Medium:
+ 						num16 = 4;
+ 						break;
+-					case 2:
++					case >= WorldSize.Large:
+ 						num16 = 6;
+ 						break;
+ 				}
