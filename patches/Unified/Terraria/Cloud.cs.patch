@@ -1,0 +1,39 @@
+--- src/TerrariaNetCore/Terraria/Cloud.cs
++++ src/Unified/Terraria/Cloud.cs
+@@ -1,15 +_,16 @@
+ using Microsoft.Xna.Framework;
+ using Microsoft.Xna.Framework.Graphics;
+ using Terraria.GameContent;
++using Terraria.Unified.Time;
+ using Terraria.Utilities;
+ 
+ namespace Terraria;
+ 
+ public class Cloud
+ {
+-	public Vector2 position;
++	public DeltaVector2<CloudDelta> position;
+ 	public float scale;
+-	public float rotation;
++	public DeltaFloat<CloudDelta> rotation;
+ 	public float rSpeed;
+ 	public float sSpeed;
+ 	public bool active;
+@@ -17,7 +_,7 @@
+ 	public int type;
+ 	public int width;
+ 	public int height;
+-	public float Alpha;
++	public DeltaFloat<CloudDelta> Alpha;
+ 	public bool kill;
+ 	private static UnifiedRandom rand = new UnifiedRandom();
+ 	public static Vector2? lastCameraCenter;
+@@ -43,6 +_,8 @@
+ 
+ 	public static void addCloud()
+ 	{
++		using var _ = CloudDelta.Override(1f);
++
+ 		if (Main.netMode == 2)
+ 			return;
+ 

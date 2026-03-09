@@ -1,0 +1,11 @@
+--- src/TerrariaNetCore/Terraria/IngameOptions.cs
++++ src/Unified/Terraria/IngameOptions.cs
+@@ -162,7 +_,7 @@
+ 
+ 		float num4 = 0.7f;
+ 		float num5 = 0.8f;
+-		float num6 = 0.01f;
++		float num6 = 0.01f * Main.DrawFactor;
+ 		if (flag) {
+ 			num4 = 0.4f;
+ 			num5 = 0.44f;

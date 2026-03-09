@@ -1,0 +1,11 @@
+--- src/TerrariaNetCore/Terraria/GameContent/Drawing/NextHorizonRenderer.cs
++++ src/Unified/Terraria/GameContent/Drawing/NextHorizonRenderer.cs
+@@ -312,7 +_,7 @@
+ 		if (!Main.dayTime)
+ 			num = Math.Max(num, celestialVisibility * 0.15f);
+ 
+-		num *= Utils.Clamp(1f - Main.cloudBGAlpha, 0f, 1f);
++		num *= Utils.Clamp(1f - (float)Main.cloudBGAlpha, 0f, 1f);
+ 		miscShaderData.UseShaderSpecificData(new Vector4(celestialBodyPosition.X, celestialBodyPosition.Y, num, 0f));
+ 		for (int i = 0; i < _drawData.Count; i++) {
+ 			miscShaderData.Apply(_drawData[i]);

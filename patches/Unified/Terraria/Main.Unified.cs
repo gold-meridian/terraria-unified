@@ -1,7 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
-using System.Collections.Generic;
 using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.IO;
@@ -17,9 +18,22 @@ partial class Main
 
 	internal static bool UnifiedBranding => true;
 
-	public static bool Vsync { get; set; } = true;
+	public static bool Vsync { get; set; } = false;
 
 	internal static List<TitleLinkButton> UnifiedLinks { get; } = [];
+
+	// Set to UpdateFactor during the update loop and DrawFactor during the
+	// draw loop.  Otherwise, set to 1.
+	public static float CurrentFactor { get; set; } = 1f;
+
+	// For now, always set to 1f.
+	public static float UpdateFactor => 1f;
+
+	// Set at the start of Draw.
+	public static float DrawFactor { get; set; } = 1f;
+
+	internal static bool CanDoCertainUpdatesThisDraw =>
+		!HighFPSDrawFixes.Enabled || DrawFactor >= 1f;
 
 	private static void SaveUnifiedSettings(Preferences config)
 	{
@@ -136,5 +150,12 @@ partial class Main
 		base.Content.RootDirectory = vanillaContentFolder;
 
 		// TODO: Fix file casings.
+	}
+
+	// necessary for high fps to not flicker the instrument mouse text
+	private static void ResetMouseTextCache()
+	{
+		instance._mouseTextCache.isValid = false;
+		instance._mouseTextCache.noOverride = false;
 	}
 }

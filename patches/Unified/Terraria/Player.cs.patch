@@ -1,6 +1,17 @@
 --- src/TerrariaNetCore/Terraria/Player.cs
 +++ src/Unified/Terraria/Player.cs
-@@ -40,7 +_,7 @@
+@@ -1,3 +_,4 @@
++
+ using System;
+ using System.Collections.Generic;
+ using System.IO;
+@@ -35,12 +_,13 @@
+ using Terraria.UI;
+ using Terraria.UI.Chat;
+ using Terraria.UI.Gamepad;
++using Terraria.Unified.Time;
+ using Terraria.Utilities;
+ using Terraria.WorldBuilding;
  
  namespace Terraria;
  
@@ -9,6 +20,26 @@
  {
  	public static class BuilderAccToggleIDs
  	{
+@@ -706,8 +_,8 @@
+ 	public bool hasDeadCellsDownDash;
+ 	public bool calmed;
+ 	public bool inferno;
+-	public float flameRingRot;
+-	public float flameRingScale = 1f;
++	public DeltaFloat<DrawDelta> flameRingRot;
++	public DeltaFloat<DrawDelta> flameRingScale = 1f;
+ 	public byte flameRingFrame;
+ 	public byte flameRingAlpha;
+ 	public int netManaTime;
+@@ -779,7 +_,7 @@
+ 	public float carpetFrameCounter;
+ 	public bool canCarpet;
+ 	public int carpetTime;
+-	public int miscCounter;
++	public DeltaInt<CurrentDelta> miscCounter;
+ 	public int infernoCounter;
+ 	public int insanityShadowCooldown;
+ 	public int starCloakCooldown;
 @@ -15494,11 +_,14 @@
  			return;
  

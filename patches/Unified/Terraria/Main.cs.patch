@@ -20,13 +20,14 @@
  using Microsoft.Win32;
  using Microsoft.Xna.Framework;
  using Microsoft.Xna.Framework.Graphics;
-@@ -75,6 +_,9 @@
+@@ -75,6 +_,10 @@
  using Terraria.UI;
  using Terraria.UI.Chat;
  using Terraria.UI.Gamepad;
 +using Terraria.Unified;
 +using Terraria.Unified.Features;
 +using Terraria.Unified.Startup;
++using Terraria.Unified.Time;
  using Terraria.Utilities;
  using Terraria.WorldBuilding;
  
@@ -39,6 +40,28 @@
  #endif
  {
  	public static class CurrentFrameFlags
+@@ -376,7 +_,7 @@
+ 	};
+ 	public static Vector2 CurrentPan = Vector2.Zero;
+ 	public static float sunCircle;
+-	public static int BlackFadeIn;
++	public static DeltaInt<DrawDelta> BlackFadeIn;
+ 	public static bool noWindowBorder = false;
+ 	public static RasterizerState Rasterizer = RasterizerState.CullCounterClockwise;
+ 	private string _cachedTitle;
+@@ -411,10 +_,10 @@
+ 	public static bool mouseLeft;
+ 	public static bool mouseRight;
+ 	public static bool isMouseLeftConsumedByUI = false;
+-	public static float essScale = 1f;
++	public static DeltaFloat<DrawDelta> essScale = 1f;
+ 	public static int essDir = -1;
+ 	public static float[] cloudBGX = new float[2];
+-	public static float cloudBGAlpha;
++	public static DeltaFloat<DrawDelta> cloudBGAlpha;
+ 	public static float cloudBGActive;
+ 	public static int[] cloudBG = new int[2] {
+ 		112,
 @@ -483,7 +_,14 @@
  	public static int desiredWorldTilesUpdateRate = 1;
  	public const int MaxWorldViewSizeWidth = 1920;
@@ -55,6 +78,22 @@
  	public static int maxScreenW = 1920;
  	public static int maxScreenH = 1200;
  	public static int minScreenW = 800;
+@@ -509,11 +_,11 @@
+ 	public static int[] recentPort = new int[maxMP];
+ 	public static bool shortRender = true;
+ 	public static bool BackgroundEnabled = true;
+-	public static int instantBGTransitionCounter = 2;
+-	public static int bgDelay;
++	public static DeltaInt<DrawDelta> instantBGTransitionCounter = 2;
++	public static DeltaInt<DrawDelta> bgDelay;
+ 	public static int bgStyle;
+-	public static float[] bgAlphaFrontLayer = new float[16];
+-	public static float[] bgAlphaFarBackLayer = new float[16];
++	public static DeltaFloat<DrawDelta>[] bgAlphaFrontLayer = new DeltaFloat<DrawDelta>[16];
++	public static DeltaFloat<DrawDelta>[] bgAlphaFarBackLayer = new DeltaFloat<DrawDelta>[16];
+ 	public static int[] bgFrame = new int[16];
+ 	public static int[] bgFrameCounter = new int[16];
+ 	public static int EquipPage;
 @@ -525,13 +_,23 @@
  	public static int wofDrawAreaBottom;
  	public static int wofDrawFrameIndex;
@@ -88,6 +127,35 @@
  	public static int mapTimeMax = 30;
  	public static int mapTime = mapTimeMax;
  	public static bool clearMap;
+@@ -640,7 +_,7 @@
+ 	public static bool frameRelease;
+ 	public static bool showFrameRate = false;
+ 	public static int magmaBGFrame;
+-	public static int magmaBGFrameCounter;
++	public static DeltaInt<DrawDelta> magmaBGFrameCounter;
+ 	public static int saveTimer = 0;
+ 	public static bool autoJoin;
+ 	public static bool serverStarting = false;
+@@ -717,8 +_,8 @@
+ 	public static string buffString = "";
+ 	public static string libPath = "";
+ 	public static int lo;
+-	public static int LogoA = 255;
+-	public static int LogoB;
++	public static DeltaInt<DrawDelta> LogoA = 255;
++	public static DeltaInt<DrawDelta> LogoB;
+ 	public static bool LogoT;
+ 	public static string statusText = "";
+ 	public static string worldName = "";
+@@ -785,7 +_,7 @@
+ 	public static Cloud[] cloud = new Cloud[200];
+ 	public static bool resetClouds = true;
+ 	public static float SmoothedMushroomLightInfluence;
+-	public static int fadeCounter;
++	public static DeltaInt<DrawDelta> fadeCounter;
+ 	public static float invAlpha = 1f;
+ 	public static float invDir = 1f;
+ 	[ThreadStatic]
 @@ -948,7 +_,10 @@
  	public static HairstyleUnlocksHelper Hairstyles = new HairstyleUnlocksHelper();
  	public static bool tilesLoaded = false;
@@ -99,6 +167,33 @@
  	public static Dust[] dust = new Dust[6001];
  	public static Star[] star = new Star[400];
  	public static WorldItem[] item = new WorldItem[401];
+@@ -962,7 +_,7 @@
+ 	public static Chest[] chest = new Chest[8000];
+ 	public static Sign[] sign = new Sign[32000];
+ 	public static int[] itemFrame = new int[401];
+-	public static int[] itemFrameCounter = new int[401];
++	public static DeltaInt<DrawDelta>[] itemFrameCounter = new DeltaInt<DrawDelta>[401];
+ 	public static DrawAnimation[] itemAnimations = new DrawAnimation[ItemID.Count];
+ 	private static DrawAnimation _coinOnWorldAnimation = new DrawAnimationVertical(6, 8);
+ 	private static DrawAnimation _monkStaffT3OnWorldAnimation = new DrawAnimationVertical(5, 3);
+@@ -983,7 +_,7 @@
+ 	public static string chatText = "";
+ 	public static bool inputTextEnter;
+ 	public static bool inputTextEscape;
+-	public static float[] hotbarScale = new float[10] {
++	public static DeltaFloat<DrawDelta>[] hotbarScale = new DeltaFloat<DrawDelta>[10] {
+ 		1f,
+ 		0.75f,
+ 		0.75f,
+@@ -1000,7 +_,7 @@
+ 	public static bool mouseLeftRelease;
+ 	public static bool mouseRightRelease;
+ 	public static bool playerInventory;
+-	public static int stackSplit;
++	public static DeltaInt<DrawDelta> stackSplit;
+ 	public static bool quickCraftStackSplit;
+ 	public static int stackCounter;
+ 	public static int timesTriedToFastStack;
 @@ -1010,7 +_,7 @@
  	public static Item guideItem = new Item();
  	public static Item reforgeItem = new Item();
@@ -108,6 +203,33 @@
  	public static bool PipsFastScroll;
  	public static bool PipsUseGrid;
  	public static PipPage PipsCurrentPage;
+@@ -1039,7 +_,7 @@
+ 	public static int oldNPCShop;
+ 	public static int npcChatCornerItem;
+ 	public static NPCID.Sets.NPCPortraitProvider npcChatPortrait;
+-	public static int npcChatPortraitFrameCounter;
++	public static DeltaInt<DrawDelta> npcChatPortraitFrameCounter;
+ 	public Chest[] shop = new Chest[100];
+ 	public static ItemShopSellbackHelper shopSellbackHelper = new ItemShopSellbackHelper();
+ 	public static readonly int TravelShopMaxSlots = 40;
+@@ -1116,7 +_,7 @@
+ 	private static int reforgeCooldown = 0;
+ 	public static Item HoverItem = new Item();
+ 	private static int backSpaceCount;
+-	private static float backSpaceRate;
++	private static DeltaFloat<DrawDelta> backSpaceRate;
+ 	private static bool imeCompositionActive;
+ 	public static Microsoft.Xna.Framework.Color imeCompositionStringColor = new Microsoft.Xna.Framework.Color(255, 240, 20);
+ 	private static IMEPanelAnchor? imePanelAnchor = null;
+@@ -1867,7 +_,7 @@
+ 	public static bool mouseExit;
+ 	public static float exitScale = 0.8f;
+ 	public static bool mouseReforge;
+-	public static float reforgeScale = 0.8f;
++	public static DeltaFloat<DrawDelta> reforgeScale = 0.8f;
+ 	public static Player clientPlayer = new Player();
+ 	public static string getIP = defaultIP;
+ 	public static string getPort = Convert.ToString(Netplay.ListenPort);
 @@ -1910,8 +_,8 @@
  	public static int SmartInteractNPC;
  	public static int SmartInteractProj;
@@ -119,6 +241,15 @@
  	public static int TileInteractionLX = -1;
  	public static int TileInteractionLY = -1;
  	public static int TileInteractionHX = -1;
+@@ -1943,7 +_,7 @@
+ 	public static bool UnpinFromCore0 = false;
+ 	public static bool NoPooling = false;
+ 	public static bool CollectGen0EveryFrame = false;
+-	private int splashCounter;
++	private DeltaInt<DrawDelta> splashCounter;
+ 	public List<int> DrawCacheNPCsMoonMoon = new List<int>(maxNPCs);
+ 	public List<int> DrawCacheNPCsOverPlayers = new List<int>(maxNPCs);
+ 	public List<int> DrawCacheNPCProjectiles = new List<int>(maxNPCs);
 @@ -1966,7 +_,7 @@
  	private static bool shouldSetDefaultUIScale = true;
  	private static float newDefaultUIScale = 0f;
@@ -128,6 +259,35 @@
  	public static bool startFullscreen = false;
  	public static string oldStatusText = "";
  	public static string autoGenFileLocation = null;
+@@ -2013,14 +_,14 @@
+ 	public ChumBucketProjectileHelper ChumBucketProjectileHelper = new ChumBucketProjectileHelper();
+ 	public static int weatherVaneBobframe = 0;
+ 	private static int seedMoonGoal = 16200;
+-	private float logoRotation;
++	private DeltaFloat<DrawDelta> logoRotation;
+ 	private float logoRotationDirection = -1f;
+-	private float logoRotationSpeed = 1f;
+-	private float logoScale = 1f;
++	private DeltaFloat<DrawDelta> logoRotationSpeed = 1f;
++	private DeltaFloat<DrawDelta> logoScale = 1f;
+ 	private float logoScaleDirection = 1f;
+-	private float logoScaleSpeed = 1f;
++	private DeltaFloat<DrawDelta> logoScaleSpeed = 1f;
+ 	private static int maxMenuItems = 16;
+-	private float[] menuItemScale = new float[maxMenuItems];
++	private DeltaFloat<DrawDelta>[] menuItemScale = new DeltaFloat<DrawDelta>[maxMenuItems];
+ 	private int focusMenu = -1;
+ 	private int selectedMenu = -1;
+ 	private int selectedMenu2 = -1;
+@@ -2036,7 +_,7 @@
+ 	private const int _mouseTextTooltip_MaxLines = 30;
+ 	private static readonly string[] _mouseTextTooltipLine_Text = new string[30];
+ 	private static readonly Microsoft.Xna.Framework.Color[] _mouseTextTooltipLine_Color = new Microsoft.Xna.Framework.Color[30];
+-	public int textBlinkerCount;
++	public DeltaInt<DrawDelta> textBlinkerCount;
+ 	public int textBlinkerState;
+ 	public static string newWorldName = "";
+ 	private static Vector3 shimmerShine = new Vector3(1f, 0.5f, 1f);
 @@ -2104,15 +_,15 @@
  	private static Vector2 _itemIconCacheScreenPosition;
  	private static int _itemIconCacheSelectedItemID;
@@ -153,6 +313,15 @@
  	};
  	private static bool _cannotDrawAccessoriesHorizontally = false;
  	public static Microsoft.Xna.Framework.Color selColor = Microsoft.Xna.Framework.Color.White;
+@@ -2134,7 +_,7 @@
+ 	private bool _needsMenuUIRecalculation;
+ 	public static float MenuXMovement = 0f;
+ 	public RejectionMenuInfo RejectionMenuInfo;
+-	private float _splashFrameCount;
++	private DeltaFloat<DrawDelta> _splashFrameCount;
+ 	private bool quickSplash;
+ 	private float hellBlackBoxBottom;
+ 	private Microsoft.Xna.Framework.Color[] _drawbackground_colorSlices = new Microsoft.Xna.Framework.Color[9];
 @@ -2542,7 +_,7 @@
  		}
  	}
@@ -411,6 +580,32 @@
  	{
  		switch (Style) {
  			case 0: {
+@@ -14376,6 +_,13 @@
+ 
+ 	protected override void Update(GameTime gameTime)
+ 	{
++		DrawFactor = HighFPSDrawFixes.Enabled ? gameTime.ElapsedGameTime.Ticks / 166667f : 1f;
++		// TODO: If Terraria ever got good.
++		/*
++		UpdateFactor = HighFPSDrawFixes.Enabled ? gameTime.ElapsedGameTime.Ticks / 166667 : 1f;
++		CurrentFactor = UpdateFactor;
++		*/
++
+ 		if (!IsEnginePreloaded) {
+ 			IsEnginePreloaded = true;
+ 			if (Main.OnEnginePreload != null)
+@@ -14395,6 +_,11 @@
+ 		base.Update(gameTime);
+ 		if (GameAskedToQuit)
+ 			QuitGame();
++
++		// TODO: If Terraria ever got good.
++		/*
++		CurrentFactor = 1f;
++		*/
+ 	}
+ 
+ 	public void UpdateViewZoomKeys()
 @@ -14524,12 +_,18 @@
  			Chroma.Update(GlobalTimeWrappedHourly);
  			if (FrameSkipMode == FrameSkipMode.Off || FrameSkipMode == FrameSkipMode.Subtle) {
@@ -466,6 +661,20 @@
  		int num = 220;
  		int num2 = 72;
  		int num3 = -1;
+@@ -18209,6 +_,13 @@
+ 			}
+ 
+ 			string text2 = text + " " + debugWords;
++			if (HighFPSDrawFixes.Enabled) {
++				text2 += $"dT {DrawFactor:0.000}";
++
++				if (frameRate > 0) {
++					text2 += $" ({(60f / frameRate):0.000})";
++				}
++			}
+ 			int num = 4;
+ 			if (!gameMenu)
+ 				num = screenHeight - 24;
 @@ -18522,13 +_,13 @@
  			if (flag) {
  				LoadGore(gore[i].type);
@@ -3557,6 +3766,14 @@
  		int num = 20;
  		for (int i = 0; i < 10; i++) {
  			if (i == LocalPlayer.selectedItem && !LocalPlayer.selectedItemState.HasActiveOverride) {
+@@ -37605,6 +_,7 @@
+ 				hotbarScale[i] -= 0.05f;
+ 			}
+ 
++			hotbarScale[i] = Math.Clamp(hotbarScale[i], 0.75f, 1f);
+ 			float num2 = hotbarScale[i];
+ 			int num3 = (int)(20f + 22f * (1f - num2));
+ 			int a = (int)(75f + 150f * num2);
 @@ -37710,8 +_,8 @@
  		int num5 = num2 + 234;
  		int num6 = num + 18;
@@ -3677,6 +3894,25 @@
  		}
  	}
  
+@@ -39281,14 +_,16 @@
+ 		Vector2 vector2 = FontAssets.MouseText.Value.MeasureString(text);
+ 		Vector2 vector3 = FontAssets.DeathText.Value.MeasureString(text);
+ 		float num = vector.X / vector2.X;
++		float scaling = 0.02f * DrawFactor;
+ 		if (mouseOver) {
+ 			if ((double)scale < 0.96)
+-				scale += 0.02f;
++				scale += scaling;
+ 		}
+ 		else if ((double)scale > 0.8) {
+-			scale -= 0.02f;
++			scale -= scaling;
+ 		}
+ 
++		scale = Math.Clamp(scale, 0.8f, 0.96f);
+ 		UILinkPointNavigator.SetPosition(308, new Vector2(posX, posY));
+ 		for (int i = 0; i < 5; i++) {
+ 			int num2 = 0;
 @@ -39465,7 +_,7 @@
  			}
  
@@ -3891,6 +4127,17 @@
  		Utils.DrawInvBG(spriteBatch, r3, c);
  		spriteBatch.Draw(value, r3.Left() + Vector2.UnitX * num * 8f, null, Microsoft.Xna.Framework.Color.White * invasionProgressAlpha, 0f, new Vector2(0f, value.Height / 2), num * 0.8f, SpriteEffects.None, 0f);
  		Utils.DrawBorderString(spriteBatch, text, r3.Right() + Vector2.UnitX * num * -22f, Microsoft.Xna.Framework.Color.White * invasionProgressAlpha, num * 0.9f, 1f, 0.4f);
+@@ -41399,7 +_,10 @@
+ 		if (gameMenu && alreadyGrabbingSunOrMoon)
+ 			return;
+ 
++		/*
+ 		if (player[myPlayer].dead || player[myPlayer].mouseInterface || IsCameraTrackingObject) {
++		*/
++		if ((player[myPlayer].dead || player[myPlayer].mouseInterface || IsCameraTrackingObject) && CanDoCertainUpdatesThisDraw) {
+ 			ClearSmartInteract();
+ 			TileInteractionLX = (TileInteractionHX = (TileInteractionLY = (TileInteractionHY = -1)));
+ 		}
 @@ -41506,7 +_,7 @@
  				vector *= 1f;
  				vector += Vector2.One * 2f;
@@ -3900,6 +4147,15 @@
  				float scale = cursorScale * 1.1f;
  				if (showGamepadCursor) {
  					if (smart && !flag) {
+@@ -41621,7 +_,7 @@
+ 		}
+ 
+ 		screenPosition.Y = (float)(worldSurface * 16.0 - (double)screenHeight);
+-		MenuXMovement = 4f;
++		MenuXMovement = 4f * DrawFactor;
+ 		if (alreadyGrabbingSunOrMoon) {
+ 			playOldTile = true;
+ 			if (starGame)
 @@ -41725,16 +_,16 @@
  			boulderLogo = true;
  
@@ -3923,6 +4179,35 @@
  		}
  
  		if (dayTime && !WorldGen.remixWorldGen) {
+@@ -41742,7 +_,7 @@
+ 			if (LogoA > 255)
+ 				LogoA = 255;
+ 
+-			LogoB--;
++			LogoB -= 1;
+ 			if (LogoB < 0)
+ 				LogoB = 0;
+ 		}
+@@ -41751,7 +_,7 @@
+ 			if (LogoB > 255)
+ 				LogoB = 255;
+ 
+-			LogoA--;
++			LogoA -= 1;
+ 			if (LogoA < 0) {
+ 				LogoA = 0;
+ 				LogoT = true;
+@@ -44845,6 +_,10 @@
+ 			}
+ 			else if ((double)menuItemScale[num112] > 0.8) {
+ 				menuItemScale[num112] -= 0.02f;
++
++				if (menuItemScale[num112] < 0.8f) {
++					menuItemScale[num112] = 0.8f;
++				}
+ 			}
+ 		}
+ 
 @@ -44887,7 +_,7 @@
  
  			b2 = (byte)num114;
@@ -4878,15 +5163,24 @@
  	{
  		float num = 2f * scale;
  		Microsoft.Xna.Framework.Color white = Microsoft.Xna.Framework.Color.White;
-@@ -49083,7 +_,7 @@
+@@ -49083,12 +_,12 @@
  		}
  	}
  
 -	internal void DrawCapture(Microsoft.Xna.Framework.Rectangle area, CaptureSettings settings, CaptureCamera camera)
 +	internal void DrawCapture(System.Drawing.Rectangle area, CaptureSettings settings, CaptureCamera camera)
  	{
- 		float[] array = bgAlphaFrontLayer;
- 		bgAlphaFrontLayer = new float[array.Length];
+-		float[] array = bgAlphaFrontLayer;
+-		bgAlphaFrontLayer = new float[array.Length];
+-		float[] array2 = bgAlphaFarBackLayer;
+-		bgAlphaFarBackLayer = new float[array2.Length];
++		DeltaFloat<DrawDelta>[] array = bgAlphaFrontLayer;
++		bgAlphaFrontLayer = new DeltaFloat<DrawDelta>[array.Length];
++		DeltaFloat<DrawDelta>[] array2 = bgAlphaFarBackLayer;
++		bgAlphaFarBackLayer = new DeltaFloat<DrawDelta>[array2.Length];
+ 		UpdateBGVisibility_BackLayer(settings.Biome.BackgroundIndex, 1f);
+ 		UpdateBGVisibility_FrontLayer(settings.Biome.BackgroundIndex, 1f);
+ 		float[] array3 = liquidAlpha.ToArray();
 @@ -49159,7 +_,7 @@
  		val3 = Math.Max(val3, 5);
  		val2 = Math.Min(val2, maxTilesX - 5) + 2;
@@ -5600,6 +5894,24 @@
  				if (flag4)
  					value.X = (4 + hitter.data[i].crackStyle / 2) * 18;
  
+@@ -53328,6 +_,8 @@
+ 
+ 	protected override void Draw(GameTime gameTime)
+ 	{
++		CurrentFactor = DrawFactor;
++
+ 		if (!_isDrawingOrUpdating && IsGraphicsDeviceAvailable) {
+ 			_isDrawingOrUpdating = true;
+ 			DetailedFPS.Begin(DetailedFPS.OperationCategory.Draw);
+@@ -53340,6 +_,8 @@
+ 			DetailedFPS.End();
+ 			_isDrawingOrUpdating = false;
+ 		}
++
++		CurrentFactor = 1f;
+ 	}
+ 
+ 	protected override void EndDraw()
 @@ -53420,7 +_,7 @@
  		TimeLogger.PrepareRequests.AddTime(fromTimestamp3);
  		if (loadMap) {
@@ -5609,6 +5921,32 @@
  		}
  
  		if (Lighting.UpdateEveryFrame)
+@@ -53453,8 +_,12 @@
+ 		}
+ 		else {
+ 			stackCounter++;
++			/*
+ 			int num2 = 30;
++			*/
++			float num2 = 30;
+ 			num2 = ((stackDelay == 7) ? 30 : ((stackDelay == 6) ? 25 : ((stackDelay == 5) ? 20 : ((stackDelay == 4) ? 15 : ((stackDelay != 3) ? 5 : 10)))));
++			num2 /= (HighFPSDrawFixes.FixStackSplitSpeed ? DrawFactor : 1);
+ 			if (stackCounter >= num2) {
+ 				stackDelay--;
+ 				if (stackDelay < 2) {
+@@ -53489,9 +_,11 @@
+ 		}
+ 
+ 		ClearHoverItem();
++		// necessary for high fps to not flicker the instrument mouse text
++		ResetMouseTextCache();
+ 		DoDraw_UpdateCameraPosition();
+ 		Cloud.UpdateCloudParallax();
+-		sunCircle += 0.01f;
++		sunCircle += 0.01f * DrawFactor;
+ 		if ((double)sunCircle > 6.285)
+ 			sunCircle -= 6.285f;
+ 
 @@ -53546,7 +_,7 @@
  				updateMap = null;
  			}
@@ -5618,6 +5956,32 @@
  			}
  		}
  
+@@ -53554,7 +_,7 @@
+ 		if (num4 < 1)
+ 			num4 = 1;
+ 
+-		float num5 = 0.0005f * (float)num4;
++		float num5 = ((0.0005f * (float)num4) * DrawFactor);
+ 		if (gameMenu)
+ 			num5 *= 20f;
+ 
+@@ -53587,13 +_,13 @@
+ 		float num7 = SmoothedMushroomLightInfluence;
+ 		if (num6 > 0f) {
+ 			if (num6 > num7)
+-				num7 += 0.01f;
++				num7 += 0.01f * DrawFactor;
+ 
+ 			if (num6 < num7)
+-				num7 -= 0.01f;
++				num7 -= 0.01f * DrawFactor;
+ 		}
+ 		else {
+-			num7 -= 0.02f;
++			num7 -= 0.02f * DrawFactor;
+ 		}
+ 
+ 		if (num7 < 0f)
 @@ -53620,8 +_,8 @@
  		if (DebugOptions.DrawWaitInMs > 0.0)
  			ThreadUtilities.HighPrecisionSleep(DebugOptions.DrawWaitInMs);
@@ -5656,6 +6020,45 @@
  		areaToLight.Inflate(28, 28);
  		SceneMetrics.Scan(new SceneMetricsScanSettings {
  			VisualScanArea = areaToLight,
+@@ -54167,25 +_,25 @@
+ 			cameraX = 0f;
+ 
+ 		if (cameraX > 0f) {
+-			cameraX -= 1f;
++			cameraX -= 1f * DrawFactor;
+ 			if (cameraX < 0f)
+ 				cameraX = 0f;
+ 		}
+ 
+ 		if (cameraX < 0f) {
+-			cameraX += 1f;
++			cameraX += 1f * DrawFactor;
+ 			if (cameraX > 0f)
+ 				cameraX = 0f;
+ 		}
+ 
+ 		if (cameraY > 0f) {
+-			cameraY -= 2f;
++			cameraY -= 2f * DrawFactor;
+ 			if (cameraY < 0f)
+ 				cameraY = 0f;
+ 		}
+ 
+ 		if (cameraY < 0f) {
+-			cameraY += 2f;
++			cameraY += 2f * DrawFactor;
+ 			if (cameraY > 0f)
+ 				cameraY = 0f;
+ 		}
+@@ -54196,7 +_,7 @@
+ 			if (Vector2.Distance(value, screenPosition) - LocalPlayer.velocity.Length() < 0.25f)
+ 				cameraLerp = 0f;
+ 			else
+-				screenPosition = Vector2.Lerp(value, screenPosition, cameraLerp);
++				screenPosition = Vector2.Lerp(value, screenPosition, cameraLerp * (HighFPSDrawFixes.FixScreenLerpSpeed ? DrawFactor : 1));
+ 		}
+ 
+ 		instance.CameraModifiers.ApplyTo(ref screenPosition);
 @@ -54459,17 +_,17 @@
  			moonColor *= num13;
  			Vector2 position = new Vector2(num6, num7 + moonModY);
@@ -5680,6 +6083,15 @@
  		sunModY = (short)((double)sunModY * 0.999);
  		moonModY = (short)((double)moonModY * 0.999);
  		if (gameMenu && netMode != 1) {
+@@ -54603,7 +_,7 @@
+ 				num7 = (int)num8;
+ 
+ 			for (int j = 1; j < num7; j++) {
+-				Vector2 vector3 = theStar.fallSpeed * j * 0.4f;
++				Vector2 vector3 = theStar.fallSpeed * j * (0.4f * DrawFactor);
+ 				float num9 = theStar.scale * (1f - (float)j * 1f / num8);
+ 				Microsoft.Xna.Framework.Color color2 = color;
+ 				_ = theStar.rotation;
 @@ -55289,7 +_,7 @@
  		ColorOfTheSkies = bgColorToSet;
  	}
@@ -5705,6 +6117,34 @@
  			Vector2 input = worldPlayArea.TopLeft() - GameViewMatrix.Translation;
  			Vector2 input2 = worldPlayArea.BottomRight() - Camera.ScaledSize - GameViewMatrix.Translation;
  			input = Utils.Round(input);
+@@ -55574,7 +_,7 @@
+ 
+ 	private void DrawBG_ModifyBGFarBackLayerAlpha(int desiredBG, int? desiredBG2 = null, float? transitionAmountOverride = null)
+ 	{
+-		float value = backgroundLayerTransitionSpeed;
++		float value = backgroundLayerTransitionSpeed * DrawFactor;
+ 		if (transitionAmountOverride.HasValue)
+ 			value = transitionAmountOverride.Value;
+ 
+@@ -55611,11 +_,18 @@
+ 			if (allowPlayerToEmitEffects)
+ 				player[i].flameRingRot += 0.05f;
+ 
++			/*
+ 			if (player[i].flameRingRot > (float)Math.PI * 2f)
+ 				player[i].flameRingRot -= (float)Math.PI * 2f;
+ 
+ 			if (player[i].flameRingRot < (float)Math.PI * -2f)
+ 				player[i].flameRingRot += (float)Math.PI * 2f;
++			*/
++			if (player[i].flameRingRot > MathF.Tau)
++				player[i].flameRingRot = player[i].flameRingRot - MathF.Tau;
++
++			if (player[i].flameRingRot < -MathF.Tau)
++				player[i].flameRingRot = player[i].flameRingRot + MathF.Tau;
+ 
+ 			for (int j = 0; j < 3; j++) {
+ 				float num4 = num + num2 * (float)j;
 @@ -55623,7 +_,7 @@
  					num4 -= num2 * 2f;
  

@@ -1,5 +1,39 @@
 --- src/TerrariaNetCore/Terraria/Star.cs
 +++ src/Unified/Terraria/Star.cs
+@@ -1,27 +_,28 @@
+ using System;
+ using Microsoft.Xna.Framework;
++using Terraria.Unified.Time;
+ using Terraria.Utilities;
+ 
+ namespace Terraria;
+ 
+ public class Star
+ {
+-	public Vector2 position;
++	public DeltaVector2<CurrentDelta> position;
+ 	public float scale;
+-	public float rotation;
++	public DeltaFloat<CurrentDelta> rotation;
+ 	public int type;
+-	public float twinkle;
++	public DeltaFloat<CurrentDelta> twinkle;
+ 	public float twinkleSpeed;
+ 	public float rotationSpeed;
+ 	public bool falling;
+ 	public bool hidden;
+ 	public Vector2 fallSpeed;
+ 	public int fallTime;
+-	public Vector2 velocity;
++	public DeltaVector2<CurrentDelta> velocity;
+ 	public static bool dayCheck = false;
+ 	public static float starfallBoost = 1f;
+ 	public static int starFallCount = 0;
+-	public float fadeIn;
++	public DeltaFloat<CurrentDelta> fadeIn;
+ 
+ 	public static void NightSetup()
+ 	{
 @@ -46,7 +_,7 @@
  		starFallCount++;
  		int num = -1;
@@ -9,6 +43,24 @@
  		for (int i = 0; i < Main.numStars; i++) {
  			if (!Main.star[i].hidden && !Main.star[i].falling) {
  				float num4 = Math.Abs(Main.star[i].position.X - num3);
+@@ -142,7 +_,7 @@
+ 			if (position.Y > 1500f)
+ 				hidden = true;
+ 
+-			if (Main.starGame && position.Length() > 99999f)
++			if (Main.starGame && ((Vector2)position).Length() > 99999f)
+ 				hidden = true;
+ 
+ 			twinkle += twinkleSpeed * 3f;
+@@ -221,7 +_,7 @@
+ 				if (k == l || Main.star[l].falling || Main.star[l].hidden || !(Main.star[l].position != Main.star[k].position))
+ 					continue;
+ 
+-				Vector2 vector = Main.star[l].position - Main.star[k].position;
++				Vector2 vector = (Vector2)Main.star[l].position - (Vector2)Main.star[k].position;
+ 				float num = vector.X * vector.X + vector.Y * vector.Y;
+ 				vector *= 0.005f * Main.star[l].scale;
+ 				if (num != 0f) {
 @@ -244,13 +_,13 @@
  			if (Main.star[k].position.X < 0f)
  				Main.star[k].velocity.X = Math.Abs(Main.star[k].velocity.X);

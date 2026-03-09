@@ -1,0 +1,18 @@
+--- src/TerrariaNetCore/Terraria/GameContent/UI/Elements/UITextBox.cs
++++ src/Unified/Terraria/GameContent/UI/Elements/UITextBox.cs
+@@ -3,13 +_,14 @@
+ using Microsoft.Xna.Framework.Graphics;
+ using ReLogic.Localization.IME;
+ using ReLogic.OS;
++using Terraria.Unified.Time;
+ 
+ namespace Terraria.GameContent.UI.Elements;
+ 
+ internal class UITextBox : UITextPanel<string>
+ {
+ 	private int _cursor;
+-	private int _frameCount;
++	private DeltaFloat<DrawDelta> _frameCount;
+ 	private int _maxLength = 20;
+ 	public bool ShowInputTicker = true;
+ 	public bool HideSelf;

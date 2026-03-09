@@ -1,0 +1,18 @@
+--- src/TerrariaNetCore/Terraria/UI/UserInterface.cs
++++ src/Unified/Terraria/UI/UserInterface.cs
+@@ -4,6 +_,7 @@
+ using Microsoft.Xna.Framework.Graphics;
+ using ReLogic.Graphics;
+ using Terraria.GameInput;
++using Terraria.UI.Gamepad;
+ 
+ namespace Terraria.UI;
+ 
+@@ -129,6 +_,7 @@
+ 
+ 	private void ResetState()
+ 	{
++		UILinkPointNavigator.Shortcuts.BackButtonInUse = false; // Fixes high FPS bugs
+ 		if (!Main.dedServ) {
+ 			GetMousePosition();
+ 			ImmediatelyUpdateInputPointers();

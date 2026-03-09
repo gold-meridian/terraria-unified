@@ -1,5 +1,22 @@
 --- src/TerrariaNetCore/Terraria/Projectile.cs
 +++ src/Unified/Terraria/Projectile.cs
+@@ -24,6 +_,7 @@
+ using Terraria.ObjectData;
+ using Terraria.Physics;
+ using Terraria.Testing;
++using Terraria.Unified.Time;
+ using Terraria.Utilities;
+ using Terraria.WorldBuilding;
+ 
+@@ -137,7 +_,7 @@
+ 	public bool trap;
+ 	public bool npcProj;
+ 	public bool originatedFromActivableTile;
+-	public int frameCounter;
++	public DeltaInt<CurrentDelta> frameCounter;
+ 	public int frame;
+ 	public bool manualDirectionChange;
+ 	public int projUUID = -1;
 @@ -12823,7 +_,7 @@
  		if (localAI[0] == 1f && GetStormLightningExplosionRect().Intersects(targetRect))
  			return true;

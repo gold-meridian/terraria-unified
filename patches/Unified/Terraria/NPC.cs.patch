@@ -1,5 +1,13 @@
 --- src/TerrariaNetCore/Terraria/NPC.cs
 +++ src/Unified/Terraria/NPC.cs
+@@ -22,6 +_,7 @@
+ using Terraria.ID;
+ using Terraria.Localization;
+ using Terraria.Testing;
++using Terraria.Unified.Time;
+ using Terraria.Utilities;
+ using Terraria.WorldBuilding;
+ 
 @@ -4261,8 +_,8 @@
  
  		public static void SlimeRainSpawns(Player player)
@@ -11,6 +19,15 @@
  			float num = 15f;
  			if ((double)player.position.Y > Main.worldSurface * 16.0 + (double)(y / 2) || player.nearbyActiveNPCs > num)
  				return;
+@@ -4578,7 +_,7 @@
+ 	public int life;
+ 	public int lifeMax;
+ 	public Rectangle targetRect;
+-	public double frameCounter;
++	public DeltaDouble<CurrentDelta> frameCounter;
+ 	public Rectangle frame;
+ 	public Color color;
+ 	public int alpha;
 @@ -19144,8 +_,10 @@
  			if (this.ai[0] < 0f || this.ai[0] >= (float)Main.maxTilesX || this.ai[1] < 0f || this.ai[1] >= (float)Main.maxTilesX)
  				return;
