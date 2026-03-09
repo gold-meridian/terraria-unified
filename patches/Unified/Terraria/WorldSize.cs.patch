@@ -1,0 +1,40 @@
+--- src/TerrariaNetCore/Terraria/WorldSize.cs
++++ src/Unified/Terraria/WorldSize.cs
+@@ -1,8 +_,37 @@
+ namespace Terraria;
+ 
++/*
+ public static class WorldSize
+ {
+ 	public const int Small = 0;
+ 	public const int Medium = 1;
+ 	public const int Large = 2;
++}
++*/
++
++/// <summary>
++///		Rough categorizations of the horizontal size of a world.
++/// </summary>
++public enum WorldSize : sbyte
++{
++	// Smaller than Extra Small
++	SuperSmall = -2,
++
++	// 3DS normal/Mobile tiny
++	ExtraSmall = -1,
++
++	// Vanilla small/3DS expanded
++	Small = 0,
++
++	// Vanilla Medium
++	Medium = 1,
++
++	// Vanilla Large
++	Large = 2,
++
++	// tModLoader 64bit XL
++	ExtraLarge = 3,
++
++	// Bigger than Extra Large
++	SuperLarge = 4,
+ }

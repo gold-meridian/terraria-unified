@@ -1,4 +1,10 @@
 {
+	"UI": {
+		"WorldSizeExtraSmall": "Tiny",
+		"WorldSizeExtraLarge": "Huge",
+		"WorldDescriptionSizeExtraSmall": "Equivalent to 3DS 'Normal'/Mobile 'Tiny'.",
+		"WorldDescriptionSizeExtraLarge": "Equivalent to tModLoader 64bit 'XL'."
+	},
 	"GameUI": {
 		"CraftingReachPreview0": "Crafting reach off",
 		"CraftingReachPreview1": "Crafting reach - outline",

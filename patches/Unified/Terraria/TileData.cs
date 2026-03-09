@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Loader;
 
 namespace Terraria;
 
@@ -43,22 +42,10 @@ internal static unsafe class TileData<T> where T : unmanaged, ITileData
 		TileData.OnClearEverything += ClearEverything;
 		TileData.OnCopySingle += CopySingle;
 		TileData.OnClearSingle += ClearSingle;
-		AssemblyLoadContext.GetLoadContext(typeof(T).Assembly).Unloading += _ => Unload();
 
 		SetLength(TileData.Length);
 	}
 
-	private static void Unload()
-	{
-		TileData.OnSetLength -= SetLength;
-		TileData.OnClearEverything -= ClearEverything;
-		TileData.OnCopySingle -= CopySingle;
-		TileData.OnClearSingle -= ClearSingle;
-		if (Data != null) {
-			handle.Free();
-			Data = null;
-		}
-	}
 
 	public static void ClearEverything()
 	{

@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using ReLogic.Content;
 using ReLogic.Content.Sources;
-using Terraria.Initializers;
+using Terraria.GameContent;
 
 namespace Terraria.Unified;
 
@@ -28,11 +27,15 @@ internal static class ContentSources
 			Refresh();
 		}
 
-		public override Stream OpenStream(string assetName) => assembly.GetManifestResourceStream(rootPath + assetName + GetExtension(assetName));
+		public override Stream OpenStream(string assetName)
+		{
+			return assembly.GetManifestResourceStream(rootPath + '.' + assetName.Replace('\\', '.') + GetExtension(assetName))
+				?? throw AssetLoadException.FromMissingAsset(assetName);
+		}
 
 		public override void Refresh()
 		{
-			IEnumerable<string> resourceNames = assembly.GetManifestResourceNames();
+			var resourceNames = (IEnumerable<string>)assembly.GetManifestResourceNames();
 
 			foreach (string startingPath in excludedStartingPaths ?? Enumerable.Empty<string>()) {
 				resourceNames = resourceNames.Where(p => !p.StartsWith(startingPath));
@@ -41,26 +44,34 @@ internal static class ContentSources
 			if (!string.IsNullOrEmpty(rootPath)) {
 				resourceNames = resourceNames
 					.Where(p => p.StartsWith(rootPath))
-					.Select(p => p.Substring(rootPath.Length));
+					.Select(p => p[rootPath.Length..]);
 			}
 
+			resourceNames = resourceNames.Select(static p => {
+				var ext = Path.GetExtension(p);
+				var name = Path.ChangeExtension(p, null);
+				return name.Replace('.', '/') + (ext is null ? "" : ext);
+			});
+			resourceNames = resourceNames
+				.Select(x => x.StartsWith('/') ? x[1..] : x)
+				.Select(AssetPathHelper.CleanPath);
 			SetAssetNames(resourceNames);
 		}
 	}
 
-	public static AssetRepository ManifestAssets { get; set; }
-
-	public static AssemblyResourcesContentSource ManifestContentSource { get; set; }
-
 	public static void PrepareAssets()
 	{
-		ManifestContentSource = new AssemblyResourcesContentSource(
+		// new XnaDirectContentSource(((UnifiedContentManager)Content).RootDirectories)
+		var vanillaContent = new XnaDirectContentSource([Main.instance.Content.RootDirectory]);
+		var unifiedContent = new AssemblyResourcesContentSource(
 			Assembly.GetExecutingAssembly(),
+			rootPath: "Terraria.Unified.Assets",
 			excludedStartingPaths: []
 		);
 
-		ManifestAssets = new AssetRepository(AssetInitializer.assetReaderCollection, [ManifestContentSource]) {
-			AssetLoadFailHandler = Main.instance.OnceFailedLoadingAnAsset,
-		};
+		Main.AssetSourceController = new AssetSourceController(Main.Assets, [
+			vanillaContent,
+			unifiedContent,
+		]);
 	}
 }

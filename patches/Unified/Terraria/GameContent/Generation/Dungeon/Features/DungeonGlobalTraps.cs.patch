@@ -1,0 +1,19 @@
+--- src/TerrariaNetCore/Terraria/GameContent/Generation/Dungeon/Features/DungeonGlobalTraps.cs
++++ src/Unified/Terraria/GameContent/Generation/Dungeon/Features/DungeonGlobalTraps.cs
+@@ -50,13 +_,13 @@
+ 		if (data.Type == DungeonType.DualDungeon) {
+ 			int num8 = 30;
+ 			switch (WorldGen.GetWorldSize()) {
+-				case 0:
++				case <= WorldSize.Small:
+ 					num8 = 30 + genRand.Next(11);
+ 					break;
+-				case 1:
++				case WorldSize.Medium:
+ 					num8 = 50 + genRand.Next(16);
+ 					break;
+-				case 2:
++				case >= WorldSize.Large:
+ 					num8 = 70 + genRand.Next(21);
+ 					break;
+ 			}

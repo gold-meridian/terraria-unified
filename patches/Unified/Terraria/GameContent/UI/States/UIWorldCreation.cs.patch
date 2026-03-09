@@ -1,0 +1,161 @@
+--- src/TerrariaNetCore/Terraria/GameContent/UI/States/UIWorldCreation.cs
++++ src/Unified/Terraria/GameContent/UI/States/UIWorldCreation.cs
+@@ -24,12 +_,14 @@
+ 
+ public class UIWorldCreation : UIState, IHaveBackButtonCommand
+ {
++	/*
+ 	private enum WorldSizeId
+ 	{
+ 		Small,
+ 		Medium,
+ 		Large
+ 	}
++	*/
+ 
+ 	private enum WorldDifficultyId
+ 	{
+@@ -59,7 +_,7 @@
+ 	private UICharacterNameButton _namePlate;
+ 	private UICharacterNameButton _seedPlate;
+ 	private UIWorldCreationPreview _previewPlate;
+-	private GroupOptionButton<WorldSizeId>[] _sizeButtons;
++	private GroupOptionButton<WorldSize>[] _sizeButtons;
+ 	private GroupOptionButton<WorldDifficultyId>[] _difficultyButtons;
+ 	private GroupOptionButton<WorldEvilId>[] _evilButtons;
+ 	private UIText _descriptionText;
+@@ -78,6 +_,7 @@
+ 	private float animationSpeed = 0.5f;
+ 	private float saturation = 0.5f;
+ 
++	/*
+ 	private WorldSizeId _optionSize {
+ 		get {
+ 			return (WorldSizeId)WorldGen.GetWorldSize();
+@@ -86,6 +_,15 @@
+ 			WorldGen.SetWorldSize((int)value);
+ 		}
+ 	}
++	*/
++	private WorldSize _optionSize {
++		get {
++			return WorldGen.GetWorldSize();
++		}
++		set {
++			WorldGen.SetWorldSize(value);
++		}
++	}
+ 
+ 	private WorldDifficultyId _optionDifficulty {
+ 		get {
+@@ -279,7 +_,7 @@
+ 		Main.ActiveWorldFileData = new WorldFileData();
+ 		AssignRandomWorldName();
+ 		ClearSeed();
+-		_optionSize = WorldSizeId.Medium;
++		_optionSize = WorldSize.Medium;
+ 		if (Main.ActivePlayerFileData.Player.difficulty == 3)
+ 			_optionDifficulty = WorldDifficultyId.Creative;
+ 
+@@ -320,40 +_,50 @@
+ 
+ 	private void AddWorldSizeOptions(UIElement container, float accumualtedHeight, MouseEvent clickEvent, string tagGroup, float usableWidthPercent)
+ 	{
+-		WorldSizeId[] array = new WorldSizeId[3] {
+-			WorldSizeId.Small,
+-			WorldSizeId.Medium,
+-			WorldSizeId.Large
++		WorldSize[] array = new WorldSize[] {
++			WorldSize.ExtraSmall,
++			WorldSize.Small,
++			WorldSize.Medium,
++			WorldSize.Large,
++			WorldSize.ExtraLarge,
+ 		};
+ 
+-		LocalizedText[] array2 = new LocalizedText[3] {
++		LocalizedText[] array2 = new LocalizedText[] {
++			Language.GetText("UI.WorldSizeExtraSmall"),
+ 			Lang.menu[92],
+ 			Lang.menu[93],
+-			Lang.menu[94]
++			Lang.menu[94],
++			Language.GetText("UI.WorldSizeExtraLarge"),
+ 		};
+ 
+-		LocalizedText[] array3 = new LocalizedText[3] {
++		LocalizedText[] array3 = new LocalizedText[] {
++			Language.GetText("UI.WorldDescriptionSizeExtraSmall"),
+ 			Language.GetText("UI.WorldDescriptionSizeSmall"),
+ 			Language.GetText("UI.WorldDescriptionSizeMedium"),
+-			Language.GetText("UI.WorldDescriptionSizeLarge")
++			Language.GetText("UI.WorldDescriptionSizeLarge"),
++			Language.GetText("UI.WorldDescriptionSizeExtraLarge"),
+ 		};
+ 
+-		Color[] array4 = new Color[3] {
++		Color[] array4 = new Color[] {
++			Color.Lerp(Color.Cyan, Color.LightGoldenrodYellow, 0.5f),
+ 			Color.Cyan,
+ 			Color.Lerp(Color.Cyan, Color.LimeGreen, 0.5f),
+-			Color.LimeGreen
++			Color.LimeGreen,
++			Color.Lerp(Color.LimeGreen, Color.ForestGreen, 0.5f),
+ 		};
+ 
+-		string[] array5 = new string[3] {
++		string[] array5 = new string[] {
++			"Images/UI/WorldCreation/IconSizeExtraSmall",
+ 			"Images/UI/WorldCreation/IconSizeSmall",
+ 			"Images/UI/WorldCreation/IconSizeMedium",
+-			"Images/UI/WorldCreation/IconSizeLarge"
++			"Images/UI/WorldCreation/IconSizeLarge",
++			"Images/UI/WorldCreation/IconSizeExtraLarge",
+ 		};
+ 
+-		GroupOptionButton<WorldSizeId>[] array6 = new GroupOptionButton<WorldSizeId>[array.Length];
++		GroupOptionButton<WorldSize>[] array6 = new GroupOptionButton<WorldSize>[array.Length];
+ 		for (int i = 0; i < array6.Length; i++) {
+-			GroupOptionButton<WorldSizeId> groupOptionButton = new GroupOptionButton<WorldSizeId>(array[i], array2[i], array3[i], array4[i], array5[i], 1f, 1f, 16f);
++			GroupOptionButton<WorldSize> groupOptionButton = new GroupOptionButton<WorldSize>(array[i], array2[i], array3[i], array4[i], array5[i], 1f, 1f, 16f);
+-			groupOptionButton.Width = StyleDimension.FromPixelsAndPercent(-4 * (array6.Length - 1), 1f / (float)array6.Length * usableWidthPercent);
++			groupOptionButton.Width = StyleDimension.FromPixelsAndPercent(/*-4*/ -1 * (array6.Length - 1), 1f / (float)array6.Length * usableWidthPercent);
+ 			groupOptionButton.Left = StyleDimension.FromPercent(1f - usableWidthPercent);
+ 			groupOptionButton.HAlign = (float)i / (float)(array6.Length - 1);
+ 			groupOptionButton.Top.Set(accumualtedHeight, 0f);
+@@ -519,9 +_,9 @@
+ 
+ 	private void ClickSizeOption(UIMouseEvent evt, UIElement listeningElement)
+ 	{
+-		GroupOptionButton<WorldSizeId> groupOptionButton = (GroupOptionButton<WorldSizeId>)listeningElement;
++		GroupOptionButton<WorldSize> groupOptionButton = (GroupOptionButton<WorldSize>)listeningElement;
+ 		_optionSize = groupOptionButton.OptionValue;
+-		GroupOptionButton<WorldSizeId>[] sizeButtons = _sizeButtons;
++		GroupOptionButton<WorldSize>[] sizeButtons = _sizeButtons;
+ 		for (int i = 0; i < sizeButtons.Length; i++) {
+ 			sizeButtons[i].SetCurrentOption(groupOptionButton.OptionValue);
+ 		}
+@@ -555,12 +_,12 @@
+ 
+ 	private void UpdatePreviewPlate()
+ 	{
+-		_previewPlate.UpdateOption((byte)_optionDifficulty, (byte)_optionEvil, (byte)_optionSize);
++		_previewPlate.UpdateOption((byte)_optionDifficulty, (byte)_optionEvil, _optionSize);
+ 	}
+ 
+ 	private void UpdateSliders()
+ 	{
+-		GroupOptionButton<WorldSizeId>[] sizeButtons = _sizeButtons;
++		GroupOptionButton<WorldSize>[] sizeButtons = _sizeButtons;
+ 		for (int i = 0; i < sizeButtons.Length; i++) {
+ 			sizeButtons[i].SetCurrentOption(_optionSize);
+ 		}
+@@ -579,7 +_,7 @@
+ 	public void ShowOptionDescription(UIMouseEvent evt, UIElement listeningElement)
+ 	{
+ 		LocalizedText localizedText = null;
+-		if (listeningElement is GroupOptionButton<WorldSizeId> groupOptionButton)
++		if (listeningElement is GroupOptionButton<WorldSize> groupOptionButton)
+ 			localizedText = groupOptionButton.Description;
+ 
+ 		if (listeningElement is GroupOptionButton<WorldDifficultyId> groupOptionButton2)

@@ -1,0 +1,46 @@
+--- src/TerrariaNetCore/Terraria/GameContent/Generation/Dungeon/LayoutProviders/DualDungeonLayoutProvider.cs
++++ src/Unified/Terraria/GameContent/Generation/Dungeon/LayoutProviders/DualDungeonLayoutProvider.cs
+@@ -535,7 +_,7 @@
+ 		int num5 = 5;
+ 		int num6 = 6;
+ 		switch (WorldGen.GetWorldSize()) {
+-			case 0:
++			case <= WorldSize.Small:
+ 				num = 2;
+ 				num2 = 2;
+ 				num3 = 2;
+@@ -543,7 +_,7 @@
+ 				num5 = 5;
+ 				num6 = 6;
+ 				break;
+-			case 1:
++			case WorldSize.Medium:
+ 				num = 4;
+ 				num2 = 6;
+ 				num3 = 6;
+@@ -551,7 +_,7 @@
+ 				num5 = 8;
+ 				num6 = 10;
+ 				break;
+-			case 2:
++			case >= WorldSize.Large:
+ 				num = 6;
+ 				num2 = 10;
+ 				num3 = 10;
+@@ -791,13 +_,13 @@
+ 		UnifiedRandom genRand = WorldGen.genRand;
+ 		int num = 3;
+ 		switch (WorldGen.GetWorldSize()) {
+-			case 0:
++			case <= WorldSize.Small:
+ 				num = 3;
+ 				break;
+-			case 1:
++			case WorldSize.Medium:
+ 				num = 4;
+ 				break;
+-			case 2:
++			case >= WorldSize.Large:
+ 				num = 5;
+ 				break;
+ 		}

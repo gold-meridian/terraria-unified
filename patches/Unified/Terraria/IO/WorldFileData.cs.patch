@@ -1,0 +1,82 @@
+--- src/TerrariaNetCore/Terraria/IO/WorldFileData.cs
++++ src/Unified/Terraria/IO/WorldFileData.cs
+@@ -28,6 +_,7 @@
+ 	public Guid UniqueId;
+ 	public int WorldId;
+ 	public LocalizedText _worldSizeName;
++	public bool unusualWorldSize;
+ 	public int GameMode;
+ 	public bool DrunkWorld;
+ 	public bool NotTheBees;
+@@ -99,6 +_,7 @@
+ 
+ 	public string GetFullSeedText(bool allowCropping = false)
+ 	{
++		/*
+ 		int num = 0;
+ 		if (WorldSizeX == 4200 && WorldSizeY == 1200)
+ 			num = 1;
+@@ -108,6 +_,8 @@
+ 
+ 		if (WorldSizeX == 8400 && WorldSizeY == 2400)
+ 			num = 3;
++		*/
++		int num = (int)WorldGen.GetWorldSize(WorldSizeX);
+ 
+ 		int num2 = 0;
+ 		if (HasCorruption)
+@@ -212,7 +_,7 @@
+ 		if (processedSeed.Length > MAX_USER_SEED_TEXT_LENGTH)
+ 			return false;
+ 
+-		WorldGen.SetWorldSize(value - 1);
++		WorldGen.SetWorldSize((WorldSize)(value - 1));
+ 		Main.GameMode = value2 - 1;
+ 		WorldGen.WorldGenParam_Evil = value3 - 1;
+ 		WorldGenerationOptions.Reset();
+@@ -280,6 +_,7 @@
+ 	{
+ 		WorldSizeX = x;
+ 		WorldSizeY = y;
++		/*
+ 		switch (x) {
+ 			case 4200:
+ 				_worldSizeName = Language.GetText("UI.WorldSizeSmall");
+@@ -292,6 +_,37 @@
+ 				break;
+ 			default:
+ 				_worldSizeName = Language.GetText("UI.WorldSizeUnknown");
++				unusualWorldSize = true;
++				break;
++		}
++		*/
++
++		switch (WorldGen.GetWorldSize(x)) {
++			default:
++			case WorldSize.SuperSmall:
++			case WorldSize.SuperLarge:
++				_worldSizeName = Language.GetText("UI.WorldSizeUnknown");
++				unusualWorldSize = true;
++				break;
++
++			case WorldSize.ExtraSmall:
++				_worldSizeName = Language.GetText("UI.WorldSizeExtraSmall");
++				break;
++
++			case WorldSize.Small:
++				_worldSizeName = Language.GetText("UI.WorldSizeSmall");
++				break;
++
++			case WorldSize.Medium:
++				_worldSizeName = Language.GetText("UI.WorldSizeMedium");
++				break;
++
++			case WorldSize.Large:
++				_worldSizeName = Language.GetText("UI.WorldSizeLarge");
++				break;
++
++			case WorldSize.ExtraLarge:
++				_worldSizeName = Language.GetText("UI.WorldSizeExtraLarge");
+ 				break;
+ 		}
+ 	}
