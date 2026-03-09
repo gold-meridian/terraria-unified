@@ -251,12 +251,12 @@
 +				break;
 +
 +			case WorldSize.Large:
-+				SetWorldSize(WorldSizeLargeX, WorldSizeLargeX);
++				SetWorldSize(WorldSizeLargeX, WorldSizeLargeY);
 +				break;
 +
 +			case WorldSize.ExtraLarge:
 +			case WorldSize.SuperLarge:
-+				SetWorldSize(WorldSizeExtraLargeX, WorldSizeExtraLargeX);
++				SetWorldSize(WorldSizeExtraLargeX, WorldSizeExtraLargeY);
 +				break;
 +		}
 +	}
