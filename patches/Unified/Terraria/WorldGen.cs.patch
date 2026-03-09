@@ -326,7 +326,7 @@
  			Console.WriteLine("Creating world - Seed: {0}, Width: {1}, Height: {2}, Evil: {3}, Difficulty: {4}", Main.ActiveWorldFileData.SeedText, Main.maxTilesX, Main.maxTilesY, WorldGenParam_Evil, Main.GameMode);
  			GenVars.configuration = WorldGenConfiguration.FromEmbeddedPath("Terraria.GameContent.WorldBuilding.Configuration.json");
  			Hooks.ProcessWorldGenConfig(ref GenVars.configuration);
-@@ -9245,6 +_,8 @@
+@@ -9245,9 +_,16 @@
  			AddPasses();
  			DisablePassesForSpecialSeeds(_generator._passes);
  			flag = _generator.GenerateWorld();
@@ -335,6 +335,41 @@
  			Finish();
  			return flag;
  		}
++		catch (Exception e) {
++			Console.WriteLine("Failed to generaet world:");
++			Console.WriteLine(e);
++			throw;
++		}
+ 		finally {
+ 			RestoreTemporaryStateChanges();
+ 			generatingWorld = false;
+@@ -9576,10 +_,26 @@
+ 		else
+ 			GenVars.rightBeachStart -= GenVars.beachSandJungleExtraWidth;
+ 
++		/*
+ 		if (num2 <= DungeonSide.Left)
+ 			GenVars.CurrentDungeonGenVars.dungeonLocation = genRand.Next(GenVars.leftBeachEnd + GenVars.dungeonBeachPadding, (int)((double)Main.maxTilesX * 0.2));
+ 		else
+ 			GenVars.CurrentDungeonGenVars.dungeonLocation = genRand.Next((int)((double)Main.maxTilesX * 0.8), GenVars.rightBeachStart - GenVars.dungeonBeachPadding);
++		*/
++
++		// Small patch to allow XS worlds to generate.
++		if (num2 <= DungeonSide.Left)
++			GenVars.CurrentDungeonGenVars.dungeonLocation = genRand.Next(GenVars.leftBeachEnd + GenVars.dungeonBeachPadding, (int)((double)Main.maxTilesX * 0.2));
++		else {
++			var startPos = (int)((double)Main.maxTilesX * 0.8);
++			var endPos = GenVars.rightBeachStart - GenVars.dungeonBeachPadding;
++			if (startPos > endPos) {
++				GenVars.CurrentDungeonGenVars.dungeonLocation = startPos;
++			}
++			else {
++				GenVars.CurrentDungeonGenVars.dungeonLocation = genRand.Next(startPos, endPos);
++			}
++		}
+ 
+ 		GenVars.CurrentDungeonGenVars.outerPotentialDungeonBounds.Reset();
+ 		GenVars.CurrentDungeonGenVars.innerPotentialDungeonBounds.Reset();
 @@ -18623,13 +_,13 @@
  			int num16 = 0;
  			int num17 = 3;
