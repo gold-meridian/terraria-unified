@@ -1,7 +1,7 @@
 {
 	"UI": {
-		"WorldSizeExtraSmall": "XS",
-		"WorldSizeExtraLarge": "XL",
+		"WorldSizeExtraSmall": "Tiny",
+		"WorldSizeExtraLarge": "Huge",
 		"WorldDescriptionSizeExtraSmall": "Equivalent to 3DS 'Normal'/Mobile 'Tiny'.",
 		"WorldDescriptionSizeExtraLarge": "Equivalent to tModLoader 64bit 'XL'."
 	},

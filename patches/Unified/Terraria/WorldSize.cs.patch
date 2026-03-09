@@ -15,7 +15,7 @@
 +/// <summary>
 +///		Rough categorizations of the horizontal size of a world.
 +/// </summary>
-+public enum WorldSize
++public enum WorldSize : sbyte
 +{
 +	// Smaller than Extra Small
 +	SuperSmall = -2,

@@ -135,7 +135,13 @@
  		for (int i = 0; i < sizeButtons.Length; i++) {
  			sizeButtons[i].SetCurrentOption(groupOptionButton.OptionValue);
  		}
-@@ -560,7 +_,7 @@
+@@ -555,12 +_,12 @@
+ 
+ 	private void UpdatePreviewPlate()
+ 	{
+-		_previewPlate.UpdateOption((byte)_optionDifficulty, (byte)_optionEvil, (byte)_optionSize);
++		_previewPlate.UpdateOption((byte)_optionDifficulty, (byte)_optionEvil, _optionSize);
+ 	}
  
  	private void UpdateSliders()
  	{

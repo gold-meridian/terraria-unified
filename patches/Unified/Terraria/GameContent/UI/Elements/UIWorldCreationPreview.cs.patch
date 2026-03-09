@@ -1,0 +1,58 @@
+--- src/TerrariaNetCore/Terraria/GameContent/UI/Elements/UIWorldCreationPreview.cs
++++ src/Unified/Terraria/GameContent/UI/Elements/UIWorldCreationPreview.cs
+@@ -21,9 +_,11 @@
+ 	private readonly Asset<Texture2D> _SizeSmallTexture;
+ 	private readonly Asset<Texture2D> _SizeMediumTexture;
+ 	private readonly Asset<Texture2D> _SizeLargeTexture;
++	private readonly Asset<Texture2D> _SizeExtraSmallTexture;
++	private readonly Asset<Texture2D> _SizeExtraLargeTexture;
+ 	private byte _difficulty;
+ 	private byte _evil;
+-	private byte _size;
++	private WorldSize _size;
+ 
+ 	public UIWorldCreationPreview()
+ 	{
+@@ -41,11 +_,13 @@
+ 		_SizeSmallTexture = Main.Assets.Request<Texture2D>("Images/UI/WorldCreation/PreviewSizeSmall");
+ 		_SizeMediumTexture = Main.Assets.Request<Texture2D>("Images/UI/WorldCreation/PreviewSizeMedium");
+ 		_SizeLargeTexture = Main.Assets.Request<Texture2D>("Images/UI/WorldCreation/PreviewSizeLarge");
++		_SizeExtraSmallTexture = Main.Assets.Request<Texture2D>("Images/UI/WorldCreation/PreviewSizeExtraSmall");
++		_SizeExtraLargeTexture = Main.Assets.Request<Texture2D>("Images/UI/WorldCreation/PreviewSizeExtraLarge");
+ 		Width.Set(_BackgroundExpertTexture.Width(), 0f);
+ 		Height.Set(_BackgroundExpertTexture.Height(), 0f);
+ 	}
+ 
+-	public void UpdateOption(byte difficulty, byte evil, byte size)
++	public void UpdateOption(byte difficulty, byte evil, WorldSize size)
+ 	{
+ 		_difficulty = difficulty;
+ 		_evil = evil;
+@@ -74,14 +_,24 @@
+ 		}
+ 
+ 		switch (_size) {
+-			case 0:
++			case WorldSize.SuperSmall:
++			case WorldSize.ExtraSmall:
++				spriteBatch.Draw(_SizeExtraSmallTexture.Value, position, color);
++				break;
++
++			case WorldSize.Small:
+ 				spriteBatch.Draw(_SizeSmallTexture.Value, position, color);
+ 				break;
+-			case 1:
++			case WorldSize.Medium:
+ 				spriteBatch.Draw(_SizeMediumTexture.Value, position, color);
+ 				break;
+-			case 2:
++			case WorldSize.Large:
+ 				spriteBatch.Draw(_SizeLargeTexture.Value, position, color);
++				break;
++
++			case WorldSize.ExtraLarge:
++			case WorldSize.SuperLarge:
++				spriteBatch.Draw(_SizeExtraLargeTexture.Value, position, color);
+ 				break;
+ 		}
+ 
