@@ -56,3 +56,8 @@ public readonly struct DrawDelta : IDeltaFactorProvider<DrawDelta>
 {
 	public static float RealFactor => Main.DrawFactor;
 }
+
+public readonly struct CloudDelta : IDeltaFactorProvider<CloudDelta>
+{
+	public static float RealFactor => Main.CurrentFactor;
+}
