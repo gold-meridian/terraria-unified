@@ -20,14 +20,13 @@
  		<ProjectReference Include="../ReLogic/ReLogic.csproj" />
  		<EmbeddedResource Include="../ReLogic/bin/$(Configuration)/$(TargetFramework)/ReLogic.dll">
  			<Link>Libraries/ReLogic/ReLogic.dll</Link>
-@@ -45,11 +_,32 @@
+@@ -45,11 +_,31 @@
  		<Reference Include="RailSDK.Net" />
  		<Reference Include="SteelSeriesEngineWrapper" />
  
 +		<PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.2" />
 +		<PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.2" />
  		<PackageReference Include="Steamworks.NET.AnyCPU" Version="2025.162.4" />
-+		<PackageReference Include="Velopack" Version="0.0.1298" />
 +
 +		<PackageReference Include="Krafs.Publicizer" Version="2.3.0">
 +			<PrivateAssets>all</PrivateAssets>

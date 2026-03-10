@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<Import Project="../Configuration.targets" />
+
+	<PropertyGroup>
+		<OutputType>Library</OutputType>
+		<Nullable>enable</Nullable>
+
+		<!-- This corresponds to the actual version of Unified. -->
+		<Version>0.2.0</Version>
+		
+		<Company>Gold Meridian</Company>
+		<Copyright>Copyright © Tomat et al.  2026</Copyright>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="../../../FNA2/src/FNA/FNA.csproj" />
+		<PackageReference Include="Velopack" Version="0.0.1298" />
+
+		<Using Alias="Vector2" Include="System.Numerics.Vector2"/>
+		<Using Alias="Vector3" Include="System.Numerics.Vector3"/>
+		<Using Alias="Vector4" Include="System.Numerics.Vector4"/>
+		<Using Alias="Quaternion" Include="System.Numerics.Quaternion"/>
+		<Using Alias="Point" Include="System.Drawing.Point"/>
+		<Using Alias="Rectangle" Include="System.Drawing.Rectangle"/>
+		<Using Alias="Matrix" Include="System.Numerics.Matrix4x4"/>
+		<Using Static="true" Include="Microsoft.Xna.Framework.NumericsExtensions"/>
+	</ItemGroup>
+
+</Project>

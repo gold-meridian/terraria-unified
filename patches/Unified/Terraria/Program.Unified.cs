@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Terraria.Unified.Startup;
+using Velopack;
 
 namespace Terraria;
 
@@ -37,6 +36,7 @@ internal static class Program
 
 	public static void Main(string[] args)
 	{
+		VelopackApp.Build().Run();
 		GameLaunch.StartGame(args);
 	}
 }
