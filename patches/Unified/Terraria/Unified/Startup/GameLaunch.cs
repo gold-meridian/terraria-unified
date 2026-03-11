@@ -2,10 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using GoldMeridian.Tomoko.Application;
+using GoldMeridian.Tomoko.Hosting;
+using GoldMeridian.Tomoko.Velopack;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ReLogic.OS;
+using Velopack;
+using Velopack.Sources;
 
 namespace Terraria.Unified.Startup;
 
@@ -22,7 +27,7 @@ public static class GameLaunch
 		private set;
 	}
 
-	#region Program member contracts
+#region Program member contracts
 	// The following members are from the original Program implementation and
 	// are depended on by various parts of the game.
 
@@ -61,36 +66,29 @@ public static class GameLaunch
 	///		root in cases where it isn't accessible.
 	/// </summary>
 	internal static string SavePath { get; private set; }
-	#endregion
+#endregion
+
+	private const string app_id = "dev.tomat.terraria.unified";
+	private const string app_name = "Terraria: Unified";
+	private const string app_package_manager = "TERRARIA_UNIFIED_PACKAGE_MANAGER";
+	private const string app_update_url = "https://github.com/gold-meridian/terraria-unified";
 
 	internal static void StartGame(string[] args)
 	{
-		ParseArguments(args);
-
-		SavePath = LaunchParameters.TryGetValue("-savedirectory", out string savePath) ? savePath : Platform.Get<IPathService>().GetStoragePath("Terraria");
-		Main.dedServ = LaunchParameters.ContainsKey("-server");
+		var skipVelopackSetup = ParseArguments(args);
+		{
+			SavePath = LaunchParameters.TryGetValue("-savedirectory", out string savePath) ? savePath : Platform.Get<IPathService>().GetStoragePath("Terraria");
+			Main.dedServ = LaunchParameters.ContainsKey("-server");
+		}
 
 		var builder = Host.CreateApplicationBuilder(args);
-
-		Logging.Initialize(builder.Logging);
-
-		// TODO: Is this really needed?
-		/*
-		try {
-			Console.OutputEncoding = Encoding.UTF8;
-			Console.InputEncoding = Platform.IsWindows ? Encoding.Unicode : Encoding.UTF8;
+		{
+			InitializeLogging(builder);
+			InitializeApplicationServices(builder);
+			InitializeGameServices(builder);
 		}
-		catch {
-			// no-op
-		}
-		*/
 
 		// Game start services.
-		builder.Services.AddSingleton<INativeLibraryResolver, NativeLibraryResolver>();
-		builder.Services.AddSingleton<IEngineBackendInitializer, EngineBackendInitializer>();
-		builder.Services.AddSingleton<IEngineRunner, EngineRunner>();
-		builder.Services.AddSingleton<IPreJitPolicy, DefaultPreJitPolicy>();
-		builder.Services.AddSingleton<IContentDirectoryResolver, ContentDirectoryResolver>();
 
 		var host = builder.Build();
 
@@ -118,7 +116,7 @@ public static class GameLaunch
 		host.Dispose();
 	}
 
-	private static void ParseArguments(string[] args)
+	private static bool ParseArguments(string[] args)
 	{
 		// TODO: Do we need this?  tModLoader uses it because Mono does, but we
 		//       aren't actually running Mono... so?
@@ -127,5 +125,60 @@ public static class GameLaunch
 		*/
 
 		LaunchParameters = Utils.ParseArguements(args);
+
+		// Skip the Velopack setup if the game is launched with any non-velopack
+		// arguments as its first arguments, indicating it may be being used as
+		// a server, used to open a file, etc.
+		return args.Length > 0 && !args[0].StartsWith("--velo", StringComparison.Ordinal);
+	}
+
+	private static void InitializeLogging(HostApplicationBuilder builder)
+	{
+		// TODO: Is this really needed?
+		/*
+		try {
+			Console.OutputEncoding = Encoding.UTF8;
+			Console.InputEncoding = Platform.IsWindows ? Encoding.Unicode : Encoding.UTF8;
+		}
+		catch {
+			// no-op
+		}
+		*/
+
+		Logging.Initialize(builder.Logging);
+	}
+
+	private static void InitializeApplicationServices(HostApplicationBuilder builder)
+	{
+		// TODO: Eventually read the channel from a config file or something...
+		builder.Services.AddHosting(
+			app_id,
+			app_name,
+			// We use Tomoko to store our version information, etc.
+			typeof(ApplicationIdentity).Assembly,
+			packageManagerEnvVar: app_package_manager,
+			channel: null
+		);
+
+		builder.Services.AddVelopackUpdateProvider(
+			new GithubSource(app_update_url, null, prerelease: false),
+			b => {
+				b.OnConfigure += BootstrapVelopack;
+			}
+		);
+	}
+
+	private static void BootstrapVelopack(VelopackApp app)
+	{
+		// TODO: First-run actions, etc.?
+	}
+
+	private static void InitializeGameServices(HostApplicationBuilder builder)
+	{
+		builder.Services.AddSingleton<INativeLibraryResolver, NativeLibraryResolver>();
+		builder.Services.AddSingleton<IEngineBackendInitializer, EngineBackendInitializer>();
+		builder.Services.AddSingleton<IEngineRunner, EngineRunner>();
+		builder.Services.AddSingleton<IPreJitPolicy, DefaultPreJitPolicy>();
+		builder.Services.AddSingleton<IContentDirectoryResolver, ContentDirectoryResolver>();
 	}
 }
