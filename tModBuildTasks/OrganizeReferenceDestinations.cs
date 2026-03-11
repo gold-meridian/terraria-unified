@@ -59,10 +59,16 @@ public sealed class OrganizeReferenceDestinations : TaskBase
 
 			// Project References
 			if (referenceSourceTarget == "ProjectReference" && assemblyName != null) {
-				// Version is bugged in deps.json for ProjectReferences, doesn't reflect AssemblyVersion for whatever reason. Uses 1.0.0.
-				const string VersionHack = "1.0.0";
+				var version = assemblyName.Version;
+				var versionStr = $"{version.Major}.{version.Minor}.{version.Build}";
 
-				destinationSubDirectory = Path.Combine(BaseDirectory, assemblyName.Name, VersionHack);
+				// The revision gets cut off when zero, maybe to bias toward
+				// SemVer?
+				if (version.Revision > 0) {
+					versionStr += $".{version.Revision}";
+				}
+
+				destinationSubDirectory = Path.Combine(BaseDirectory, assemblyName.Name, versionStr);
 			}
 			// Direct Managed References
 			else if (referenceSourceTarget == "ResolveAssemblyReference" && assemblyName != null) {

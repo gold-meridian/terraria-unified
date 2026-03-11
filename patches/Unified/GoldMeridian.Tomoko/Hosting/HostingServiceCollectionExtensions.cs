@@ -29,7 +29,7 @@ public static class HostingServiceCollectionExtensions
 
 		services.AddSingleton<IInstallationProfileProbe, DevelopmentBuildInstallationProbe>();
 		services.AddSingleton<IInstallationProfileProbe>(_ => new PortableMarkerInstallationProbe());
-		services.AddSingleton<IInstallationProfileProbe, EnvironmentVariablePackageManagerProbe>();
+		services.AddSingleton<IInstallationProfileProbe>(_ => new EnvironmentVariablePackageManagerProbe(packageManagerEnvVar));
 
 		services.AddSingleton<IInstallationProfileDetector, CompositeInstallationProfileDetector>();
 
