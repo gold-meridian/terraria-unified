@@ -29,7 +29,7 @@ internal static class ContentSources
 
 		public override Stream OpenStream(string assetName)
 		{
-			return assembly.GetManifestResourceStream(rootPath + '.' + assetName.Replace('\\', '.') + GetExtension(assetName))
+			return assembly.GetManifestResourceStream(rootPath + '.' + assetName.Replace('\\', '.').Replace('/', ',') + GetExtension(assetName))
 				?? throw AssetLoadException.FromMissingAsset(assetName);
 		}
 
