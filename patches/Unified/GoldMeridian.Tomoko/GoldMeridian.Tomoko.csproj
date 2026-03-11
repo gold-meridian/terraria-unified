@@ -15,6 +15,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="../../../FNA2/src/FNA/FNA.csproj" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.4" />
 		<PackageReference Include="Velopack" Version="0.0.1298" />
 
 		<Using Alias="Vector2" Include="System.Numerics.Vector2" />
