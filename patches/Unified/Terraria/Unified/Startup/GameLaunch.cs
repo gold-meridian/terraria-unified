@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using GoldMeridian.Tomoko.Application;
+using GoldMeridian.Tomoko.Environment;
 using GoldMeridian.Tomoko.Hosting;
+using GoldMeridian.Tomoko.Updating;
 using GoldMeridian.Tomoko.Velopack;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -89,13 +91,15 @@ public static class GameLaunch
 		}
 
 		// Game start services.
-
 		var host = builder.Build();
 
 		var loggerFactory = host.Services.GetRequiredService<ILoggerFactory>();
-		Logging.RedirectConsole(loggerFactory);
+		{
+			Logging.RedirectConsole(loggerFactory);
+		}
 
 		var logger = loggerFactory.CreateLogger("Terraria");
+
 		logger.LogInformation("Using launch arguments:");
 		foreach (var (key, value) in LaunchParameters) {
 			if (string.IsNullOrEmpty(value)) {
@@ -104,6 +108,25 @@ public static class GameLaunch
 			else {
 				logger.LogInformation($"{key}: {value}");
 			}
+		}
+
+		var install = host.Services.GetRequiredService<IInstallationProfile>();
+		if (skipVelopackSetup) {
+			logger.LogInformation("Skipping update provider setup because arguments imply it should be skipped...");
+		}
+		else if (!install.CanSelfUpdate) {
+			logger.LogInformation("Skipping update provider setup because the install reports that it doesn't support self-updating...");
+		}
+		else {
+			var updater = host.Services.GetRequiredService<IUpdateProvider>();
+			logger.LogInformation("Running setup for updater: " + updater.Name);
+
+			if (updater.HandleStartupCommands(args)) {
+				logger.LogInformation("Updater has requested the process to exit, canceling start-up...");
+				return;
+			}
+
+			logger.LogInformation("Updater handled startup comments without exiting...");
 		}
 
 		Instance = new GameLifetime(host, logger);
