@@ -17,14 +17,14 @@
 		<ProjectReference Include="../../../FNA2/src/FNA/FNA.csproj" />
 		<PackageReference Include="Velopack" Version="0.0.1298" />
 
-		<Using Alias="Vector2" Include="System.Numerics.Vector2"/>
-		<Using Alias="Vector3" Include="System.Numerics.Vector3"/>
-		<Using Alias="Vector4" Include="System.Numerics.Vector4"/>
-		<Using Alias="Quaternion" Include="System.Numerics.Quaternion"/>
-		<Using Alias="Point" Include="System.Drawing.Point"/>
-		<Using Alias="Rectangle" Include="System.Drawing.Rectangle"/>
-		<Using Alias="Matrix" Include="System.Numerics.Matrix4x4"/>
-		<Using Static="true" Include="Microsoft.Xna.Framework.NumericsExtensions"/>
+		<Using Alias="Vector2" Include="System.Numerics.Vector2" />
+		<Using Alias="Vector3" Include="System.Numerics.Vector3" />
+		<Using Alias="Vector4" Include="System.Numerics.Vector4" />
+		<Using Alias="Quaternion" Include="System.Numerics.Quaternion" />
+		<Using Alias="Point" Include="System.Drawing.Point" />
+		<Using Alias="Rectangle" Include="System.Drawing.Rectangle" />
+		<Using Alias="Matrix" Include="System.Numerics.Matrix4x4" />
+		<Using Static="true" Include="Microsoft.Xna.Framework.NumericsExtensions" />
 	</ItemGroup>
 
 </Project>

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.3.11312.210 d18.3
+VisualStudioVersion = 18.3.11312.210
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Terraria", "..\src\Unified\Terraria\Terraria.csproj", "{2723ACB3-6289-BEF0-22D2-9035A47C36ED}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FNA", "..\FNA2\src\FNA\FNA.csproj", "{60F686F7-E218-43DD-D4DE-977A0EFB40BB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnifiedTests", "..\UnifiedTests\UnifiedTests.csproj", "{A0709050-A2EF-439D-8B8C-EAADC0F6995A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoldMeridian.Tomoko", "..\src\unified\GoldMeridian.Tomoko\GoldMeridian.Tomoko.csproj", "{209441B6-DBF1-490D-83CB-32B7640D88A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{A0709050-A2EF-439D-8B8C-EAADC0F6995A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0709050-A2EF-439D-8B8C-EAADC0F6995A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0709050-A2EF-439D-8B8C-EAADC0F6995A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{209441B6-DBF1-490D-83CB-32B7640D88A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{209441B6-DBF1-490D-83CB-32B7640D88A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{209441B6-DBF1-490D-83CB-32B7640D88A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{209441B6-DBF1-490D-83CB-32B7640D88A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
