@@ -1,10 +1,8 @@
 --- src/TerrariaNetCore/Terraria/Netplay.cs
 +++ src/Unified/Terraria/Netplay.cs
-@@ -533,6 +_,7 @@
+@@ -516,4 +_,5 @@
  				SoundEngine.StopTrackedSounds();
  				MapHelper.noStatusText = false;
- 				Main.menuMode = 14;
 +				WorldGen.ResizeWorldMapData(clearTileMap: true);
  			}
  
- 			NetMessage.buffer[256].Reset();

@@ -1,6 +1,6 @@
 --- src/TerrariaNetCore/Terraria/Audio/LegacyAudioSystem.cs
 +++ src/Unified/Terraria/Audio/LegacyAudioSystem.cs
-@@ -70,17 +_,18 @@
+@@ -71,17 +_,18 @@
  
  #if !SERVER
  			string extension = contentSource.GetExtension(assetPath);
@@ -22,13 +22,12 @@
  						break;
  				}
  
-@@ -102,13 +_,14 @@
- 
- 	public LegacyAudioSystem()
+@@ -117,12 +_,13 @@
+ 	public void Init(string renderer = "")
  	{
--		Engine = new AudioEngine("Content\\TerrariaMusic.xgs");
+-		Engine = new AudioEngine("Content\\TerrariaMusic.xgs", TimeSpan.FromMilliseconds(250.0), renderer);
 +		var contentDir = Main.instance.Content.RootDirectory;
-+		Engine = new AudioEngine(Path.Combine(contentDir, "TerrariaMusic.xgs"));
++		Engine = new AudioEngine(Path.Combine(contentDir, "TerrariaMusic.xgs"), TimeSpan.FromMilliseconds(250.0), renderer);
  #if FNA
  		Console.WriteLine("SDL Audio Driver: " + SDL3.SDL.SDL_GetCurrentAudioDriver());
  #endif

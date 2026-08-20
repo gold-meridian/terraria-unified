@@ -29,19 +29,8 @@
  	public Tile()
  	{
  		type = 0;
-@@ -72,7 +_,9 @@
- 		frameX = 0;
+@@ -73,10 +_,14 @@
  		frameY = 0;
- 	}
-+	*/
- 
-+	/*
- 	public Tile(Tile copy)
- 	{
- 		if (copy == null) {
-@@ -98,11 +_,15 @@
- 			frameY = copy.frameY;
- 		}
  	}
 +	*/
  
@@ -55,15 +44,16 @@
  		type = 0;
  		wall = 0;
  		liquid = 0;
-@@ -112,6 +_,7 @@
- 		bTileHeader3 = 0;
+@@ -87,6 +_,8 @@
  		frameX = 0;
  		frameY = 0;
-+		*/
  	}
++	*/
  
++	/*
  	public void ClearTile()
-@@ -135,6 +_,9 @@
+ 	{
+@@ -109,6 +_,9 @@
  
  	public void CopyFrom(Tile from)
  	{
@@ -73,7 +63,7 @@
  		type = from.type;
  		wall = from.wall;
  		liquid = from.liquid;
-@@ -144,10 +_,34 @@
+@@ -118,10 +_,34 @@
  		bTileHeader3 = from.bTileHeader3;
  		frameX = from.frameX;
  		frameY = from.frameY;
@@ -109,7 +99,7 @@
  		if (compTile == null)
  			return false;
  
-@@ -180,9 +_,10 @@
+@@ -154,9 +_,10 @@
  			return false;
  
  		return true;
@@ -121,7 +111,7 @@
  	{
  		if (halfBrick())
  			return 1;
-@@ -194,6 +_,7 @@
+@@ -168,6 +_,7 @@
  		return num;
  	}
  
@@ -129,7 +119,7 @@
  	public void liquidType(int liquidType)
  	{
  		switch (liquidType) {
-@@ -221,9 +_,16 @@
+@@ -195,9 +_,16 @@
  
  		return false;
  	}
@@ -146,9 +136,7 @@
  		liquid = 0;
  		sTileHeader = 32;
  		bTileHeader = 0;
-@@ -232,10 +_,16 @@
- 		frameX = 0;
- 		frameY = 0;
+@@ -208,8 +_,14 @@
  		this.type = type;
 +		*/
  	}
@@ -163,7 +151,7 @@
  		liquid = 0;
  		sTileHeader = 0;
  		bTileHeader = 0;
-@@ -243,9 +_,10 @@
+@@ -217,9 +_,10 @@
  		bTileHeader3 = 0;
  		frameX = 0;
  		frameY = 0;
@@ -175,7 +163,7 @@
  	{
  		if (!inActive())
  			return oldColor;
-@@ -254,13 +_,13 @@
+@@ -228,13 +_,13 @@
  		return new Color((byte)(num * (double)(int)oldColor.R), (byte)(num * (double)(int)oldColor.G), (byte)(num * (double)(int)oldColor.B), oldColor.A);
  	}
  
@@ -191,7 +179,7 @@
  	{
  		byte b = slope();
  		if (b != 1)
-@@ -269,7 +_,7 @@
+@@ -243,7 +_,7 @@
  		return true;
  	}
  
@@ -200,7 +188,7 @@
  	{
  		byte b = slope();
  		if (b != 3)
-@@ -278,7 +_,7 @@
+@@ -252,7 +_,7 @@
  		return true;
  	}
  
@@ -209,7 +197,7 @@
  	{
  		byte b = slope();
  		if (b != 2)
-@@ -287,7 +_,7 @@
+@@ -261,7 +_,7 @@
  		return true;
  	}
  
@@ -218,7 +206,7 @@
  	{
  		byte b = slope();
  		if (b != 1)
-@@ -296,7 +_,9 @@
+@@ -270,7 +_,9 @@
  		return true;
  	}
  
@@ -228,7 +216,7 @@
  	public byte wallColor() => (byte)(bTileHeader & 0x1Fu);
  
  	public void wallColor(byte wallColor)
-@@ -557,6 +_,7 @@
+@@ -531,6 +_,7 @@
  
  		return true;
  	}

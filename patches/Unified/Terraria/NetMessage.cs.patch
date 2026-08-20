@@ -1,6 +1,6 @@
 --- src/TerrariaNetCore/Terraria/NetMessage.cs
 +++ src/Unified/Terraria/NetMessage.cs
-@@ -14,6 +_,7 @@
+@@ -13,6 +_,7 @@
  using Terraria.Map;
  using Terraria.Social;
  using Terraria.Testing;
@@ -8,7 +8,7 @@
  
  namespace Terraria;
  
-@@ -794,11 +_,30 @@
+@@ -806,11 +_,30 @@
  
  					if (number2 == 1f) {
  						string text3 = text.ToString();
@@ -39,7 +39,7 @@
  					}
  
  					writer.Write((short)number);
-@@ -1723,11 +_,11 @@
+@@ -1741,11 +_,11 @@
  		int num6 = 0;
  		byte b = 0;
  		byte[] array = new byte[16];
@@ -53,7 +53,7 @@
  					num4 = (short)(num4 + 1);
  					continue;
  				}
-@@ -2005,16 +_,19 @@
+@@ -2023,15 +_,18 @@
  
  	public static void DecompressTileBlock_Inner(BinaryReader reader, int xStart, int yStart, int width, int height)
  	{
@@ -66,15 +66,14 @@
  					num--;
 +					/*
  					if (Main.tile[j, i] == null)
- 						Main.tile[j, i] = new Tile(tile);
- 					else
- 						Main.tile[j, i].CopyFrom(tile);
+ 						Main.tile[j, i] = new Tile();
+ 
+ 					Main.tile[j, i].CopyFrom(tile);
 +					*/
 +					Main.tile[j, i].CopyFrom(tile);
- 
  					continue;
  				}
-@@ -2023,6 +_,8 @@
+@@ -2040,6 +_,8 @@
  				byte b;
  				byte b3 = (b2 = (b = 0));
  				tile = Main.tile[j, i];
@@ -83,7 +82,7 @@
  				if (tile == null) {
  					tile = new Tile();
  					Main.tile[j, i] = tile;
-@@ -2030,6 +_,8 @@
+@@ -2047,6 +_,8 @@
  				else {
  					tile.ClearEverything();
  				}

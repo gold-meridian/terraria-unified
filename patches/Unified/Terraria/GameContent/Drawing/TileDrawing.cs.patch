@@ -65,7 +65,7 @@
  		tileDrawInfo.tileCache = Main.tile[tileX, tileY];
  		tileDrawInfo.typeCache = tileDrawInfo.tileCache.type;
  		tileDrawInfo.tileFrameX = tileDrawInfo.tileCache.frameX;
-@@ -827,7 +_,7 @@
+@@ -824,7 +_,7 @@
  			drawBlackHelper.DrawBlack(tileX, tileY);
  
  		CacheSpecialDraws_Part1(tileX, tileY, tileDrawInfo.typeCache, tileDrawInfo.tileFrameX, tileDrawInfo.tileFrameY, !flag);
@@ -74,7 +74,7 @@
  		if (tileDrawInfo.typeCache == 72 && tileDrawInfo.tileFrameX >= 36) {
  			int num4 = 0;
  			if (tileDrawInfo.tileFrameY == 18)
-@@ -980,11 +_,11 @@
+@@ -977,11 +_,11 @@
  		}
  
  		if (tileDrawInfo.typeCache == 314)
@@ -89,7 +89,7 @@
  
  		if (Main.tileGlowMask[tileDrawInfo.tileCache.type] != -1) {
  			short num9 = Main.tileGlowMask[tileDrawInfo.tileCache.type];
-@@ -1283,12 +_,12 @@
+@@ -1280,12 +_,12 @@
  		return TextureAssets.CageTop[key.CageStyle].Value;
  	}
  
@@ -104,7 +104,7 @@
  
  		if (flag2 && drawData.tileCache.slope() > 0) {
  			if (TileID.Sets.Platforms[drawData.tileCache.type]) {
-@@ -1394,7 +_,7 @@
+@@ -1391,7 +_,7 @@
  		}
  
  		if (flag && Lighting.NotRetro && _tileSolid[drawData.typeCache] && !drawData.tileCache.halfBrick()) {
@@ -113,7 +113,7 @@
  			return;
  		}
  
-@@ -1469,7 +_,7 @@
+@@ -1466,7 +_,7 @@
  			Main.tileBatch.Draw(drawData.drawTexture, normalTilePosition, normalTileRect, drawData.finalColor, _zero, 1f, drawData.tileSpriteEffect);
  		}
  
@@ -122,7 +122,7 @@
  	}
  
  	private int GetPalmTreeBiome(int tileX, int tileY)
-@@ -2397,7 +_,7 @@
+@@ -2394,7 +_,7 @@
  		}
  	}
  
@@ -131,7 +131,7 @@
  	{
  		if (drawData.typeCache == 548 && drawData.tileFrameX / 54 > 6)
  			Main.tileBatch.Draw(TextureAssets.GlowMask[297].Value, new Vector2((float)(tileX * 16 - (int)screenPosition.X) - ((float)drawData.tileWidth - 16f) / 2f, tileY * 16 - (int)screenPosition.Y + drawData.tileTop) + screenOffset, new Rectangle(drawData.tileFrameX + drawData.addFrX, drawData.tileFrameY + drawData.addFrY, drawData.tileWidth, drawData.tileHeight), Color.White, _zero, 1f, drawData.tileSpriteEffect);
-@@ -3129,7 +_,7 @@
+@@ -3126,7 +_,7 @@
  		return num;
  	}
  
@@ -140,7 +140,7 @@
  	{
  		Color color = default(Color);
  		Vector2 origin = default(Vector2);
-@@ -3137,8 +_,8 @@
+@@ -3134,8 +_,8 @@
  		Vector3 tileLight = default(Vector3);
  		Vector2 position = default(Vector2);
  		if (drawData.tileLight.R > _highQualityLightingRequirement.R || drawData.tileLight.G > _highQualityLightingRequirement.G || drawData.tileLight.B > _highQualityLightingRequirement.B) {
@@ -151,7 +151,7 @@
  			Vector3 vector = drawData.tileLight.ToVector3();
  			Vector3 tint = drawData.colorTint.ToVector3();
  			if (drawData.tileCache.fullbrightBlock())
-@@ -3214,8 +_,8 @@
+@@ -3211,8 +_,8 @@
  			}
  		}
  		else if (drawData.tileLight.R > _mediumQualityLightingRequirement.R || drawData.tileLight.G > _mediumQualityLightingRequirement.G || drawData.tileLight.B > _mediumQualityLightingRequirement.B) {
@@ -162,7 +162,7 @@
  			Vector3 vector2 = drawData.tileLight.ToVector3();
  			Vector3 tint2 = drawData.colorTint.ToVector3();
  			if (drawData.tileCache.fullbrightBlock())
-@@ -3270,7 +_,7 @@
+@@ -3267,7 +_,7 @@
  		}
  	}
  
@@ -171,7 +171,7 @@
  	{
  		int num = 2;
  		if (tileY - drawData.tileFrameY > 0 && drawData.tileFrameY == 7 && Main.tile[tileX, tileY - drawData.tileFrameY] != null) {
-@@ -3355,7 +_,7 @@
+@@ -3352,7 +_,7 @@
  		}
  	}
  
@@ -180,7 +180,7 @@
  	{
  		if (!WorldGen.InWorld(tileX, tileY, 1))
  			return;
-@@ -3372,13 +_,13 @@
+@@ -3369,13 +_,13 @@
  		}
  	}
  
@@ -196,34 +196,7 @@
  		if (drawData.tileFrameY != -1)
  			Main.tileBatch.Draw(tileDrawTexture, new Vector2(tileX * 16 - (int)screenPosition.X, tileY * 16 - (int)screenPosition.Y) + screenOffset, Minecart.GetSourceRect(drawData.tileFrameY, Main.tileFrame[314]), drawData.tileLight, default(Vector2), 1f, drawData.tileSpriteEffect);
  
-@@ -3407,6 +_,8 @@
- 		Tile tile2 = Main.tile[tileX - 1, tileY];
- 		Tile tile3 = Main.tile[tileX, tileY - 1];
- 		Tile tile4 = Main.tile[tileX, tileY + 1];
-+
-+		/*
- 		if (tile == null) {
- 			tile = new Tile();
- 			Main.tile[tileX + 1, tileY] = tile;
-@@ -3426,7 +_,9 @@
- 			tile4 = new Tile();
- 			Main.tile[tileX, tileY + 1] = tile4;
- 		}
-+		*/
- 
-+		/*
- 		if (tile.type == 379)
- 			tile = new Tile();
- 
-@@ -3438,6 +_,7 @@
- 
- 		if (tile4.type == 379)
- 			tile4 = new Tile();
-+		*/
- 
- 		if (DebugOptions.hideWater || !tileCache.active() || tileCache.inActive() || _tileSolidTop[tileCache.type] || (tileCache.halfBrick() && (tile2.liquid > 160 || tile.liquid > 160) && Main.instance.waterfallManager.CheckForWaterfall(tileX, tileY)) || (TileID.Sets.BlocksWaterDrawingBehindSelf[tileCache.type] && tileCache.slope() == 0))
- 			return;
-@@ -3801,7 +_,7 @@
+@@ -3794,7 +_,7 @@
  		}
  	}
  
@@ -232,7 +205,7 @@
  	{
  		if (TileID.Sets.BasicChest[drawData.typeCache]) {
  			Point key = new Point(tileX, tileY);
-@@ -3949,6 +_,16 @@
+@@ -3957,6 +_,16 @@
  
  	private void GetTileOutlineInfo(int x, int y, ushort typeCache, ref Color tileLight, ref Texture2D highlightTexture, ref Color highlightColor)
  	{

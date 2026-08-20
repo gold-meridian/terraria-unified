@@ -1,0 +1,8 @@
+@@ -112,6 +_,7 @@
+ 		bTileHeader3 = 0;
+ 		frameX = 0;
+ 		frameY = 0;
++		*/
+ 	}
+ 
+ 	public void ClearTile()

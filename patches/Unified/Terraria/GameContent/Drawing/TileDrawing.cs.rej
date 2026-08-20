@@ -1,0 +1,27 @@
+@@ -3407,6 +_,8 @@
+ 		Tile tile2 = Main.tile[tileX - 1, tileY];
+ 		Tile tile3 = Main.tile[tileX, tileY - 1];
+ 		Tile tile4 = Main.tile[tileX, tileY + 1];
++
++		/*
+ 		if (tile == null) {
+ 			tile = new Tile();
+ 			Main.tile[tileX + 1, tileY] = tile;
+@@ -3426,7 +_,9 @@
+ 			tile4 = new Tile();
+ 			Main.tile[tileX, tileY + 1] = tile4;
+ 		}
++		*/
+ 
++		/*
+ 		if (tile.type == 379)
+ 			tile = new Tile();
+ 
+@@ -3438,6 +_,7 @@
+ 
+ 		if (tile4.type == 379)
+ 			tile4 = new Tile();
++		*/
+ 
+ 		if (DebugOptions.hideWater || !tileCache.active() || tileCache.inActive() || _tileSolidTop[tileCache.type] || (tileCache.halfBrick() && (tile2.liquid > 160 || tile.liquid > 160) && Main.instance.waterfallManager.CheckForWaterfall(tileX, tileY)) || (TileID.Sets.BlocksWaterDrawingBehindSelf[tileCache.type] && tileCache.slope() == 0))
+ 			return;
