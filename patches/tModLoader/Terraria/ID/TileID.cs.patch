@@ -1,6 +1,7 @@
 --- src/TerrariaNetCore/Terraria/ID/TileID.cs
 +++ src/tModLoader/Terraria/ID/TileID.cs
-@@ -1,11 +_,13 @@
+@@ -1,11 +_,14 @@
++using System;
  using System.Collections.Generic;
  using ReLogic.Reflection;
 +using Terraria.ModLoader;
@@ -24,23 +25,53 @@
  			public static bool[] Regrowth = Factory.CreateBoolSet(false, 3, 24, 52, 382, 61, 703, 62, 71, 73, 74, 82, 83, 84, 110, 113, 115, 184, 205, 201, 519, 518, 528, 529, 530, 705, 549, 637, 638, 636);
  		}
  
-@@ -148,28 +_,94 @@
+@@ -72,7 +_,7 @@
+ 			public static bool[] ClosedDoors = Factory.CreateBoolSet(10, 388);
+ 		}
+ 
+-		public static class RoomNeeds
++		internal static class RoomNeeds_Vanilla
+ 		{
+ 			public static int[] CountsAsChairTypes = new int[6] {
+ 				15,
+@@ -145,32 +_,117 @@
+ 			public static bool[] CountsAsDoor = Factory.CreateBoolSet(CountsAsDoorTypes);
+ 		}
+ 
++		public static class RoomNeeds
++		{
++			internal static ReadOnlySpan<int> CountsAsChairTypes => CountsAsChair;
++			public static BoolListSet CountsAsChair = Factory.CreateBoolListSet(RoomNeeds_Vanilla.CountsAsChairTypes);
++			internal static ReadOnlySpan<int> CountsAsTableTypes => CountsAsTable;
++			public static BoolListSet CountsAsTable = Factory.CreateBoolListSet(RoomNeeds_Vanilla.CountsAsTableTypes);
++			internal static ReadOnlySpan<int> CountsAsTorchTypes => CountsAsTorch;
++			public static BoolListSet CountsAsTorch = Factory.CreateBoolListSet(RoomNeeds_Vanilla.CountsAsTorchTypes);
++			internal static ReadOnlySpan<int> CountsAsDoorTypes => CountsAsDoor;
++			public static BoolListSet CountsAsDoor = Factory.CreateBoolListSet(RoomNeeds_Vanilla.CountsAsDoorTypes);
++		}
++
  		public static class Wiring
  		{
 +			/// <summary>
-+			/// Indicates that the tile is an appropriate tile to be connected to a trigger tile (<see cref="IsATrigger"/>). Used during the "Remove Broken Traps" world generation step to remove wires and tiles in situations where the mechanism or trigger have been orphaned (not connected anymore).
++			/// Indicates that the tile is wireable and any item placing these tiles will have the "Wireable" tooltip.
++			/// <br/><br/> Unless <see cref="IgnoreWhenValidatingTraps"/> is also set, the "Remove Broken Traps" world generation step will remove tiles of this type (and connected wires) that are not connected to a trigger tile (<see cref="IsATrigger"/>).
 +			/// </summary>
  			public static bool[] IsAMechanism = Factory.CreateBoolSet(420, 419, 411, 4, 33, 100, 93, 42, 34, 215, 405, 92, 35, 126, 95, 149, 593, 594, 564, 10, 11, 387, 386, 388, 389, 137, 443, 141, 130, 131, 546, 557, 421, 422, 209, 212, 216, 338, 335, 497, 406, 244, 452, 565, 139, 506, 105, 349, 531, 429, 142, 143, 235, 210, 425, 21, 467, 219, 642, 356, 663, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 207, 480, 455, 509, 657, 658, 720, 721, 725, 733, 314);
 +			/// <summary>
-+			/// Indicates that the tile is an appropriate tile to be connected to a mechanism tile (<see cref="IsAMechanism"/>). Used during the "Remove Broken Traps" world generation step to remove wires and tiles in situations where the mechanism or trigger have been orphaned (not connected anymore).
++			/// Indicates that the tile is an appropriate tile to be connected to a mechanism tile (<see cref="IsAMechanism"/>). Any item placing these tiles will have the "Wireable" tooltip. Used during the "Remove Broken Traps" world generation step to remove wires and tiles in situations where the mechanism or trigger have been orphaned (not connected anymore).
 +			/// </summary>
  			public static bool[] IsATrigger = Factory.CreateBoolSet(135, 136, 132, 144, 411, 423, 476, 440, 441, 468);
++			/// <summary>
++			/// Tiles in this set are ignored during the "Remove Broken Traps" world generation step despite being in <see cref="IsAMechanism"/> and won't be removed even if they are not connected to a trigger. Used for tiles that should have the "Wireable" tooltip but shouldn't be removed as traps, such as doors and other wireable furniture.
++			/// <br/><br/> Defaults to <see langword="false"/>.
++			/// </summary>
  			public static bool[] IgnoreWhenValidatingTraps = Factory.CreateBoolSet(411, 10, 11, 387, 386, 388, 389, 4, 215, 21, 467, 219, 642, 314);
  		}
  
 -		public static SetFactory Factory = new SetFactory(Count);
 +		public static SetFactory Factory = new SetFactory(TileLoader.TileCount, nameof(TileID), Search);
  		public static bool[] SaveSlopes;
+ 		public static bool[] HitchIgnoresBecauseOfSingleBlockSizePlacement = Factory.CreateBoolSet(5, 72, 137, 314, 323, 380, 518, 519, 529, 549, 571, 583, 584, 585, 586, 587, 588, 589, 596, 616, 634, 726);
  		public static bool[] BreaksToys = Factory.CreateBoolSet(740);
  		public static bool[] MakesRubbleDust = Factory.CreateBoolSet(0, 668, 40, 59, 123, 224, 1, 25, 203, 117, 2, 60, 70, 23, 661, 199, 662, 109, 477, 492, 633, 53, 112, 234, 116, 397, 398, 399, 402, 396, 400, 401, 403, 57, 147, 161, 163, 200, 164, 539, 182, 180, 179, 534, 381, 183, 181, 625, 536, 627, 191, 192, 383, 384, 315, 367, 368, 495, 56, 666, 229, 230, 189, 196, 460, 717, 718, 719);
 +
@@ -74,6 +105,8 @@
 +		/// <summary>
 +		/// If <see langword="true"/> for a given tile type (<see cref="Tile.TileType"/>), then that tile is categorized as a tree trunk.
 +		/// <br/> Tree trunks are a type of tile anchor (<see cref="Enums.AnchorType.Tree"/>), targetable by axes, and are replanted when using the <see cref="ItemID.AcornAxe"/>.
++		/// /// <br/> Tiles in this set also get the "Tree" map text.
++		/// <br/> Some trees, such as <see cref="TileID.PalmTree"/>, are not included in this set because they curve and as such are not suitable for tile anchors.
 +		/// <br/> Defaults to <see langword="false"/>.
 +		/// </summary>
  		public static bool[] IsATreeTrunk = Factory.CreateBoolSet(false, 5, 72, 583, 584, 585, 586, 587, 588, 589, 596, 616, 634);
@@ -120,7 +153,7 @@
  		public static bool[] CanBeDugByShovel = Factory.CreateBoolSet(false, 0, 668, 59, 57, 123, 224, 147, 2, 109, 23, 661, 199, 662, 60, 70, 477, 492, 53, 116, 112, 234, 40, 495, 633, 189, 196, 460, 717, 718, 719);
  		public static bool[] NonSolidSaveSlopes = Factory.CreateBoolSet(false, 131, 351, 336, 340, 342, 341, 343, 344);
  		public static bool[] ResetsHalfBrickPlacementAttempt = Factory.CreateBoolSet(true, 2, 23, 661, 60, 70, 199, 662, 109, 477, 492, 179, 512, 180, 513, 181, 514, 182, 515, 183, 516, 381, 517, 534, 535, 536, 537, 539, 540, 625, 626, 627, 628, 633);
-@@ -181,6 +_,10 @@
+@@ -182,16 +_,36 @@
  		public static bool[] DontMergeWithSnow = Factory.CreateBoolSet(161, 200, 163, 164, 224, 170, 738);
  		public static bool[] Boulders = Factory.CreateBoolSet(138, 484, 664, 665, 711, 712, 713, 714, 715, 716);
  		public static bool[] Clouds = Factory.CreateBoolSet(189, 196, 460, 717, 718, 719);
@@ -131,7 +164,22 @@
  		public static int[] CritterCageLidStyle = Factory.CreateIntSet(-1, 275, 0, 276, 0, 277, 0, 278, 0, 279, 0, 280, 0, 281, 0, 558, 0, 554, 0, 553, 0, 551, 0, 550, 0, 542, 0, 413, 0, 309, 0, 297, 0, 296, 0, 645, 0, 643, 0, 644, 0, 632, 0, 640, 0, 710, 0, 559, 1, 414, 1, 359, 1, 358, 1, 605, 2, 604, 2, 603, 2, 602, 2, 601, 2, 599, 2, 600, 2, 612, 2, 611, 2, 610, 2, 609, 2, 608, 2, 606, 2, 607, 2, 285, 3, 286, 3, 582, 3, 555, 3, 538, 3, 533, 3, 532, 3, 394, 3, 393, 3, 392, 3, 391, 3, 339, 3, 310, 3, 299, 3, 298, 3, 629, 3, 619, 3, 556, 4, 544, 4, 364, 4, 363, 4, 362, 4, 361, 4);
  		public static int[] SmartCursorPickaxePriorityOverride = Factory.CreateIntSet(0, 12, 1, 665, 1, 639, 1);
  		public static bool[] IgnoreSmartCursorPriorityAxe = Factory.CreateBoolSet(false, 488);
-@@ -189,6 +_,10 @@
++		/// <summary>
++		/// Whether or not the smart cursor function is disabled when the cursor hovers above this tile. Used by tiles frequently right click interacted with to help prevent accidental tile placement when the player accidentally left clicks on it with smart cursor enabled, such as doors and containers.
++		/// <para/> Defaults to <see langword="false"/>.
++		/// </summary>
+ 		public static bool[] DisableSmartCursor = Factory.CreateBoolSet(4, 104, 79, 209, 511, 510, 216, 335, 338, 219, 212, 21, 467, 13, 29, 463, 491, 97, 33, 49, 174, 50, 707, 139, 207, 55, 85, 237, 88, 10, 11, 125, 621, 354, 699, 287, 132, 136, 144, 334, 386, 387, 411, 389, 388, 425, 441, 468, 494, 573, 464, 642);
++		/// <summary>
++		/// Whether or not the smart tile interaction function is disabled when the cursor hovers above this tile. Used by tiles interactable by right click that do not use smart interact, such as torches and candles.
++		/// <para/> Defaults to <see langword="false"/>.
++		/// </summary>
+ 		public static bool[] DisableSmartInteract = Factory.CreateBoolSet(4, 410, 480, 509, 657, 658, 720, 721, 725, 733, 395, 698, 334, 33, 455, 471, 520);
++		/// <summary>
++		/// Whether or not the tile will be ignored for automatic step up regarding town NPC collision.
++		/// <br>Only checked when <see cref="Collision.StepUp"/> with specialChecksMode set to 1 is called</br>
++		/// </summary>
+ 		public static bool[] IgnoredByNpcStepUp = Factory.CreateBoolSet(14, 469, 18, 16, 134);
+ 		public static bool[] CanBeSatOnForNPCs = Factory.CreateBoolSet(false, 15, 497);
  		public static bool[] CanBeSatOnForPlayers = Factory.CreateBoolSet(false, 15, 497, 89, 102, 487);
  		public static bool[] CanBeSleptIn = Factory.CreateBoolSet(false, 79);
  		public static bool[] IgnoresTileReplacementDropCheckWhenBeingPlaced = Factory.CreateBoolSet(false, 158, 30);
@@ -142,7 +190,7 @@
  		public static bool?[] DrawTileInSolidLayer = Factory.CreateCustomSet<bool?>(null, new object[10] {
  			(ushort)11,
  			true,
-@@ -201,28 +_,76 @@
+@@ -204,30 +_,79 @@
  			(ushort)579,
  			true
  		});
@@ -218,9 +266,11 @@
 +		/// </summary>
  		public static bool[] HasOutlines = Factory.CreateBoolSet(10, 11, 15, 21, 29, 55, 79, 85, 88, 89, 97, 102, 104, 125, 132, 136, 139, 144, 207, 209, 212, 215, 216, 237, 287, 335, 338, 354, 356, 377, 386, 387, 388, 389, 410, 411, 425, 441, 455, 463, 467, 468, 470, 475, 487, 480, 494, 497, 509, 510, 511, 621, 464, 657, 658, 663, 699, 720, 721, 725, 733, 16, 17, 18, 26, 77, 86, 94, 96, 101, 106, 114, 133, 134, 217, 218, 220, 228, 243, 247, 283, 300, 301, 302, 303, 304, 305, 306, 307, 308, 412, 499, 622, 355, 172);
  		public static bool[] DoesNotOpenCraftingMenuOnInteract = Factory.CreateBoolSet(215, 207);
++		/// <summary> Whether or not this tile counts as a water source for crafting purposes. </summary>
  		public static bool[] CountsAsWaterForCrafting = Factory.CreateBoolSet(172, 207);
-@@ -239,13 +_,33 @@
- 		public static bool[] HellSpecial = Factory.CreateBoolSet(58, 76, 75);
+ 		public static bool[] AllTiles = Factory.CreateBoolSet(true);
+ 		public static bool[] Dirt = Factory.CreateBoolSet(0, 668);
+@@ -243,11 +_,31 @@
  		public static bool[] Leaves = Factory.CreateBoolSet(384, 192);
  		public static bool[] bonusCutTiles = Factory.CreateBoolSet(false, 233);
  		public static bool[] tileMossBrick = Factory.CreateBoolSet(false, 512, 513, 514, 515, 516, 517, 535, 537, 540, 626, 628);
@@ -252,8 +302,8 @@
  		public static bool[] CanBeClearedDuringGeneration = Factory.CreateBoolSet(true, 396, 400, 401, 397, 398, 399, 404, 368, 367, 41, 43, 44, 481, 482, 483, 226, 237);
  		public static bool[] PreventsSlopesDuringGeneration = Factory.CreateBoolSet(false, 48, 137, 232, 191, 151, 274, 135, 442, 428);
  		public static List<int> CorruptCountCollection = new List<int> {
- 			23,
-@@ -296,33 +_,80 @@
+@@ -298,33 +_,85 @@
+ 		public static bool[] SpreadsCrimson = Factory.CreateBoolSet(199, 662, 203, 234, 399, 401, 200, 352, 205, 201);
  		public static bool[] UsesADifferentTileTypeForNPCSpawning = Factory.CreateBoolSet(false, 421, 422);
  		public static bool[] BlocksStairs = Factory.CreateBoolSet(386, 387, 54, 328, 459, 541);
 +		/// <summary>
@@ -262,6 +312,9 @@
  		public static bool[] NotReallySolid = Factory.CreateBoolSet(387, 388, 10);
  		public static bool[] BlocksWaterDrawingBehindSelf = Factory.CreateBoolSet(false, 54, 541, 328, 459, 470);
  		public static bool[] AllowLightInWater = Factory.CreateBoolSet(false, 54, 541, 328, 459, 748, 750);
++		/// <summary>
++		/// Tiles that are interpreted as a wall by nearby walls during framing, causing them to frame as if merging with this adjacent tile. Prevents wall from drawing within bounds for transparent tiles.
++		/// </summary>
  		public static bool[] TruncatesWalls = Factory.CreateBoolSet(false, 54, 328, 459, 748);
  		public static bool[] FrameImportantEchoCulling = Factory.CreateBoolSet(false, 19, 436, 435, 438, 427, 439, 437, 380);
  		public static bool[] NeedsGrassFraming = Factory.CreateBoolSet(633);
@@ -319,7 +372,10 @@
 +		/// Indicates that the tile is an ore. Used in worldgen code for various purposes and by Fairies.
 +		/// </summary>
  		public static bool[] Ore = Factory.CreateBoolSet(7, 166, 6, 167, 9, 168, 8, 169, 22, 204, 37, 58, 107, 221, 108, 222, 111, 223, 211);
++		/// <summary> Whether or not this tile behaves like a torch. If you are making a torch tile, then setting this to true is necessary in order for tile placement, tile framing, and the item's smart selection to work properly. Each item that places torch tiles should also set <see cref="ItemID.Sets.Torches"/>.</summary>
  		public static bool[] Torches = Factory.CreateBoolSet(4);
++		/// <summary> Whether or not this tile behaves like a campfire. Campfires must be 3x2 and need to follow the vanilla layout with the on state being at the top of the texture. Padding must also be present in the same manner, resulting in a 54x36 section for each style. The animation, however, can be done with a separate flame texture if desired. <br/>
++		/// Necessary for block swap and Marshmallow on a Stick features.</summary>
  		public static bool[] Campfires = Factory.CreateBoolSet(215);
 +		/// <summary>
 +		/// Indicates that this tile contains items. All chests and dressers should set this. <see cref="Main.tileContainer"/> should also be set in tandem.
@@ -332,9 +388,15 @@
  		public static bool[] FriendlyFairyCanLureTo = Factory.CreateBoolSet(8, 169, 21, 467, 107, 108, 111, 221, 222, 223, 211, 12, 665, 639, 236, 702, 227);
  		public static bool[] IgnoredInHouseScore = Factory.CreateBoolSet(4, 3, 73, 82, 83, 84, 386);
  		public static bool[] SpreadOverground = Factory.CreateBoolSet(2, 23, 661, 32, 60, 70, 109, 199, 662, 352, 477, 492, 633, 226);
- 		public static bool[] SpreadUnderground = Factory.CreateBoolSet(23, 661, 109, 199, 662, 60, 70, 633, 226);
+@@ -341,6 +_,7 @@
+ 			}
+ 		}
+ 	}
 +#endif
-@@ -1093,5 +_,6 @@
+ 
+ 	public const ushort Dirt = 0;
+ 	public const ushort Stone = 1;
+@@ -1096,5 +_,6 @@
  	public const ushort PalworldDigtoiseSleeping = 751;
  	public const ushort PalworldChilletEgg = 752;
  	public static readonly ushort Count = 753;

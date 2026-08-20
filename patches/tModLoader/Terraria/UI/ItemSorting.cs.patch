@@ -8,6 +8,24 @@
  
  namespace Terraria.UI;
  
+@@ -985,11 +_,17 @@
+ 
+ 	private struct DamageTypeSortingLayerEntry
+ 	{
++		/*
+ 		public float Multiplier;
++		*/
++		public StatModifier Multiplier;
+ 		public ItemSortingLayer Layer;
+ 		public int Index;
+ 
++		/*
+ 		public DamageTypeSortingLayerEntry(float multiplier, ItemSortingLayer layer, int index)
++		*/
++		public DamageTypeSortingLayerEntry(StatModifier multiplier, ItemSortingLayer layer, int index)
+ 		{
+ 			Multiplier = multiplier;
+ 			Layer = layer;
 @@ -1121,7 +_,7 @@
  		list.Add(ItemSortingLayers.LastTilesCommon);
  		list.Add(ItemSortingLayers.LastNotTrash);
@@ -17,22 +35,31 @@
  			Item item = new Item();
  			item.netDefaults(i);
  			list2.Add(item);
-@@ -1162,8 +_,9 @@
+@@ -1130,7 +_,7 @@
+ 
+ 		Item[] array = list2.ToArray();
+ 		_layerCount = list.Count;
+-		_layerIndexForItemType = new int[ItemID.Count];
++		_layerIndexForItemType = new int[ItemLoader.ItemCount];
+ 		for (int j = 0; j < list.Count; j++) {
+ 			ItemSortingLayer itemSortingLayer = list[j];
+ 			List<int> list4 = itemSortingLayer.SortingMethod(itemSortingLayer, array, list3);
+@@ -1161,7 +_,10 @@
+ 
  	private static int Descending(DamageTypeSortingLayerEntry x, DamageTypeSortingLayerEntry y)
  	{
-+		// TODO: Restore list.Sort((x, y) => (y.Additive * y.Multiplicative).CompareTo(x.Additive * x.Multiplicative)); patch
++		/*
  		int num = y.Multiplier.CompareTo(x.Multiplier);
++		*/
++		int num = (y.Multiplier.Additive * y.Multiplier.Multiplicative).CompareTo(x.Multiplier.Additive * x.Multiplier.Multiplicative);
  		if (num == 0)
  			num = x.Index.CompareTo(y.Index);
  
- 		return num;
- 	}
-@@ -1251,6 +_,10 @@
+@@ -1251,6 +_,9 @@
  
  				Item item3 = inv[_sort_itemsToSort[k]];
  				if (Item.CanStack(item2, item3) && item3.stack != item3.maxStack) {
-+					if (!ItemLoader.TryStackItems(item2, item3, out _))
-+						continue;
++					ItemLoader.StackItems(item2, item3, out _);
 +
 +					/* #OnStackHook
  					int num2 = item3.stack;

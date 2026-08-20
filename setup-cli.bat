@@ -1,6 +1,13 @@
 @echo off
 setlocal enabledelayedexpansion
 
+rem For the best development experience, alias this script in your shell config.
+rem For example:
+rem CMD/Batch  - doskey tml=C:\dev\terraria\tModLoader\setup-cli.bat
+rem PowerShell - Set-Alias -Name tml -Value C:\dev\terraria\tModLoader\setup-cli.bat
+
+cd /d "%~dp0"
+
 where git >NUL
 if !errorlevel! neq 0 (
 	echo git not found on PATH
@@ -25,8 +32,6 @@ if !errorlevel! neq 0 (
 	echo dotnet not found on PATH. Install .NET Core!
     exit /b %errorlevel%
 )
-
-endlocal
 
 cd setup
 dotnet run --project CLI/Setup.CLI.csproj -c Release -p:WarningLevel=0 -v q -- %*

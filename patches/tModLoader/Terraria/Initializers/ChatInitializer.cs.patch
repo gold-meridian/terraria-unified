@@ -1,10 +1,6 @@
 --- src/TerrariaNetCore/Terraria/Initializers/ChatInitializer.cs
 +++ src/tModLoader/Terraria/Initializers/ChatInitializer.cs
-@@ -1,9 +_,11 @@
- using Terraria.Chat.Commands;
- using Terraria.GameContent.UI.Chat;
-+using Terraria.ModLoader;
- using Terraria.UI.Chat;
+@@ -4,6 +_,7 @@
  
  namespace Terraria.Initializers;
  

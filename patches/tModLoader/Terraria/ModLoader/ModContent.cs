@@ -370,7 +370,7 @@ public static class ModContent
 		RarityLoader.FinishSetup();
 		Config.ConfigManager.FinishSetup();
 
-		SystemLoader.ModifyGameTipVisibility(Main.gameTips.allTips);
+		SystemLoader.ModifyGameTipVisibility(Main.gameTipsProvider.allTips);
 
 		PlayerInput.reinitialize = true;
 		SetupBestiary();
@@ -380,6 +380,13 @@ public static class ModContent
 		ContentSamples.RebuildItemCreativeSortingIDsAfterRecipesAreSetUp();
 		ItemSorting.SetupWhiteLists();
 		LocalizationLoader.FinishSetup();
+		Main.NPCInteractionDB = new NPCInteractionDatabase();
+		Main.NPCInteractionDB.Populate();
+
+		ArmorSetBonuses.Initialize();
+		ArmorSetBonuses.BuildLookup();
+		ItemID.Sets.PostSetupContent();
+		TileID.Sets.PostSetupContent();
 
 		MenuLoader.GotoSavedModMenu();
 		BossBarLoader.GotoSavedStyle();
@@ -407,6 +414,7 @@ public static class ModContent
 		RuntimeHelpers.RunClassConstructor(typeof(ArmorIDs.Shoe.Sets).TypeHandle);
 		RuntimeHelpers.RunClassConstructor(typeof(ArmorIDs.Waist.Sets).TypeHandle);
 		RuntimeHelpers.RunClassConstructor(typeof(ArmorIDs.Wing.Sets).TypeHandle);
+		RuntimeHelpers.RunClassConstructor(typeof(ArmorIDs.Neck.Sets).TypeHandle);
 		RuntimeHelpers.RunClassConstructor(typeof(ArmorIDs.Face.Sets).TypeHandle);
 		RuntimeHelpers.RunClassConstructor(typeof(ArmorIDs.Beard.Sets).TypeHandle);
 		RuntimeHelpers.RunClassConstructor(typeof(ArmorIDs.Balloon.Sets).TypeHandle);
@@ -447,7 +455,8 @@ public static class ModContent
 				loadAction(mod);
 			}
 			catch (Exception e) {
-				e.Data["mod"] = mod.Name;
+				if (!e.Data.Contains("mod"))
+					e.Data["mod"] = mod.Name;
 				throw;
 			}
 			finally {

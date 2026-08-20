@@ -1,6 +1,6 @@
 --- src/TerrariaNetCore/Terraria/Audio/ActiveSound.cs
 +++ src/tModLoader/Terraria/Audio/ActiveSound.cs
-@@ -1,16 +_,35 @@
+@@ -1,48 +_,76 @@
  using Microsoft.Xna.Framework;
  using Microsoft.Xna.Framework.Audio;
 +using System;
@@ -38,7 +38,9 @@
  
 -	public SoundEffectInstance Sound { get; private set; }
 +	public SoundEffectInstance? Sound { get; private set; }
-@@ -20,25 +_,30 @@
+ 
+ 	public SoundStyle Style { get; private set; }
+ 
  	public bool IsPlaying {
  		get {
  			if (Sound != null)
@@ -51,36 +53,38 @@
  
 +	public bool IsPlayingOrPaused => Sound?.IsDisposed == false && Sound.State != SoundState.Stopped;
 +
++	/*
  	private void UseOverrides(SoundPlayOverrides overrides)
  	{
  		if (overrides.Volume.HasValue)
  			Volume = overrides.Volume.Value;
  	}
++	*/
  
-+	//TML: Position parameter made nullable, SoundUpdateCallback added with changed type.
 -	public ActiveSound(SoundStyle style, Vector2 position, SoundPlayOverrides overrides)
-+	public ActiveSound(SoundStyle style, Vector2? position = null, SoundPlayOverrides overrides = null, SoundUpdateCallback? updateCallback = null)
++	//TML: Position parameter made nullable, SoundUpdateCallback added with changed type. SoundPlayOverrides removed in favor of SoundStyle.WithVolume
++	public ActiveSound(SoundStyle style, Vector2? position = null, SoundUpdateCallback? updateCallback = null)
  	{
  		Position = position;
  		Volume = 1f;
  		Pitch = style.PitchVariance;
 -		IsGlobal = false;
 -		Style = style;
- 		UseOverrides(overrides);
+-		UseOverrides(overrides);
++		//UseOverrides(overrides);
 +		//IsGlobal = false;
 +		Style = style.WithSelectedVariant(style.SelectedVariant); // Select a variant if for some reason not set at this point.
 +		Callback = updateCallback;
 +
  		Play();
  	}
-@@ -46,3 +_,5 @@
+ 
 +	//TML: Merged with the above constructor.
 +	/*
  	public ActiveSound(SoundStyle style)
  	{
  		Position = Vector2.Zero;
-@@ -62,19 +_,27 @@
- 		Style = style;
+@@ -63,18 +_,26 @@
  		UseOverrides(overrides);
  		PlayLooped(condition);
  	}
@@ -146,7 +150,9 @@
  		if (Sound != null && Sound.State == SoundState.Paused)
  			Sound.Resume();
  	}
-@@ -110,5 +_,13 @@
+@@ -108,7 +_,15 @@
+ 	public void Update()
+ 	{
  		if (Sound != null) {
 -			if (Condition != null && !Condition()) {
 +			if (!Program.IsMainThread) {
@@ -180,14 +186,15 @@
  				num *= Main.ambientVolume;
 +
 +				// Added by TML to mimic the behavior of the LegacySoundPlayer code.
-+				if (Main.gameInactive) {
++				if (FocusHelper.QuietAmbientSounds) {
 +					num = 0f;
 +				}
 +
  				break;
  			case SoundType.Music:
  				num *= Main.musicVolume;
-@@ -144,3 +_,8 @@
+@@ -143,4 +_,9 @@
+ 
  		return MathHelper.Clamp(num, 0f, 1f);
  	}
 +

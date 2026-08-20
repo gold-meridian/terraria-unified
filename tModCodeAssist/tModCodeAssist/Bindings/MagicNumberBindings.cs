@@ -155,8 +155,6 @@ public static class MagicNumberBindings
 			AddBinding<BuffID>("Terraria.NPC", "AddBuff", (ctx) => new MethodParameterBinding(ctx, 0));
 			AddBinding<BuffID>("Terraria.NPC", "FindBuffIndex", (ctx) => new MethodParameterBinding(ctx, 0));
 			AddBinding<BuffID>("Terraria.NPC", "HasBuff(int)", (ctx) => new MethodParameterBinding(ctx, 0));
-			AddBinding<RecipeGroupID>("Terraria.Recipe", "AddRecipeGroup(int, int)", (ctx) => new MethodParameterBinding(ctx, 0), idType: typeof(int)); // RecipeGroupID is a little strange, the values aren't actually correct, that is why it currently doesn't have a Search IdDictionary.
-
 			AddBinding<ItemID>("Terraria.ID.ItemID.Sets", "*", (ctx) => new FieldOrPropertyBinding(ctx));
 			AddBinding<NPCID>("Terraria.ID.NPCID.Sets", "*", (ctx) => new FieldOrPropertyBinding(ctx));
 			AddBinding<ProjectileID>("Terraria.ID.ProjectileID.Sets", "*", (ctx) => new FieldOrPropertyBinding(ctx));
@@ -165,6 +163,7 @@ public static class MagicNumberBindings
 			AddBinding<WallID>("Terraria.ID.WallID.Sets", "*", (ctx) => new FieldOrPropertyBinding(ctx));
 			AddBinding<WallID>("Terraria.ID.WallID.Sets.Conversion", "*", (ctx) => new FieldOrPropertyBinding(ctx));
 			AddBinding<MountID>("Terraria.ID.MountID.Sets", "*", (ctx) => new FieldOrPropertyBinding(ctx));
+			AddBinding<ProjectileDrawLayerID>("Terraria.Projectile", "drawLayer", (ctx) => new FieldOrPropertyBinding(ctx), typeof(int));
 		}
 	}
 

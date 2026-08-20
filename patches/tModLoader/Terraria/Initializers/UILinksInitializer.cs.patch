@@ -1,7 +1,6 @@
 --- src/TerrariaNetCore/Terraria/Initializers/UILinksInitializer.cs
 +++ src/tModLoader/Terraria/Initializers/UILinksInitializer.cs
-@@ -9,7 +_,10 @@
- using Terraria.GameContent.UI.States;
+@@ -10,6 +_,9 @@
  using Terraria.GameInput;
  using Terraria.Localization;
  using Terraria.Social;
@@ -11,6 +10,16 @@
  using Terraria.UI;
  using Terraria.UI.Gamepad;
  
+@@ -130,6 +_,9 @@
+ 		cp22.LinkMap.Add(2509, new UILinkPoint(2509, enabled: true, -3, -4, -1, -2));
+ 		cp22.LinkMap.Add(2510, new UILinkPoint(2510, enabled: true, -3, -4, -1, -2));
+ 		cp22.LinkMap.Add(2511, new UILinkPoint(2511, enabled: true, -3, -4, -1, -2));
++		for (int i = 12; i < 32; i++) { // TML: Increased the number of supported Town NPCs chat buttons to 32.
++			cp22.LinkMap.Add(2500 + i, new UILinkPoint(2500 + i, enabled: true, -3, -4, -1, -2));
++		}
+ 		cp22.UpdateEvent += delegate {
+ 			if (UILinkPointNavigator.Shortcuts.NPCCHAT_ButtonsNew) {
+ 				for (int num69 = 0; num69 < UILinkPointNavigator.Shortcuts.NPCCHAT_ButtonsCount; num69++) {
 @@ -772,7 +_,8 @@
  			return text3;
  		};
@@ -43,7 +52,8 @@
  			}
  		};
  
-@@ -1555,5 +_,16 @@
+@@ -1556,8 +_,19 @@
+ 
  		cp4.OnSpecialInteracts += () => (Main.InGameUI.CurrentState is UIBestiaryTest) ? (PlayerInput.BuildCommand(Lang.misc[82].Value, PlayerInput.ProfileGamepadUI.KeyStatus["Inventory"]) + PlayerInput.BuildCommand(Language.GetText("UI.SwitchPage").Value, PlayerInput.ProfileGamepadUI.KeyStatus["HotbarMinus"], PlayerInput.ProfileGamepadUI.KeyStatus["HotbarPlus"]) + PlayerInput.BuildCommand(Lang.misc[53].Value, PlayerInput.ProfileGamepadUI.KeyStatus["MouseLeft"]) + FancyUISpecialInstructions()) : (PlayerInput.BuildCommand(Lang.misc[53].Value, PlayerInput.ProfileGamepadUI.KeyStatus["MouseLeft"]) + PlayerInput.BuildCommand(Lang.misc[82].Value, PlayerInput.ProfileGamepadUI.KeyStatus["Inventory"]) + FancyUISpecialInstructions());
  		cp4.UpdateEvent += delegate {
 +			bool flag11 = PlayerInput.Triggers.JustPressed.Inventory;
@@ -60,7 +70,9 @@
  				FancyExit();
 +			*/
  		};
-@@ -1808,6 +_,12 @@
+ 
+ 		cp4.EnterEvent += delegate {
+@@ -1810,6 +_,12 @@
  				if (Main.MenuUI.CurrentState is IHaveBackButtonCommand haveBackButtonCommand)
  					haveBackButtonCommand.HandleBackButtonUsage();
  				break;

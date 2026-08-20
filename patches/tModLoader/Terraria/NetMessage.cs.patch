@@ -1,14 +1,15 @@
 --- src/TerrariaNetCore/Terraria/NetMessage.cs
 +++ src/tModLoader/Terraria/NetMessage.cs
-@@ -1,5 +_,6 @@
+@@ -1,6 +_,7 @@
  using System;
  using System.IO;
+-using Ionic.Zlib;
 +using System.Threading;
- using Ionic.Zlib;
++using System.IO.Compression;
  using Microsoft.Xna.Framework;
  using Microsoft.Xna.Framework.Graphics.PackedVector;
-@@ -11,8 +_,10 @@
- using Terraria.GameContent.Tile_Entities;
+ using Terraria.Chat;
+@@ -12,6 +_,8 @@
  using Terraria.ID;
  using Terraria.Localization;
  using Terraria.Map;
@@ -17,7 +18,6 @@
  using Terraria.Social;
  using Terraria.Testing;
  
- namespace Terraria;
 @@ -57,10 +_,11 @@
  	private static short[] _compressChestList = new short[8000];
  	private static short[] _compressSignList = new short[32000];
@@ -59,7 +59,7 @@
  			writer.Write((byte)msgType);
  			switch (msgType) {
  				case 1:
--					writer.Write("Terraria" + 318);
+-					writer.Write("Terraria" + 319);
 +					writer.Write(ModNet.NetVersionString);
  					break;
  				case 2:
@@ -79,7 +79,7 @@
  					WriteAccessoryVisibility(writer, player5.hideVisibleAccessory);
  					writer.Write(player5.hideMisc);
  					writer.WriteRGB(player5.hairColor);
-@@ -170,16 +_,20 @@
+@@ -170,12 +_,16 @@
  
  					int num7 = item5.stack;
  					int type = item5.type;
@@ -96,10 +96,6 @@
  					BitsByte bitsByte5 = default(BitsByte);
  					bitsByte5[0] = item5.favorited;
  					bitsByte5[1] = number3 != 0f;
- 					writer.Write(bitsByte5);
- 					break;
- 				}
- 				case 7: {
 @@ -356,9 +_,13 @@
  						writer.Write(SocialAPI.Network.GetLobbyId());
  					else
@@ -136,9 +132,7 @@
  					break;
  				}
  				case 151:
-@@ -638,8 +_,13 @@
- 					bitsByte2[0] = nPC2.statsAreScaledForThisManyPlayers > 1;
- 					bitsByte2[1] = nPC2.SpawnedFromStatue;
+@@ -640,6 +_,11 @@
  					bitsByte2[2] = nPC2.difficulty != 1f;
  					bitsByte2[3] = nPC2.spawnNeedsSyncing;
  					bitsByte2[4] = nPC2.spawnNeedsSyncing && nPC2.shimmerTransparency > 0f;
@@ -263,8 +257,7 @@
  					break;
  				case 35:
  					writer.Write((byte)number);
-@@ -836,7 +_,10 @@
- 					writer.Write(player4.zone3);
+@@ -837,6 +_,9 @@
  					writer.Write(player4.zone4);
  					writer.Write(player4.zone5);
  					writer.Write((byte)player4.townNPCs);
@@ -309,6 +302,19 @@
  					if (number2 != 255f) {
  						writer.Write((ushort)number3);
  						writer.Write((ushort)number4);
+@@ -1190,6 +_,12 @@
+ 					writer.Write(number3);
+ 					writer.Write(number4);
+ 					break;
++				case MessageID.DevCommands:
++					writer.Write(text.ToString());
++					writer.Write(number);
++					writer.Write(number2);
++					writer.Write(number3);
++					break;
+ 				case 95:
+ 					writer.Write((ushort)number);
+ 					writer.Write((byte)number2);
 @@ -1295,6 +_,11 @@
  					writer.Write(number);
  					break;
@@ -371,6 +377,21 @@
  					break;
  				}
  				case 134: {
+@@ -1479,9 +_,14 @@
+ 					writer.Write((short)number);
+ 					writer.Write((short)number2);
+ 					Item item = Main.player[(int)number4].inventory[(int)number3];
++
++					ItemIO.Send(item, writer);
++					writer.Write7BitEncodedInt(number5);
++					/*
+ 					writer.Write((short)item.type);
+ 					writer.Write(item.prefix);
+ 					writer.Write((short)number5);
++					*/
+ 					break;
+ 				}
+ 				case 150:
 @@ -1527,6 +_,16 @@
  				throw new Exception("Maximum packet length exceeded. id: " + msgType + " length: " + num21);
  
@@ -388,13 +409,15 @@
  			writer.Write((ushort)num21);
  			writer.BaseStream.Position = num21;
  			if (Main.netMode == 1) {
-@@ -1657,5 +_,5 @@
+@@ -1657,7 +_,7 @@
  
  			buffer[num].writeLocked = false;
  			if (msgType == 2 && Main.netMode == 2)
 -				Netplay.Clients[num].PendingTermination = true;
 +				Netplay.Clients[num].SetPendingTermination("Kicked");
  		}
+ 	}
+ 
 @@ -1723,11 +_,11 @@
  		int num6 = 0;
  		byte b = 0;
@@ -473,7 +496,7 @@
  
  		num3 = reader.ReadInt16();
  		for (int m = 0; m < num3; m++) {
--			TileEntity.Add(TileEntity.Read(reader, 318));
+-			TileEntity.Add(TileEntity.Read(reader, 319));
 +			TileEntity.Add(TileEntity.Read(reader, Main.curRelease, networkSend: true)); //TML: Made networkSend true, but lightSend should be false.
  		}
  
@@ -526,9 +549,7 @@
  				}
  			}
  		}
-@@ -2232,14 +_,18 @@
- 
- 		lock (buffer[bufferIndex]) {
+@@ -2234,7 +_,11 @@
  			buffer[bufferIndex].checkBytes = false;
  			int num = 0;
  			int num2 = buffer[bufferIndex].totalData;
@@ -540,12 +561,15 @@
  				while (num2 >= 2) {
  					int num3 = BitConverter.ToUInt16(buffer[bufferIndex].readBuffer, num);
  					if (num3 < 3)
- 						throw new IndexOutOfRangeException("Invalid packet. Message size too small (" + num3 + ")");
+@@ -2242,7 +_,7 @@
  
  					if (num2 >= num3) {
  						long position = buffer[bufferIndex].reader.BaseStream.Position;
 -						buffer[bufferIndex].GetData(num + 2, num3 - 2, out var _);
 +						buffer[bufferIndex].GetData(num + 2, num3 - 2, out msgId);
+ 						buffer[bufferIndex].reader.BaseStream.Position = position + num3;
+ 						num2 -= num3;
+ 						num += num3;
 @@ -2252,9 +_,12 @@
  					break;
  				}
@@ -560,7 +584,7 @@
  
  				num2 = 0;
  				num = 0;
-@@ -2266,4 +_,7 @@
+@@ -2266,6 +_,9 @@
  				}
  
  				buffer[bufferIndex].totalData = num2;
@@ -568,6 +592,8 @@
 +				if (num2 > 0 && ModNet.DetailedLogging)
 +					ModNet.Debug(bufferIndex, $"partial {num2}");
  			}
+ 		}
+ 	}
 @@ -2297,8 +_,12 @@
  			SendData(77, whoAmi, -1, null, animationType, tileType, xCoord, yCoord);
  	}
@@ -660,7 +686,7 @@
  			Netplay.Disconnect = true;
  		}
  	}
-@@ -2580,10 +_,13 @@
+@@ -2580,11 +_,14 @@
  			SyncOnePlayer_ItemArray(plr, toWho, fromWho, Main.player[plr].Loadouts[1].Dye, PlayerItemSlotID.Loadout2_Dye_0);
  			SyncOnePlayer_ItemArray(plr, toWho, fromWho, Main.player[plr].Loadouts[2].Armor, PlayerItemSlotID.Loadout3_Armor_0);
  			SyncOnePlayer_ItemArray(plr, toWho, fromWho, Main.player[plr].Loadouts[2].Dye, PlayerItemSlotID.Loadout3_Dye_0);
@@ -675,6 +701,7 @@
 +					Logging.ServerConsoleLine(Lang.mp[19].Format(Main.player[plr].name));
  			}
  
+ 			for (int l = 0; l < 1000; l++) {
 @@ -2602,7 +_,7 @@
  			Netplay.Clients[plr].IsAnnouncementCompleted = false;
  			ChatHelper.BroadcastChatMessage(NetworkText.FromKey(Lang.mp[20].Key, Netplay.Clients[plr].Name), new Color(255, 240, 20), plr);

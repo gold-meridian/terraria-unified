@@ -249,7 +249,7 @@ public abstract partial class ModSystem : ModType
 
 	/// <summary>
 	/// Called after the Network got updated, this is the last hook that happens in an update.
-	/// <para/> Called in single player or on the server only.
+	/// <para/> Called on all clients and the server.
 	/// </summary>
 	public virtual void PostUpdateEverything() { }
 
@@ -403,7 +403,7 @@ public abstract partial class ModSystem : ModType
 	/// To disable or hide generation passes, please use <see cref="GenPass.Disable"/> and defensive coding.
 	/// <para/> See the <see href="https://github.com/tModLoader/tModLoader/wiki/World-Generation#determining-a-suitable-index">"Determining a suitable index" section of the World Generation wiki guide</see> for more information about how to properly use this for adding new world generation passes.
 	/// </summary>
-	public virtual void ModifyWorldGenTasks(List<GenPass> tasks, ref double totalWeight) { }
+	public virtual void ModifyWorldGenTasks(List<GenPass> tasks) { }
 
 	/// <summary>
 	/// Use this method to place tiles in the world after world generation is complete.
@@ -417,7 +417,7 @@ public abstract partial class ModSystem : ModType
 	public virtual void ResetNearbyTileEffects() { }
 
 	/// <summary>
-	/// Similar to <see cref="ModifyWorldGenTasks(List{GenPass}, ref double)"/>, but occurs in-game when Hardmode starts. Can be used to modify which tasks should be done and/or add custom tasks. <para/>
+	/// Similar to <see cref="ModifyWorldGenTasks(List{GenPass})"/>, but occurs in-game when Hardmode starts. Can be used to modify which tasks should be done and/or add custom tasks. <para/>
 	/// By default the list will only contain 5 items, the vanilla hardmode tasks called "Hardmode Good Remix", "Hardmode Good", "Hardmode Evil", "Hardmode Walls", and "Hardmode Announcement". "Hardmode Good Remix" will only be enabled on <see href="https://terraria.wiki.gg/wiki/Don%27t_dig_up">Don't dig up</see> worlds (<see cref="Main.remixWorld"/>) while "Hardmode Good" and "Hardmode Evil" will be enabled otherwise.<para/>
 	/// To disable or hide tasks, please use <see cref="GenPass.Disable"/> and defensive coding.
 	/// </summary>

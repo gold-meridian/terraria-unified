@@ -6,6 +6,7 @@ namespace Terraria.UI;
 
 public partial class ItemSlot
 {
+	/* TODO: Restore functionality in ArmorSwap. Try new approach rather than just fixing compile issues.
 	private static bool AccessorySwap(Player player, Item item, ref Item result)
 	{
 		//TML: Rewrote ArmorSwap for accessories under the PR #1299 so it was actually readable. No vanilla functionality lost in transition
@@ -89,6 +90,7 @@ public partial class ItemSlot
 
 		return true;
 	}
+	*/
 
 	/// <summary>
 	/// Alters the ItemSlot.DyeSwap method for modded slots;
@@ -118,7 +120,6 @@ public partial class ItemSlot
 		dyes[dyeSlotCount] = item.Clone();
 
 		SoundEngine.PlaySound(7);
-		Recipe.FindRecipes();
 		success = true;
 		return item2;
 	}
@@ -134,11 +135,13 @@ public partial class ItemSlot
 	/// </summary>
 	internal static bool AccCheck_ForPlayer(Player player, Item[] itemCollection, Item item, int slot)
 	{
+		/*
 		if (isEquipLocked(item.type))
 			return true;
+		*/
 
 		if (slot != -1) {
-			if (itemCollection[slot].IsTheSameAs(item))
+			if (!itemCollection[slot].IsNotTheSameAs(item))
 				return false;
 
 			if (itemCollection[slot].wingSlot > 0 && item.wingSlot > 0 || !ItemLoader.CanAccessoryBeEquippedWith(player, itemCollection[slot], item))
@@ -160,7 +163,7 @@ public partial class ItemSlot
 		}
 
 		for (int i = 0; i < itemCollection.Length; i++) {
-			if (item.IsTheSameAs(itemCollection[i]))
+			if (!item.IsNotTheSameAs(itemCollection[i]))
 				return true;
 		}
 

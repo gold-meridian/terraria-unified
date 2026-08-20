@@ -1,6 +1,6 @@
 --- src/TerrariaNetCore/Terraria/ID/ProjectileID.cs
 +++ src/tModLoader/Terraria/ID/ProjectileID.cs
-@@ -1,29 +_,85 @@
+@@ -1,29 +_,88 @@
  using Microsoft.Xna.Framework;
  using ReLogic.Reflection;
  using Terraria.DataStructures;
@@ -53,6 +53,9 @@
 +		/// </summary>
 +		/// <remarks>You can adjust whip settings using <see cref="Projectile.WhipSettings"/>.</remarks>
  		public static bool[] IsAWhip = Factory.CreateBoolSet(false, 847, 841, 848, 849, 912, 913, 914, 915, 952, 1028, 1029, 1030, 1031, 1032, 1033, 1034, 1035, 1104);
++		/// <summary>
++		/// Used to scale down summon tag damage for fast hitting minions and sentries.
++		/// </summary>
  		public static float[] SummonTagDamageMultiplier = Factory.CreateFloatSet(1f, 688f, 0.5f, 689f, 0.5f, 690f, 0.5f);
 +
 +		/// <summary>
@@ -221,7 +224,7 @@
 +		/// If <see langword="true"/> for a given projectile type (<see cref="Projectile.type"/>), then any item that shoots that projectile can be right-clicked to force minion targeting.
 +		/// <br/> Defaults to <see langword="false"/>.
 +		/// </summary>
- 		public static bool[] MinionTargettingFeature = Factory.CreateBoolSet(191, 192, 193, 194, 266, 317, 373, 375, 387, 388, 390, 393, 407, 423, 533, 613, 625, 755, 758, 759, 831, 833, 834, 835, 864, 946, 951, 963, 970, 1022, 1093, 1094, 377, 308, 643, 641, 663, 665, 667, 677, 678, 679, 688, 689, 690, 691, 692, 693, 966, 1025);
+ 		public static bool[] MinionTargetingFeature = Factory.CreateBoolSet(191, 192, 193, 194, 266, 317, 373, 375, 387, 388, 390, 393, 407, 423, 533, 613, 625, 755, 758, 759, 831, 833, 834, 835, 864, 946, 951, 963, 970, 1022, 1093, 1094, 377, 308, 643, 641, 663, 665, 667, 677, 678, 679, 688, 689, 690, 691, 692, 693, 966, 1025);
 +
 +		/// <summary>
 +		/// If <see langword="true"/> for a given projectile type (<see cref="Projectile.type"/>), then other minions will be sacrificed to make room to summon this minion.
@@ -250,7 +253,7 @@
  		public static float[] ExtendedCanHitCheckRange = Factory.CreateFloatSet(0f, 833f, 48f, 834f, 48f, 835f, 48f);
  		public static bool[] NeedsUUID = Factory.CreateBoolSet(625, 626, 627, 628);
  		public static bool[] StardustDragon = Factory.CreateBoolSet(625, 626, 627, 628);
-@@ -287,15 +_,59 @@
+@@ -287,12 +_,50 @@
  			834,
  			835
  		};
@@ -301,15 +304,6 @@
  		public static bool[] CanHitPastShimmer = Factory.CreateBoolSet(605, 270, 719, 961, 962, 926, 922, 100, 84, 83, 96, 101, 102, 275, 276, 277, 258, 259, 384, 385, 386, 874, 872, 873, 871, 683, 676, 670, 675, 686, 687, 467, 468, 464, 465, 466, 526, 456, 462, 455, 452, 454, 949, 1041);
  		public static bool[] TrackMinionSpawnFromItemUse = Factory.CreateBoolSet(true, 388, 625, 627, 628);
  
-+		/// <summary>
-+		/// If <see langword="true"/> for a given projectile type (<see cref="Projectile.type"/>), then that projectile will do the same damage to players regardless of difficulty (expert/master etc). <br/>
-+		/// This set includes all the friendly vanilla explosives which can hurt players from vanilla
-+		/// </summary>
-+		public static bool[] PlayerHurtDamageIgnoresDifficultyScaling = Factory.CreateBoolSet(28, 29, 30, 37, 108, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 164, 397, 470, 516, 517, 519, 588, 637, 773, 776, 777, 778, 779, 780, 781, 782, 783, 784, 785, 786, 787, 788, 789, 790, 791, 792, 793, 794, 795, 796, 797, 798, 799, 800, 801, 903, 904, 905, 906, 910, 911, 1002);
-+
- 		public static SettingsForCharacterPreview SimpleLoop(int startFrame, int frameCount, int delayPerFrame = 4, bool bounceLoop = false)
- 		{
- 			if (frameCount < 1)
 @@ -309,6 +_,7 @@
  			return settingsForCharacterPreview;
  		}

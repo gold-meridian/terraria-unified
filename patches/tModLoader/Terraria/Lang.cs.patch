@@ -32,14 +32,27 @@
 +	internal static LocalizedText[] _buffDescriptionCache = new LocalizedText[BuffID.Count];
 -	private static ItemTooltip[] _itemTooltipCache = new ItemTooltip[ItemID.Count];
 +	internal static ItemTooltip[] _itemTooltipCache = new ItemTooltip[ItemID.Count];
-+
 -	private static LocalizedText[] _emojiNameCache = new LocalizedText[EmoteID.Count];
++
  	private static Dictionary<string, Func<object>> _globalSubstitutions = new Dictionary<string, Func<object>>();
  	private static LocalizedText _prefixFormatText = Language.GetText("CombineFormat.Prefix");
 + 	internal static LocalizedText[] _emojiNameCache = new LocalizedText[EmoteID.Count];
  
  	public static string GetMapObjectName(int id)
  	{
+@@ -67,6 +_,12 @@
+ 		_globalSubstitutions[key] = getValue;
+ 	}
+ 
++	/// <summary>
++	/// Gets the current current value of a global substitution. Used for keybindings, npc names, world evil substitutions, and guide tip conditions. <br/>
++	/// If the value is <c>null</c>, then uses of <see cref="LocalizedText.TryFormatWith(object, out string)"/> or <see cref="LocalizedText.ConditionsMet"/> with {Key} will return false<br/>
++	/// If the value is boolean, then it can be used with {?Key} and {?!Key} conditionals, and <c>TryFormatWith</c>/<c>ConditionsMet</c>
++	/// If the value is of an integer type, it can be used with plural expressions like {^Count:item;items}<br/>
++	/// </summary>
+ 	public static object GetGlobalSubstitution(string key)
+ 	{
+ 		if (!_globalSubstitutions.TryGetValue(key, out var value))
 @@ -141,11 +_,13 @@
  
  	[Old("dialog is deprecated. Please use Language.GetText instead.")]
@@ -70,7 +83,7 @@
  			return _itemNameCache[id];
  
  		return LocalizedText.Empty;
-@@ -169,30 +_,33 @@
+@@ -169,12 +_,13 @@
  
  	public static LocalizedText GetEmojiName(int id)
  	{
@@ -85,16 +98,7 @@
  	public static string GetItemNameValue(int id) => GetItemName(id).Value;
  
  	public static string GetPrefixedItemName(int id, int prefixType)
- 	{
- 		LocalizedText itemName = GetItemName(id);
- 		LocalizedText localizedText = prefix[prefixType];
- 		string prefixName = localizedText.Value;
- 		if (Language.TryGetVariation(itemName.Key, "Gender", out var value) && Language.TryGetVariation(localizedText.Key, value, out var value2))
- 			prefixName = value2;
- 
- 		return _prefixFormatText.FormatWith(new ItemPrefixCombiner {
- 			PrefixName = prefixName,
- 			ItemName = itemName.Value
+@@ -191,7 +_,9 @@
  		});
  	}
  
@@ -104,7 +108,6 @@
  	public static string GetBuffDescription(int id) => _buffDescriptionCache[id].Value;
  
  	public static string GetDryadWorldStatusDialog(out bool worldIsEntirelyPure)
- 	{
 @@ -335,7 +_,20 @@
  		return npc.FullName;
  	}

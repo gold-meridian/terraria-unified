@@ -1,7 +1,6 @@
 --- src/TerrariaNetCore/Terraria/GameContent/Tile_Entities/TEDisplayDoll.cs
 +++ src/tModLoader/Terraria/GameContent/Tile_Entities/TEDisplayDoll.cs
-@@ -6,10 +_,12 @@
- using Terraria.Audio;
+@@ -7,11 +_,13 @@
  using Terraria.DataStructures;
  using Terraria.GameInput;
  using Terraria.Graphics.Renderers;
@@ -14,6 +13,24 @@
 -public class TEDisplayDoll : TileEntityType<TEDisplayDoll>, IFixLoadedData
 +public sealed partial class TEDisplayDoll : TileEntityType<TEDisplayDoll>, IFixLoadedData
  {
+ 	public struct DisplayDollPose
+ 	{
+@@ -70,7 +_,14 @@
+ 		RegisterUsePose(15, DisplayDollPoseID.Use1, 0.5f);
+ 	}
+ 
+-	private static void RegisterUsePose(int useStyle, DisplayDollPoseID pose, float usePercent, float? useAim = null)
++	/// <summary>
++	/// Allows registering custom use styles for mannequins to use.
++	/// </summary>
++	/// <param name="useStyle">The use style ID. Use the result from <see cref="ItemLoader.RegisterUseStyle"/></param>
++	/// <param name="pose">The pose that the mannequin is in. Typically <see cref="DisplayDollPoseID.Use1"/> through 5.</param>
++	/// <param name="usePercent">How far into the item animation will be displayed.</param>
++	/// <param name="useAim">An angle (in radians) to rotate the item.</param>
++	public static void RegisterUsePose(int useStyle, DisplayDollPoseID pose, float usePercent, float? useAim = null) // TML: Made public
+ 	{
+ 		if (!SupportedUseStylePoses.TryGetValue(useStyle, out var value)) {
+ 			value = new List<DisplayDollPose>();
 @@ -168,8 +_,8 @@
  		Item[] equip = _equip;
  		foreach (Item item in equip) {
@@ -36,6 +53,17 @@
  				writer.Write((short)item2.stack);
  			}
  		}
+@@ -186,8 +_,8 @@
+ 		equip = _misc;
+ 		foreach (Item item3 in equip) {
+ 			if (!item3.IsAir) {
+-				writer.Write((short)item3.type);
+-				writer.Write(item3.prefix);
++				ItemIO.WriteShortVanillaID(item3, writer);
++				ItemIO.WriteByteVanillaPrefix(item3, writer);
+ 				writer.Write((short)item3.stack);
+ 			}
+ 		}
 @@ -278,11 +_,14 @@
  			return;
  
@@ -51,7 +79,18 @@
  		WorldGen.destroyObject = true;
  		for (int k = num; k < num + 2; k++) {
  			for (int l = num2; l < num2 + 3; l++) {
-@@ -671,18 +_,28 @@
+@@ -420,7 +_,10 @@
+ 				_playerRenderer.OverrideHeldProjectile = projectileDummy;
+ 				int drawLayer = projectileDummy.drawLayer;
+ 				if ((uint)drawLayer <= 3u)
++					/*
+ 					Main.instance.DrawProjDirect(projectileDummy);
++					*/
++					Main.instance.DrawProjDirect(projectileDummy, dollPlayer);
+ 			}
+ 		}
+ 
+@@ -672,6 +_,10 @@
  	public void WriteItem(int itemIndex, BinaryWriter writer, Item[] collection)
  	{
  		Item item = collection[itemIndex];
@@ -62,7 +101,7 @@
  		writer.Write((ushort)item.type);
  		writer.Write((ushort)item.stack);
  		writer.Write(item.prefix);
- 	}
+@@ -679,14 +_,22 @@
  
  	public void ReadItem(int itemIndex, BinaryReader reader, Item[] collection)
  	{
@@ -74,9 +113,14 @@
  		if (itemIndex < collection.Length) {
  			Item obj = collection[itemIndex];
 +			
-+			ItemIO.Receive(item, reader, readStack: true);
++			ItemIO.Receive(obj, reader, readStack: true);
 +			return;
-+			
++
++			/*
  			obj.SetDefaults(num);
  			obj.stack = stack;
  			obj.Prefix(prefixWeWant);
++			*/
+ 		}
+ 	}
+ 

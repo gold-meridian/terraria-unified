@@ -1,11 +1,12 @@
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria.DataStructures;
 using Terraria.GameContent;
+using Terraria.GameContent.Tile_Entities;
 using Terraria.ID;
 using Terraria.Localization;
 
@@ -43,9 +44,6 @@ public abstract class ModProjectile : ModType<Projectile, ModProjectile>, ILocal
 
 	/// <summary> The horizontal origin offset from the projectile's center when it is drawn. </summary>
 	public float DrawOriginOffsetX { get; set; }
-
-	/// <summary> If this projectile is held by the player, determines whether it is drawn in front of or behind the player's arms. Defaults to false. </summary>
-	public bool DrawHeldProjInFrontOfHeldItemAndArms { get; set; }
 
 	/// <summary>
 	/// The file name of this type's texture file in the mod loader's file space. <br/>
@@ -357,7 +355,8 @@ public abstract class ModProjectile : ModType<Projectile, ModProjectile>, ILocal
 	/// Allows you to draw things behind this projectile. Use the <c>Main.EntitySpriteDraw</c> method for drawing. Returns false to stop the game from drawing extras textures related to the projectile (for example, the chains for grappling hooks), useful if you're manually drawing the extras. Returns true by default.
 	/// <para/> Called on local and remote clients.
 	/// </summary>
-	public virtual bool PreDrawExtras()
+	/// <param name="player"> The player associated with drawing this projectile. Not necessarily the same as player.owner for things like Mannequins. </param>
+	public virtual bool PreDrawExtras(Player player)
 	{
 		return true;
 	}
@@ -366,8 +365,9 @@ public abstract class ModProjectile : ModType<Projectile, ModProjectile>, ILocal
 	/// Allows you to draw things behind this projectile, or to modify the way it is drawn. Use the <c>Main.EntitySpriteDraw</c> method for drawing. Return false to stop the vanilla projectile drawing code (useful if you're manually drawing the projectile). Returns true by default.
 	/// <para/> Called on local and remote clients.
 	/// </summary>
+	/// <param name="player"> The player associated with drawing this projectile. Not necessarily the same as player.owner for things like Mannequins. </param>
 	/// <param name="lightColor"> The color of the light at the projectile's center. </param>
-	public virtual bool PreDraw(ref Color lightColor)
+	public virtual bool PreDraw(Player player, ref Color lightColor)
 	{
 		return true;
 	}
@@ -376,8 +376,9 @@ public abstract class ModProjectile : ModType<Projectile, ModProjectile>, ILocal
 	/// Allows you to draw things in front of this projectile. Use the <c>Main.EntitySpriteDraw</c> method for drawing. This method is called even if PreDraw returns false.
 	/// <para/> Called on local and remote clients.
 	/// </summary>
+	/// <param name="player"> The player associated with drawing this projectile. Not necessarily the same as player.owner for things like Mannequins. </param>
 	/// <param name="lightColor"> The color of the light at the projectile's center, after being modified by vanilla and other mods. </param>
-	public virtual void PostDraw(Color lightColor)
+	public virtual void PostDraw(Player player, Color lightColor)
 	{
 	}
 
@@ -451,14 +452,6 @@ public abstract class ModProjectile : ModType<Projectile, ModProjectile>, ILocal
 	}
 
 	/// <summary>
-	/// When used in conjunction with <c>Projectile.hide = true</c> (<see cref="Projectile.hide"/>), allows you to specify that this projectile should be drawn behind certain elements. Add the index to one and only one of the lists. For example, the Nebula Arcanum projectile draws behind NPCs and tiles.
-	/// <para/> Called on local and remote clients.
-	/// </summary>
-	public virtual void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
-	{
-	}
-
-	/// <summary>
 	/// Used to adjust projectile properties immediately before the projectile becomes an explosion. This is called on projectiles using the <see cref="ProjAIStyleID.Explosive"/> aiStyle or projectiles that are contained in the <see cref="ProjectileID.Sets.Explosive"/> set. By defaults tileCollide is set to false and alpha is set to 255. Use this to adjust damage, knockBack, and the projectile hitbox (Projectile.Resize).
 	/// <para/> Called during Projectile.PrepareBombToBlow, which is called by default during Projectile.AI_016 and during Projectile.Kill for the aforementioned projectiles.
 	/// <para/> Can be called on the local client or server, depending on who owns the projectile.
@@ -474,5 +467,22 @@ public abstract class ModProjectile : ModType<Projectile, ModProjectile>, ILocal
 	/// </summary>
 	public virtual void EmitEnchantmentVisualsAt(Vector2 boxPosition, int boxWidth, int boxHeight)
 	{
+	}
+
+	/// <summary>
+	/// Allows for modifying the position of the held projectile while a Mannequin is holding it.
+	/// <para/> This is needed for held projectiles such as Spears, Drills, Shortswords, Yoyos, Flails, and Whips.
+	/// <para/> Vanilla code supports <see cref="ProjAIStyleID.Spear"/>, <see cref="ProjAIStyleID.Drill"/>, <see cref="ProjAIStyleID.ShortSword"/>, <see cref="ProjAIStyleID.HeldProjectile"/>, <see cref="ProjAIStyleID.ForwardStab"/>, <see cref="ProjAIStyleID.SleepyOctopod"/>, <see cref="ProjAIStyleID.Yoyo"/>, <see cref="ProjAIStyleID.Flail"/>, <see cref="ProjAIStyleID.MedusaRay"/>, and <see cref="ProjAIStyleID.Whip"/>, but the existing logic might not work or look correct for all modded projectiles. <paramref name="aiStyle"/> can be set to a supported vanilla aiStyle to get the same behavior as a vanilla projectile. <paramref name="aiType"/> can be set to a supported vanilla projectile type for some aiStyles that check type.
+	/// <para/> If re-using an existing aiStyle value doesn't work, you will need to implement this hook to make it display correctly on mannequins. Consult the decompiled code of <see cref="Projectile.AI_DisplayDoll(Player, TEDisplayDoll.DisplayDollPose, out bool)"/> or Example Mod usages for sample code.
+	/// <para/> See also <see cref="Projectile.isAPreviewDisplayDoll"/>.
+	/// </summary>
+	/// <param name="doll"> The mannequin holding the projectile. </param>
+	/// <param name="pose"> The pose that the mannequin is in. </param>
+	/// <param name="aiType"> The Projectile.type of the projectile. Will be set to <see cref="AIType"/> if set. Can be changed to a supported type within the style. </param>
+	/// <param name="aiStyle"> The Projectile.aiStyle of the projectile. Can be changed to a supported style. </param>
+	/// <returns> Return false to skip the vanilla logic. Returns true by default. </returns>
+	public virtual bool DisplayDollSettings(Player doll, TEDisplayDoll.DisplayDollPose pose, ref int aiStyle, ref int aiType)
+	{
+		return true;
 	}
 }

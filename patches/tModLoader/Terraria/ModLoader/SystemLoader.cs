@@ -483,11 +483,11 @@ public static partial class SystemLoader
 		}
 	}
 
-	public static void ModifyWorldGenTasks(List<GenPass> passes, ref double totalWeight)
+	public static void ModifyWorldGenTasks(List<GenPass> passes)
 	{
 		foreach (var system in HookModifyWorldGenTasks.Enumerate()) {
 			try {
-				system.ModifyWorldGenTasks(passes, ref totalWeight);
+				system.ModifyWorldGenTasks(passes);
 			}
 			catch (Exception e) {
 				string message = string.Join(
@@ -501,7 +501,7 @@ public static partial class SystemLoader
 			}
 		}
 
-		passes.RemoveAll(x => !x.Enabled);
+		// passes.RemoveAll(x => !x.Enabled);
 	}
 
 	public static void PostWorldGen()

@@ -1405,7 +1405,7 @@ public abstract class ModPlayer : ModType<Player, ModPlayer>, IIndexed
 	/// </summary>
 	/// <param name="item">The item being picked up</param>
 	/// <returns></returns>
-	public virtual bool OnPickup(Item item)
+	public virtual bool OnPickup(WorldItem item)
 	{
 		return true;
 	}
@@ -1413,7 +1413,7 @@ public abstract class ModPlayer : ModType<Player, ModPlayer>, IIndexed
 	/// <summary>
 	/// Whether or not the player can be teleported to the given coordinates with methods such as Teleportation Potions or the Rod of Discord.
 	/// <para/> The coordinates correspond to the top left corner of the player position after teleporting.
-	/// <para/> This gets called in <see cref="Player.CheckForGoodTeleportationSpot(ref bool, int, int, int, int, Player.RandomTeleportationAttemptSettings)"/> and <see cref="Player.ItemCheck_UseTeleportRod(Item)"/>. The <paramref name="context"/> will have a value of "CheckForGoodTeleportationSpot" or "TeleportRod" respectively indicating which type of teleport is being attempted.
+	/// <para/> This gets called in <see cref="Utils.CheckForGoodTeleportationSpot(ref bool, int, int, int, int, Utils.RandomTeleportationAttemptSettings)"/> and <see cref="Player.ItemCheck_UseTeleportRod(Item)"/>. The <paramref name="context"/> will have a value of "CheckForGoodTeleportationSpot" or "TeleportRod" respectively indicating which type of teleport is being attempted.
 	/// </summary>
 	public virtual bool CanBeTeleportedTo(Vector2 teleportPosition, string context)
 	{
