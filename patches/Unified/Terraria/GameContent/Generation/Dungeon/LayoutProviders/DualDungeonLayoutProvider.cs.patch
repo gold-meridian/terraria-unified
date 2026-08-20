@@ -1,6 +1,6 @@
 --- src/TerrariaNetCore/Terraria/GameContent/Generation/Dungeon/LayoutProviders/DualDungeonLayoutProvider.cs
 +++ src/Unified/Terraria/GameContent/Generation/Dungeon/LayoutProviders/DualDungeonLayoutProvider.cs
-@@ -535,7 +_,7 @@
+@@ -569,7 +_,7 @@
  		int num5 = 5;
  		int num6 = 6;
  		switch (WorldGen.GetWorldSize()) {
@@ -9,7 +9,7 @@
  				num = 2;
  				num2 = 2;
  				num3 = 2;
-@@ -543,7 +_,7 @@
+@@ -577,7 +_,7 @@
  				num5 = 5;
  				num6 = 6;
  				break;
@@ -18,7 +18,7 @@
  				num = 4;
  				num2 = 6;
  				num3 = 6;
-@@ -551,7 +_,7 @@
+@@ -585,7 +_,7 @@
  				num5 = 8;
  				num6 = 10;
  				break;
@@ -27,7 +27,7 @@
  				num = 6;
  				num2 = 10;
  				num3 = 10;
-@@ -791,13 +_,13 @@
+@@ -835,13 +_,13 @@
  		UnifiedRandom genRand = WorldGen.genRand;
  		int num = 3;
  		switch (WorldGen.GetWorldSize()) {

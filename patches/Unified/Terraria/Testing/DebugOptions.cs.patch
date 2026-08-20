@@ -1,6 +1,6 @@
 --- src/TerrariaNetCore/Terraria/Testing/DebugOptions.cs
 +++ src/Unified/Terraria/Testing/DebugOptions.cs
-@@ -1,12 +_,12 @@
+@@ -1,11 +_,11 @@
 -using Microsoft.Xna.Framework;
 +using System.Diagnostics;
  using Terraria.Localization;
@@ -14,4 +14,3 @@
  	public static bool Shared_ReportCommandUsage = true;
  	public static bool Shared_RandomizeProjectileSlots = false;
  	public static int Shared_ServerPing = 0;
- 	public static double UpdateWaitInMs = 0.0;

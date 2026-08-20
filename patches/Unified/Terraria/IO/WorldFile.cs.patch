@@ -1,6 +1,6 @@
 --- src/TerrariaNetCore/Terraria/IO/WorldFile.cs
 +++ src/Unified/Terraria/IO/WorldFile.cs
-@@ -2273,8 +_,18 @@
+@@ -2287,8 +_,18 @@
  
  				while (num3 > 0) {
  					j++;

@@ -1,6 +1,6 @@
 --- src/TerrariaNetCore/Terraria/Chest.cs
 +++ src/Unified/Terraria/Chest.cs
-@@ -319,7 +_,9 @@
+@@ -331,7 +_,9 @@
  				Tile tileSafely2 = Framing.GetTileSafely(i, j);
  				if (tileSafely2.type == type2) {
  					tileSafely2.frameX -= num;
@@ -10,7 +10,7 @@
  					for (int k = 0; k < 4; k++) {
  						Dust.NewDust(new Vector2(i * 16, j * 16), 16, 16, type);
  					}
-@@ -384,7 +_,9 @@
+@@ -396,7 +_,9 @@
  				Tile tileSafely2 = Framing.GetTileSafely(i, j);
  				if (tileSafely2.type == type) {
  					tileSafely2.frameX += num;

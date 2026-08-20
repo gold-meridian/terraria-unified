@@ -1,101 +1,101 @@
 --- src/TerrariaNetCore/Terraria/NPC.cs
 +++ src/Unified/Terraria/NPC.cs
-@@ -19188,8 +_,10 @@
- 			if (this.ai[0] < 0f || this.ai[0] >= (float)Main.maxTilesX || this.ai[1] < 0f || this.ai[1] >= (float)Main.maxTilesX)
+@@ -19256,8 +_,10 @@
+ 			if (!WorldGen.InWorld(num217, num218, 5))
  				return;
  
 +			/*
- 			if (Main.tile[(int)this.ai[0], (int)this.ai[1]] == null)
- 				Main.tile[(int)this.ai[0], (int)this.ai[1]] = new Tile();
+ 			if (Main.tile[num217, num218] == null)
+ 				Main.tile[num217, num218] = new Tile();
 +			*/
  
- 			if (!Main.tile[(int)this.ai[0], (int)this.ai[1]].active()) {
+ 			if (!Main.tile[num217, num218].active()) {
  				life = -1;
-@@ -20231,6 +_,8 @@
+@@ -20267,6 +_,8 @@
  
- 					int num270 = (int)(position.X + (float)(width / 2)) / 16;
- 					int num271 = (int)(position.Y + (float)(height / 2)) / 16;
+ 					int num272 = (int)(position.X + (float)(width / 2)) / 16;
+ 					int num273 = (int)(position.Y + (float)(height / 2)) / 16;
 +
 +					/*
- 					if (Main.tile[num270, num271 - 1] == null)
- 						Main.tile[num270, num271 - 1] = new Tile();
+ 					if (Main.tile[num272, num273 - 1] == null)
+ 						Main.tile[num272, num273 - 1] = new Tile();
  
-@@ -20239,6 +_,7 @@
+@@ -20275,6 +_,7 @@
  
- 					if (Main.tile[num270, num271 + 2] == null)
- 						Main.tile[num270, num271 + 2] = new Tile();
+ 					if (Main.tile[num272, num273 + 2] == null)
+ 						Main.tile[num272, num273 + 2] = new Tile();
 +					*/
  
- 					if (Main.tile[num270, num271 - 1].liquid > 128) {
- 						if (Main.tile[num270, num271 + 1].active())
-@@ -20560,6 +_,8 @@
+ 					if (Main.tile[num272, num273 - 1].liquid > 128) {
+ 						if (Main.tile[num272, num273 + 1].active())
+@@ -20596,6 +_,8 @@
  
- 				int num282 = (int)(position.X + (float)(width / 2)) / 16;
- 				int num283 = (int)(position.Y + (float)(height / 2)) / 16;
+ 				int num284 = (int)(position.X + (float)(width / 2)) / 16;
+ 				int num285 = (int)(position.Y + (float)(height / 2)) / 16;
 +
 +				/*
- 				if (Main.tile[num282, num283 - 1] == null)
- 					Main.tile[num282, num283 - 1] = new Tile();
+ 				if (Main.tile[num284, num285 - 1] == null)
+ 					Main.tile[num284, num285 - 1] = new Tile();
  
-@@ -20568,6 +_,7 @@
+@@ -20604,6 +_,7 @@
  
- 				if (Main.tile[num282, num283 + 2] == null)
- 					Main.tile[num282, num283 + 2] = new Tile();
+ 				if (Main.tile[num284, num285 + 2] == null)
+ 					Main.tile[num284, num285 + 2] = new Tile();
 +				*/
  
- 				if (Main.tile[num282, num283 - 1].liquid > 128) {
- 					if (Main.tile[num282, num283 + 1].active())
-@@ -20674,6 +_,8 @@
- 				int num299 = (int)(position.X + (float)width) / 16;
- 				int num300 = (int)(position.Y + (float)height) / 16;
- 				bool flag26 = false;
+ 				if (Main.tile[num284, num285 - 1].liquid > 128) {
+ 					if (Main.tile[num284, num285 + 1].active())
+@@ -20714,6 +_,8 @@
+ 				int num301 = (int)(position.X + (float)width) / 16;
+ 				int num302 = (int)(position.Y + (float)height) / 16;
+ 				bool flag29 = false;
 +
 +				/*
- 				if (Main.tile[num297, num300] == null)
- 					Main.tile[num297, num300] = new Tile();
+ 				if (Main.tile[num299, num302] == null)
+ 					Main.tile[num299, num302] = new Tile();
  
-@@ -20682,6 +_,7 @@
+@@ -20722,6 +_,7 @@
  
- 				if (Main.tile[num299, num300] == null)
- 					Main.tile[num297, num300] = new Tile();
+ 				if (Main.tile[num301, num302] == null)
+ 					Main.tile[num299, num302] = new Tile();
 +				*/
  
- 				if ((Main.tile[num297, num300].nactive() && Main.tileSolid[Main.tile[num297, num300].type]) || (Main.tile[num298, num300].nactive() && Main.tileSolid[Main.tile[num298, num300].type]) || (Main.tile[num299, num300].nactive() && Main.tileSolid[Main.tile[num299, num300].type]))
- 					flag26 = true;
-@@ -21111,8 +_,10 @@
+ 				if ((Main.tile[num299, num302].nactive() && Main.tileSolid[Main.tile[num299, num302].type]) || (Main.tile[num300, num302].nactive() && Main.tileSolid[Main.tile[num300, num302].type]) || (Main.tile[num301, num302].nactive() && Main.tileSolid[Main.tile[num301, num302].type]))
+ 					flag29 = true;
+@@ -21147,8 +_,10 @@
  				}
  				else {
- 					for (int num342 = num309; num342 < num309 + num310; num342++) {
+ 					for (int num342 = num311; num342 < num311 + num312; num342++) {
 +						/*
- 						if (Main.tile[num308, num342] == null)
- 							Main.tile[num308, num342] = new Tile();
+ 						if (Main.tile[num310, num342] == null)
+ 							Main.tile[num310, num342] = new Tile();
 +						*/
  
- 						if ((Main.tile[num308, num342].nactive() && Main.tileSolid[Main.tile[num308, num342].type]) || Main.tile[num308, num342].liquid > 0) {
- 							if (num342 <= num309 + 1)
-@@ -21128,8 +_,10 @@
+ 						if ((Main.tile[num310, num342].nactive() && Main.tileSolid[Main.tile[num310, num342].type]) || Main.tile[num310, num342].liquid > 0) {
+ 							if (num342 <= num311 + 1)
+@@ -21164,8 +_,10 @@
  			if (Main.player[target].npcTypeNoAggro[type]) {
- 				bool flag33 = false;
- 				for (int num343 = num309; num343 < num309 + num310 - 2; num343++) {
+ 				bool flag37 = false;
+ 				for (int num343 = num311; num343 < num311 + num312 - 2; num343++) {
 +					/*
- 					if (Main.tile[num308, num343] == null)
- 						Main.tile[num308, num343] = new Tile();
+ 					if (Main.tile[num310, num343] == null)
+ 						Main.tile[num310, num343] = new Tile();
 +					*/
  
- 					if ((Main.tile[num308, num343].nactive() && Main.tileSolid[Main.tile[num308, num343].type]) || Main.tile[num308, num343].liquid > 0) {
- 						flag33 = true;
-@@ -21142,8 +_,10 @@
+ 					if ((Main.tile[num310, num343].nactive() && Main.tileSolid[Main.tile[num310, num343].type]) || Main.tile[num310, num343].liquid > 0) {
+ 						flag37 = true;
+@@ -21178,8 +_,10 @@
  
  			if (type == 169 || type == 268) {
- 				for (int num344 = num309 - 3; num344 < num309; num344++) {
+ 				for (int num344 = num311 - 3; num344 < num311; num344++) {
 +					/*
- 					if (Main.tile[num308, num344] == null)
- 						Main.tile[num308, num344] = new Tile();
+ 					if (Main.tile[num310, num344] == null)
+ 						Main.tile[num310, num344] = new Tile();
 +					*/
  
- 					if ((Main.tile[num308, num344].nactive() && Main.tileSolid[Main.tile[num308, num344].type] && !TileID.Sets.Platforms[Main.tile[num308, num344].type]) || Main.tile[num308, num344].liquid > 0) {
- 						flag32 = false;
-@@ -21494,8 +_,10 @@
+ 					if ((Main.tile[num310, num344].nactive() && Main.tileSolid[Main.tile[num310, num344].type] && !TileID.Sets.Platforms[Main.tile[num310, num344].type]) || Main.tile[num310, num344].liquid > 0) {
+ 						flag35 = false;
+@@ -21530,8 +_,10 @@
  					if (!WorldGen.InWorld(num357, num360))
  						continue;
  
@@ -106,7 +106,7 @@
  
  					if ((Main.tile[num357, num360].nactive() && Main.tileSolid[Main.tile[num357, num360].type]) || Main.tile[num357, num360].liquid > 0) {
  						if (num360 < num358 + 5)
-@@ -29156,11 +_,13 @@
+@@ -29214,11 +_,13 @@
  					int num1067 = (int)(base.Center.Y / 16f);
  					int j4 = (int)(position.Y / 16f);
  					int num1068 = (int)((position.Y + (float)height) / 16f);
@@ -120,7 +120,7 @@
  
  					if (num1066 < 5 || num1066 > Main.maxTilesX - 5 || WorldGen.SolidTile(num1066, num1067) || WorldGen.SolidTile(num1066, j4) || WorldGen.SolidTile(num1066, num1068) || Main.tile[num1066, num1068].liquid == 0)
  						direction *= -1;
-@@ -29173,6 +_,7 @@
+@@ -29231,6 +_,7 @@
  					num1066 = (int)(base.Center.X / 16f);
  					num1067 = (int)(base.Center.Y / 16f);
  					float num1069 = position.Y + (float)height;
@@ -128,7 +128,7 @@
  					if (Main.tile[num1066, num1067 - 1] == null)
  						Main.tile[num1066, num1067 - 1] = new Tile();
  
-@@ -29181,6 +_,7 @@
+@@ -29239,6 +_,7 @@
  
  					if (Main.tile[num1066, num1067 + 1] == null)
  						Main.tile[num1066, num1067 + 1] = new Tile();
@@ -136,51 +136,54 @@
  
  					if (Main.tile[num1066, num1067 - 1].liquid > 0) {
  						num1069 = num1067 * 16;
-@@ -29305,8 +_,10 @@
+@@ -29363,11 +_,13 @@
  				int num1072 = 15;
- 				bool flag67 = false;
+ 				bool flag74 = false;
  				for (int num1073 = num1071; num1073 < num1071 + num1072; num1073++) {
 +					/*
+ 					if (!WorldGen.InWorld(num1070, num1073, 2))
+ 						continue;
+ 
  					if (Main.tile[num1070, num1073] == null)
  						Main.tile[num1070, num1073] = new Tile();
 +					*/
  
  					if ((Main.tile[num1070, num1073].nactive() && Main.tileSolid[Main.tile[num1070, num1073].type]) || Main.tile[num1070, num1073].liquid > 0) {
  						if (num1073 < num1071 + 5)
-@@ -35559,8 +_,10 @@
+@@ -34141,8 +_,10 @@
  			}
  
- 			for (int num1595 = num1592; num1595 < num1592 + num1568; num1595++) {
+ 			for (int num1486 = num1483; num1486 < num1483 + num1459; num1486++) {
 +				/*
- 				if (Main.tile[num1591, num1595] == null)
- 					Main.tile[num1591, num1595] = new Tile();
+ 				if (Main.tile[num1482, num1486] == null)
+ 					Main.tile[num1482, num1486] = new Tile();
 +				*/
  
- 				if ((Main.tile[num1591, num1595].nactive() && Main.tileSolid[Main.tile[num1591, num1595].type]) || Main.tile[num1591, num1595].liquid > 0) {
- 					if (num1595 <= num1592 + 1)
-@@ -35572,8 +_,10 @@
+ 				if ((Main.tile[num1482, num1486].nactive() && Main.tileSolid[Main.tile[num1482, num1486].type]) || Main.tile[num1482, num1486].liquid > 0) {
+ 					if (num1486 <= num1483 + 1)
+@@ -34154,8 +_,10 @@
  			}
  
- 			for (int num1596 = num1593; num1596 < num1593 + num1570; num1596++) {
+ 			for (int num1487 = num1484; num1487 < num1484 + num1461; num1487++) {
 +				/*
- 				if (Main.tile[num1594, num1596] == null)
- 					Main.tile[num1594, num1596] = new Tile();
+ 				if (Main.tile[num1485, num1487] == null)
+ 					Main.tile[num1485, num1487] = new Tile();
 +				*/
  
- 				if ((Main.tile[num1594, num1596].nactive() && Main.tileSolid[Main.tile[num1594, num1596].type]) || Main.tile[num1594, num1596].liquid > 0) {
- 					flag112 = true;
-@@ -35584,8 +_,10 @@
+ 				if ((Main.tile[num1485, num1487].nactive() && Main.tileSolid[Main.tile[num1485, num1487].type]) || Main.tile[num1485, num1487].liquid > 0) {
+ 					flag115 = true;
+@@ -34166,8 +_,10 @@
  
- 			if (flag113) {
- 				for (int num1597 = num1592 - num1569; num1597 < num1592; num1597++) {
+ 			if (flag116) {
+ 				for (int num1488 = num1483 - num1460; num1488 < num1483; num1488++) {
 +					/*
- 					if (Main.tile[num1591, num1597] == null)
- 						Main.tile[num1591, num1597] = new Tile();
+ 					if (Main.tile[num1482, num1488] == null)
+ 						Main.tile[num1482, num1488] = new Tile();
 +					*/
  
- 					if ((Main.tile[num1591, num1597].nactive() && Main.tileSolid[Main.tile[num1591, num1597].type]) || Main.tile[num1591, num1597].liquid > 0) {
- 						flag112 = false;
-@@ -36883,8 +_,10 @@
+ 					if ((Main.tile[num1482, num1488].nactive() && Main.tileSolid[Main.tile[num1482, num1488].type]) || Main.tile[num1482, num1488].liquid > 0) {
+ 						flag115 = false;
+@@ -36995,8 +_,10 @@
  		int num7 = 8 + num2;
  		bool flag2 = false;
  		for (int i = num6; i < num6 + num7; i++) {
@@ -191,7 +194,7 @@
  
  			if ((Main.tile[num5, i].nactive() && Main.tileSolid[Main.tile[num5, i].type]) || Main.tile[num5, i].liquid > 0) {
  				if (i < num6 + 5 + num2)
-@@ -37785,8 +_,10 @@
+@@ -37911,8 +_,10 @@
  		Point point = searchStartPositionInWorld.ToTileCoordinates();
  		int x = point.X;
  		for (int i = point.Y; i < point.Y + searchRange; i++) {
@@ -202,7 +205,7 @@
  
  			if (Main.tile[x, i].nactive() && Main.tileSolid[Main.tile[x, i].type]) {
  				tilesTraveled = i - point.Y;
-@@ -40560,8 +_,10 @@
+@@ -40681,8 +_,10 @@
  			int num8 = 8 + num3;
  			bool flag2 = false;
  			for (int i = num7; i < num7 + num8; i++) {
@@ -213,7 +216,7 @@
  
  				if ((Main.tile[num6, i].nactive() && Main.tileSolid[Main.tile[num6, i].type]) || Main.tile[num6, i].liquid > 0) {
  					if (i < num7 + 5 + num3)
-@@ -40734,8 +_,10 @@
+@@ -40855,8 +_,10 @@
  				bool flag6 = false;
  				for (int i = num13; i <= num13 + num14; i++) {
  					for (int j = num15; j < num15 + num16; j++) {
@@ -224,12 +227,12 @@
  
  						if ((Main.tile[i, j].nactive() && Main.tileSolid[Main.tile[i, j].type]) || Main.tile[i, j].liquid > 0) {
  							if (j < num15 + 5)
-@@ -45050,8 +_,13 @@
+@@ -45168,8 +_,13 @@
  			}
  		}
  
 +		/*
- 		if (!WorldGen.InWorld(num6, num7) || Main.tile[num6, num7] == null)
+ 		if (!WorldGen.IsTileLoaded(num6, num7))
  			return;
 +		*/
 +
@@ -238,7 +241,7 @@
  
  		if (Main.tile[num6, num7].type == 666 && Main.netMode != 1)
  			TryAddingRepeatedBuff(120, 180);
-@@ -47791,8 +_,10 @@
+@@ -47945,8 +_,10 @@
  				int num37 = (int)(position.Y + (float)height + 12f) / 16;
  				bool flag4 = false;
  				for (int l = num36 - 1; l <= num36 + 1; l++) {
@@ -249,39 +252,39 @@
  
  					if (Main.tile[l, num37].active() && Main.tileSolid[Main.tile[l, num37].type])
  						flag4 = true;
-@@ -50325,6 +_,7 @@
- 			int num196 = (int)((vector39.X + (float)(width / 2) + (float)((width / 2 + 1) * num195)) / 16f);
- 			int num197 = (int)((vector39.Y + (float)height - 1f) / 16f);
- 			if (WorldGen.InWorld(num196, num197, 4)) {
+@@ -50498,6 +_,7 @@
+ 			int num195 = (int)((vector39.X + (float)(width / 2) + (float)((width / 2 + 1) * num194)) / 16f);
+ 			int num196 = (int)((vector39.Y + (float)height - 1f) / 16f);
+ 			if (WorldGen.InWorld(num195, num196, 4)) {
 +				/*
- 				if (Main.tile[num196, num197] == null)
- 					Main.tile[num196, num197] = new Tile();
+ 				if (Main.tile[num195, num196] == null)
+ 					Main.tile[num195, num196] = new Tile();
  
-@@ -50342,6 +_,7 @@
+@@ -50515,6 +_,7 @@
  
- 				if (Main.tile[num196 - num195, num197 - 3] == null)
- 					Main.tile[num196 - num195, num197 - 3] = new Tile();
+ 				if (Main.tile[num195 - num194, num196 - 3] == null)
+ 					Main.tile[num195 - num194, num196 - 3] = new Tile();
 +				*/
  
- 				if ((float)(num196 * 16) < vector39.X + (float)width && (float)(num196 * 16 + 16) > vector39.X && ((Main.tile[num196, num197].nactive() && !Main.tile[num196, num197].topSlope() && !Main.tile[num196, num197 - 1].topSlope() && Main.tileSolid[Main.tile[num196, num197].type] && !Main.tileSolidTop[Main.tile[num196, num197].type]) || (Main.tile[num196, num197 - 1].halfBrick() && Main.tile[num196, num197 - 1].nactive())) && (!Main.tile[num196, num197 - 1].nactive() || !Main.tileSolid[Main.tile[num196, num197 - 1].type] || Main.tileSolidTop[Main.tile[num196, num197 - 1].type] || (Main.tile[num196, num197 - 1].halfBrick() && (!Main.tile[num196, num197 - 4].nactive() || !Main.tileSolid[Main.tile[num196, num197 - 4].type] || Main.tileSolidTop[Main.tile[num196, num197 - 4].type]))) && (!Main.tile[num196, num197 - 2].nactive() || !Main.tileSolid[Main.tile[num196, num197 - 2].type] || Main.tileSolidTop[Main.tile[num196, num197 - 2].type]) && (!Main.tile[num196, num197 - 3].nactive() || !Main.tileSolid[Main.tile[num196, num197 - 3].type] || Main.tileSolidTop[Main.tile[num196, num197 - 3].type]) && (!Main.tile[num196 - num195, num197 - 3].nactive() || !Main.tileSolid[Main.tile[num196 - num195, num197 - 3].type])) {
- 					float num198 = num197 * 16;
-@@ -50376,6 +_,7 @@
+ 				if ((float)(num195 * 16) < vector39.X + (float)width && (float)(num195 * 16 + 16) > vector39.X && ((Main.tile[num195, num196].nactive() && !Main.tile[num195, num196].topSlope() && !Main.tile[num195, num196 - 1].topSlope() && Main.tileSolid[Main.tile[num195, num196].type] && !Main.tileSolidTop[Main.tile[num195, num196].type]) || (Main.tile[num195, num196 - 1].halfBrick() && Main.tile[num195, num196 - 1].nactive())) && (!Main.tile[num195, num196 - 1].nactive() || !Main.tileSolid[Main.tile[num195, num196 - 1].type] || Main.tileSolidTop[Main.tile[num195, num196 - 1].type] || (Main.tile[num195, num196 - 1].halfBrick() && (!Main.tile[num195, num196 - 4].nactive() || !Main.tileSolid[Main.tile[num195, num196 - 4].type] || Main.tileSolidTop[Main.tile[num195, num196 - 4].type]))) && (!Main.tile[num195, num196 - 2].nactive() || !Main.tileSolid[Main.tile[num195, num196 - 2].type] || Main.tileSolidTop[Main.tile[num195, num196 - 2].type]) && (!Main.tile[num195, num196 - 3].nactive() || !Main.tileSolid[Main.tile[num195, num196 - 3].type] || Main.tileSolidTop[Main.tile[num195, num196 - 3].type]) && (!Main.tile[num195 - num194, num196 - 3].nactive() || !Main.tileSolid[Main.tile[num195 - num194, num196 - 3].type])) {
+ 					float num197 = num196 * 16;
+@@ -50549,6 +_,7 @@
  			if (type == 109 || type == 163 || type == 164 || type == 199 || type == 236 || type == 239 || type == 257 || type == 258 || type == 290 || type == 391 || type == 425 || type == 427 || type == 426 || type == 580 || type == 508 || type == 415 || type == 530 || type == 532 || type == 582)
- 				num201 = (int)((position.X + (float)(width / 2) + (float)((width / 2 + 16) * direction)) / 16f);
+ 				num200 = (int)((position.X + (float)(width / 2) + (float)((width / 2 + 16) * direction)) / 16f);
  
 +			/*
- 			if (Main.tile[num201, num202] == null)
- 				Main.tile[num201, num202] = new Tile();
+ 			if (Main.tile[num200, num201] == null)
+ 				Main.tile[num200, num201] = new Tile();
  
-@@ -50399,6 +_,7 @@
+@@ -50572,6 +_,7 @@
  
- 			if (Main.tile[num201 - direction, num202 + 1] == null)
- 				Main.tile[num201 - direction, num202 + 1] = new Tile();
+ 			if (Main.tile[num200 - direction, num201 + 1] == null)
+ 				Main.tile[num200 - direction, num201 + 1] = new Tile();
 +			*/
  
- 			Main.tile[num201, num202 + 1].halfBrick();
- 			if (Main.tile[num201, num202 - 1].nactive() && (Main.tile[num201, num202 - 1].type == 10 || Main.tile[num201, num202 - 1].type == 388) && flag8) {
-@@ -52689,6 +_,8 @@
+ 			Main.tile[num200, num201 + 1].halfBrick();
+ 			if (Main.tile[num200, num201 - 1].nactive() && (Main.tile[num200, num201 - 1].type == 10 || Main.tile[num200, num201 - 1].type == 388) && flag8) {
+@@ -52864,6 +_,8 @@
  			vector8.X += velocity.X;
  			int num15 = (int)((vector8.X + (float)(width / 2) + (float)((width / 2 + 1) * num14)) / 16f);
  			int num16 = (int)((vector8.Y + (float)height - 1f) / 16f);
@@ -290,7 +293,7 @@
  			if (Main.tile[num15, num16] == null)
  				Main.tile[num15, num16] = new Tile();
  
-@@ -52703,6 +_,7 @@
+@@ -52878,6 +_,7 @@
  
  			if (Main.tile[num15, num16 + 1] == null)
  				Main.tile[num15, num16 + 1] = new Tile();
@@ -298,7 +301,7 @@
  
  			if ((float)(num15 * 16) < vector8.X + (float)width && (float)(num15 * 16 + 16) > vector8.X && ((Main.tile[num15, num16].nactive() && !Main.tile[num15, num16].topSlope() && !Main.tile[num15, num16 - 1].topSlope() && Main.tileSolid[Main.tile[num15, num16].type] && !Main.tileSolidTop[Main.tile[num15, num16].type]) || (Main.tile[num15, num16 - 1].halfBrick() && Main.tile[num15, num16 - 1].nactive())) && (!Main.tile[num15, num16 - 1].nactive() || !Main.tileSolid[Main.tile[num15, num16 - 1].type] || Main.tileSolidTop[Main.tile[num15, num16 - 1].type] || (Main.tile[num15, num16 - 1].halfBrick() && (!Main.tile[num15, num16 - 4].nactive() || !Main.tileSolid[Main.tile[num15, num16 - 4].type] || Main.tileSolidTop[Main.tile[num15, num16 - 4].type]))) && (!Main.tile[num15, num16 - 2].nactive() || !Main.tileSolid[Main.tile[num15, num16 - 2].type] || Main.tileSolidTop[Main.tile[num15, num16 - 2].type]) && (!Main.tile[num15, num16 - 3].nactive() || !Main.tileSolid[Main.tile[num15, num16 - 3].type] || Main.tileSolidTop[Main.tile[num15, num16 - 3].type]) && (!Main.tile[num15 - num14, num16 - 3].nactive() || !Main.tileSolid[Main.tile[num15 - num14, num16 - 3].type])) {
  				float num17 = num16 * 16;
-@@ -52741,6 +_,8 @@
+@@ -52916,6 +_,8 @@
  			if (flag6) {
  				int num22 = (int)((position.X + (float)(width / 2) + (float)((width / 2 + 2) * direction) + velocity.X * 5f) / 16f);
  				int num23 = (int)((position.Y + (float)height - 15f) / 16f);
@@ -307,7 +310,7 @@
  				if (Main.tile[num22, num23] == null)
  					Main.tile[num22, num23] = new Tile();
  
-@@ -52770,6 +_,7 @@
+@@ -52945,6 +_,7 @@
  
  				if (Main.tile[num22 + direction, num23 + 3] == null)
  					Main.tile[num22 + direction, num23 + 3] = new Tile();
@@ -315,7 +318,7 @@
  
  				int num24 = spriteDirection;
  				if (type == 423 || type == 410 || type == 546)
-@@ -55477,8 +_,10 @@
+@@ -55619,8 +_,10 @@
  		}
  
  		for (int k = num19; k < num19 + num; k++) {
@@ -326,7 +329,7 @@
  
  			if ((Main.tile[num18, k].nactive() && Main.tileSolid[Main.tile[num18, k].type]) || Main.tile[num18, k].liquid > 0) {
  				if (k <= num19 + 1)
-@@ -55490,8 +_,10 @@
+@@ -55632,8 +_,10 @@
  		}
  
  		for (int l = num20; l < num20 + num3; l++) {
@@ -337,7 +340,7 @@
  
  			if ((Main.tile[num21, l].nactive() && Main.tileSolid[Main.tile[num21, l].type]) || Main.tile[num21, l].liquid > 0) {
  				flag4 = true;
-@@ -55502,8 +_,10 @@
+@@ -55644,8 +_,10 @@
  
  		if (flag5) {
  			for (int m = num19 - num2; m < num19; m++) {
@@ -348,7 +351,7 @@
  
  				if ((Main.tile[num18, m].nactive() && Main.tileSolid[Main.tile[num18, m].type]) || Main.tile[num18, m].liquid > 0) {
  					flag4 = false;
-@@ -60545,8 +_,10 @@
+@@ -60653,8 +_,10 @@
  					break;
  				}
  				if (velocity.X == 0f) {
@@ -359,7 +362,7 @@
  					frameCounter = 0.0;
  					break;
  				}
-@@ -75815,6 +_,8 @@
+@@ -75877,6 +_,8 @@
  			bool flag = false;
  			int num4 = (int)(position.X + (float)(width / 2)) / 16;
  			int num5 = (int)(position.Y + (float)(height / 2)) / 16;
@@ -368,7 +371,7 @@
  			try {
  				if (num4 >= 4 && num4 <= Main.maxTilesX - 4 && num5 >= 4 && num5 <= Main.maxTilesY - 4) {
  					if (Main.tile[num4, num5] == null)
-@@ -75834,6 +_,10 @@
+@@ -75896,6 +_,10 @@
  			}
  
  			if (flag)

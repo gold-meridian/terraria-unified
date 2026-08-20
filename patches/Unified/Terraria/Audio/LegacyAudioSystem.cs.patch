@@ -22,11 +22,12 @@
  						break;
  				}
  
-@@ -117,12 +_,13 @@
+@@ -116,13 +_,14 @@
+ 
  	public void Init(string renderer = "")
  	{
--		Engine = new AudioEngine("Content\\TerrariaMusic.xgs", TimeSpan.FromMilliseconds(250.0), renderer);
 +		var contentDir = Main.instance.Content.RootDirectory;
+-		Engine = new AudioEngine("Content\\TerrariaMusic.xgs", TimeSpan.FromMilliseconds(250.0), renderer);
 +		Engine = new AudioEngine(Path.Combine(contentDir, "TerrariaMusic.xgs"), TimeSpan.FromMilliseconds(250.0), renderer);
  #if FNA
  		Console.WriteLine("SDL Audio Driver: " + SDL3.SDL.SDL_GetCurrentAudioDriver());

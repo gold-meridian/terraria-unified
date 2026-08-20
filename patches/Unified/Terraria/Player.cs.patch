@@ -1,6 +1,6 @@
 --- src/TerrariaNetCore/Terraria/Player.cs
 +++ src/Unified/Terraria/Player.cs
-@@ -40,7 +_,7 @@
+@@ -42,7 +_,7 @@
  
  namespace Terraria;
  
@@ -9,7 +9,7 @@
  {
  	public static class BuilderAccToggleIDs
  	{
-@@ -15582,11 +_,14 @@
+@@ -15871,11 +_,14 @@
  			return;
  
  		float num3 = position.Y;
@@ -24,7 +24,7 @@
  
  		if ((!Main.tile[num, num2 - 1].active() || !Main.tileRope[Main.tile[num, num2 - 1].type]) && (!Main.tile[num, num2 + 1].active() || !Main.tileRope[Main.tile[num, num2 + 1].type]))
  			num3 = num2 * 16 + 22;
-@@ -18507,8 +_,10 @@
+@@ -18844,8 +_,10 @@
  
  				int num3 = (int)((position.Y + (float)num2 - 44f * gravDir) / 16f);
  				if (Main.tile[num, num3] != null && Main.tile[num, num3].liquid < 128) {
@@ -35,7 +35,7 @@
  
  					if (!Main.tile[num, num3].active() || !Main.tileSolid[Main.tile[num, num3].type] || Main.tileSolidTop[Main.tile[num, num3].type])
  						flag = false;
-@@ -18934,10 +_,17 @@
+@@ -19271,10 +_,17 @@
  		if (gravDir == -1f)
  			num2 = (int)(position.Y - 0.1f) / 16;
  
@@ -53,7 +53,7 @@
  
  		if (num3 <= -1) {
  			ResetFloorFlags();
-@@ -18956,7 +_,10 @@
+@@ -19293,7 +_,10 @@
  			num3 = -1;
  
  		if (!wet && !mount.Cart)
@@ -64,7 +64,7 @@
  	}
  
  	public void ResetFloorFlags()
-@@ -18968,9 +_,14 @@
+@@ -19305,9 +_,14 @@
  		runningOnSand = false;
  	}
  
@@ -80,7 +80,7 @@
  		if (Main.tile[x - 1, y] == null)
  			Main.tile[x - 1, y] = new Tile();
  
-@@ -18979,6 +_,7 @@
+@@ -19316,6 +_,7 @@
  
  		if (Main.tile[x, y] == null)
  			Main.tile[x, y] = new Tile();
@@ -88,7 +88,7 @@
  
  		if (Main.tile[x, y].nactive() && Main.tileSolid[Main.tile[x, y].type])
  			result = Main.tile[x, y];
-@@ -19217,9 +_,16 @@
+@@ -19554,9 +_,16 @@
  		if (position.Y < Main.topWorld + (float)num) {
  			Main.cameraY = 0f;
  			if (Main.remixWorld || forcedGravity > 0) {
@@ -105,20 +105,20 @@
  						AchievementsHelper.NotifyProgressionEvent(44);
  				}
  
-@@ -19244,7 +_,12 @@
- 		}
+@@ -19582,7 +_,12 @@
  
+ 		bool skyblockWorld = Main.skyblockWorld;
  		if (position.Y > Main.bottomWorld - (float)num) {
 +			// TU(#28): Restrict border movement killing the player to the
 +			// owning client.
 +			/*
- 			if (!dead)
+ 			if (skyblockWorld && !dead)
 +			*/
-+			if (!dead && whoAmI == Main.myPlayer)
++			if (skyblockWorld && !dead && whoAmI == Main.myPlayer)
  				KillMe(PlayerDeathReason.ByOther(21), 10.0, 0);
  
  			Main.cameraY = 0f;
-@@ -19578,6 +_,8 @@
+@@ -19916,6 +_,8 @@
  		if (whoAmI != Main.myPlayer) {
  			int num2 = (int)(position.X + (float)(width / 2)) / 16;
  			int num3 = (int)(position.Y + (float)(height / 2)) / 16;
@@ -127,7 +127,7 @@
  			if (!WorldGen.InWorld(num2, num3, 4))
  				flag = true;
  			else if (Main.tile[num2, num3] == null)
-@@ -19590,6 +_,10 @@
+@@ -19928,6 +_,10 @@
  				flag = true;
  			else if (Main.tile[num2, num3 + 3] == null)
  				flag = true;
@@ -138,7 +138,7 @@
  
  			if (flag) {
  				outOfRange = true;
-@@ -20191,6 +_,7 @@
+@@ -20551,6 +_,7 @@
  
  			TrySyncingInput();
  			UpdateNearbyCraftingTiles();
@@ -146,7 +146,7 @@
  			HandleBeingInChestRange();
  			tileEntityAnchor.GetTileEntity()?.OnPlayerUpdate(this);
  		}
-@@ -20295,6 +_,7 @@
+@@ -20649,6 +_,7 @@
  		if (tileTargetY < 5)
  			tileTargetY = 5;
  
@@ -154,7 +154,7 @@
  		if (Main.tile[tileTargetX - 1, tileTargetY] == null)
  			Main.tile[tileTargetX - 1, tileTargetY] = new Tile();
  
-@@ -20303,6 +_,7 @@
+@@ -20657,6 +_,7 @@
  
  		if (Main.tile[tileTargetX, tileTargetY] == null)
  			Main.tile[tileTargetX, tileTargetY] = new Tile();
@@ -162,44 +162,44 @@
  
  		if (inventory[selectedItem].axe > 0 && !Main.tile[tileTargetX, tileTargetY].active() && inventory[selectedItem].createWall <= 0 && (inventory[selectedItem].hammer <= 0 || inventory[selectedItem].axe != 0)) {
  			if (Main.tile[tileTargetX - 1, tileTargetY].active() && Main.tile[tileTargetX - 1, tileTargetY].type == 323) {
-@@ -20914,11 +_,14 @@
- 					int num33 = num32 * 16 + 8 - width / 2;
+@@ -21295,11 +_,14 @@
+ 					int num35 = num34 * 16 + 8 - width / 2;
  					float y2 = position.Y;
- 					y2 = num30 * 16 + 22;
+ 					y2 = num32 * 16 + 22;
 +
 +					/*
- 					if (Main.tile[num32, num30 - 1] == null)
- 						Main.tile[num32, num30 - 1] = new Tile();
+ 					if (Main.tile[num34, num32 - 1] == null)
+ 						Main.tile[num34, num32 - 1] = new Tile();
  
- 					if (Main.tile[num32, num30 + 1] == null)
- 						Main.tile[num32, num30 + 1] = new Tile();
+ 					if (Main.tile[num34, num32 + 1] == null)
+ 						Main.tile[num34, num32 + 1] = new Tile();
 +					*/
  
- 					if (WorldGen.IsRope(num32, num30 - 1) || WorldGen.IsRope(num32, num30 + 1))
- 						y2 = num30 * 16 + 22;
-@@ -20951,8 +_,10 @@
+ 					if (WorldGen.IsRope(num34, num32 - 1) || WorldGen.IsRope(num34, num32 + 1))
+ 						y2 = num32 * 16 + 22;
+@@ -21332,8 +_,10 @@
  			if (velocity.X != 0f)
  				pulley = false;
  
 +			/*
- 			if (Main.tile[num29, num30] == null)
- 				Main.tile[num29, num30] = new Tile();
+ 			if (Main.tile[num31, num32] == null)
+ 				Main.tile[num31, num32] = new Tile();
 +			*/
  
- 			if (!WorldGen.IsRope(num29, num30))
+ 			if (!WorldGen.IsRope(num31, num32))
  				pulley = false;
-@@ -20996,8 +_,10 @@
- 			if (WorldGen.IsRope(num34, num36 - 1) || WorldGen.IsRope(num34, num36 + 1))
- 				flag17 = true;
+@@ -21377,8 +_,10 @@
+ 			if (WorldGen.IsRope(num36, num38 - 1) || WorldGen.IsRope(num36, num38 + 1))
+ 				flag16 = true;
  
 +			/*
- 			if (Main.tile[num34, num35] == null)
- 				Main.tile[num34, num35] = new Tile();
+ 			if (Main.tile[num36, num37] == null)
+ 				Main.tile[num36, num37] = new Tile();
 +			*/
  
- 			if (!WorldGen.IsRope(num34, num35)) {
- 				flag16 = false;
-@@ -25716,8 +_,10 @@
+ 			if (!WorldGen.IsRope(num36, num37)) {
+ 				flag15 = false;
+@@ -26280,8 +_,10 @@
  
  	public void TileInteractionsCheck(int myX, int myY)
  	{
@@ -210,7 +210,7 @@
  
  		if (Main.tile[myX, myY].active()) {
  			TileInteractionsMouseOver(myX, myY);
-@@ -28835,6 +_,8 @@
+@@ -29417,6 +_,8 @@
  
  	public void AdjTiles()
  	{
@@ -219,7 +219,7 @@
  		Array.Clear(adjTile, 0, adjTile.Length);
  		oldAdjWaterSource = adjWaterSource;
  		adjWaterSource = false;
-@@ -28845,13 +_,85 @@
+@@ -29427,13 +_,85 @@
  		alchemyTable = false;
  		Rectangle tileRegion = TileReachCheckSettings.Simple.GetTileRegion(this, ateArtisanBread ? 4 : 0);
  		tileRegion = WorldUtils.ClampToWorld(tileRegion);
@@ -305,7 +305,7 @@
  				}
  
  				if (tile.liquid > 200 && tile.liquidType() == 0)
-@@ -40931,8 +_,11 @@
+@@ -42100,8 +_,11 @@
  				if (whoAmI == Main.myPlayer && flag) {
  					int num7 = (int)(itemLocation.X + (float)heldItemFrame.Width * 0.8f * (float)direction) / 16;
  					int num8 = (int)(itemLocation.Y + mountOffset + (float)(heldItemFrame.Height / 2)) / 16;

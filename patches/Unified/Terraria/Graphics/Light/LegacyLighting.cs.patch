@@ -1,6 +1,6 @@
 --- src/TerrariaNetCore/Terraria/Graphics/Light/LegacyLighting.cs
 +++ src/Unified/Terraria/Graphics/Light/LegacyLighting.cs
-@@ -133,6 +_,9 @@
+@@ -134,6 +_,9 @@
  	private static FastRandom _swipeRandom = FastRandom.CreateWithRandomSeed();
  	private LightMap _lightMap = new LightMap();
  
@@ -10,7 +10,7 @@
  	public int Mode { get; set; }
  
  	public bool IsColorOrWhiteMode => Mode < 2;
-@@ -142,6 +_,7 @@
+@@ -143,6 +_,7 @@
  		_camera = camera;
  	}
  
@@ -18,7 +18,7 @@
  	public Vector3 GetColor(int x, int y)
  	{
  		if (x < _expandedRectLeft || x >= _expandedRectRight || y < _expandedRectTop || y >= _expandedRectBottom)
-@@ -150,6 +_,12 @@
+@@ -151,6 +_,12 @@
  		LightingState lightingState = _states[x - _expandedRectLeft][y - _expandedRectTop];
  		return new Vector3(lightingState.R, lightingState.G, lightingState.B);
  	}
@@ -31,7 +31,7 @@
  
  	public void Rebuild()
  	{
-@@ -165,6 +_,7 @@
+@@ -166,6 +_,7 @@
  		int num = (int)_camera.UnscaledSize.X / 16 + 90 + 10;
  		int num2 = (int)_camera.UnscaledSize.Y / 16 + 90 + 10;
  		_lightMap.SetSize(num, num2);
@@ -39,7 +39,7 @@
  		if (_states != null && _states.Length >= num && _states[0].Length >= num2)
  			return;
  
-@@ -349,10 +_,13 @@
+@@ -350,10 +_,13 @@
  			for (int j = num3; j < num4; j++) {
  				LightingState lightingState = array[j - _expandedRectTop];
  				Tile tile = Main.tile[i, j];
@@ -53,7 +53,7 @@
  
  				if ((!tile.active() || !Main.tileNoSunLight[tile.type]) && lightingState.R < _skyColor && tile.liquid < 200 && (Main.wallLight[tile.wall] || tile.wall == 73)) {
  					lightingState.R = tileR;
-@@ -362,6 +_,8 @@
+@@ -363,6 +_,8 @@
  					if (lightingState.B < _skyColor)
  						lightingState.B = tileB;
  				}
@@ -62,7 +62,7 @@
  			}
  		}
  	}
-@@ -420,6 +_,7 @@
+@@ -421,6 +_,7 @@
  				obj.R = lightingState.R;
  				obj.G = lightingState.G;
  				obj.B = lightingState.B;
@@ -70,7 +70,7 @@
  			}
  		}
  	}
-@@ -467,6 +_,7 @@
+@@ -468,6 +_,7 @@
  					obj.R = lightingState.R2;
  					obj.G = lightingState.G2;
  					obj.B = lightingState.B2;
@@ -78,7 +78,7 @@
  				}
  			}
  
-@@ -490,6 +_,7 @@
+@@ -491,6 +_,7 @@
  				obj2.R = lightingState2.R2;
  				obj2.G = lightingState2.R2;
  				obj2.B = lightingState2.R2;
@@ -86,7 +86,7 @@
  			}
  		}
  	}
-@@ -513,6 +_,8 @@
+@@ -514,6 +_,8 @@
  				}
  			}
  		}
@@ -95,7 +95,7 @@
  	}
  
  	private void PreRenderPhase()
-@@ -591,10 +_,13 @@
+@@ -592,10 +_,13 @@
  			for (int n = num3; n < num4; n++) {
  				LightingState lightingState2 = array3[n - _expandedRectTop];
  				Tile tile = Main.tile[m, n];

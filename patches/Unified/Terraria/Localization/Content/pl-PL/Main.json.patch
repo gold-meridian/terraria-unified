@@ -1,6 +1,6 @@
 --- src/TerrariaNetCore/Terraria/Localization/Content/pl-PL/Main.json
 +++ src/Unified/Terraria/Localization/Content/pl-PL/Main.json
-@@ -595,6 +_,9 @@
+@@ -656,6 +_,9 @@
  		"WireModeNormal": "Wyświetlanie kabli: Normalne",
  		"RulerOn": "Linijka wł.",
  		"RulerOff": "Linijka wył.",

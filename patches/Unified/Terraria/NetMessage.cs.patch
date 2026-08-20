@@ -53,7 +53,7 @@
  					num4 = (short)(num4 + 1);
  					continue;
  				}
-@@ -2023,15 +_,18 @@
+@@ -2023,16 +_,19 @@
  
  	public static void DecompressTileBlock_Inner(BinaryReader reader, int xStart, int yStart, int width, int height)
  	{
@@ -73,6 +73,7 @@
 +					Main.tile[j, i].CopyFrom(tile);
  					continue;
  				}
+ 
 @@ -2040,6 +_,8 @@
  				byte b;
  				byte b3 = (b2 = (b = 0));

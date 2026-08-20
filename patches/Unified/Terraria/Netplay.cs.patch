@@ -1,8 +1,10 @@
 --- src/TerrariaNetCore/Terraria/Netplay.cs
 +++ src/Unified/Terraria/Netplay.cs
-@@ -516,4 +_,5 @@
+@@ -515,6 +_,7 @@
+ 				Main.ActivePlayerFileData.StopPlayTimer();
  				SoundEngine.StopTrackedSounds();
  				MapHelper.noStatusText = false;
 +				WorldGen.ResizeWorldMapData(clearTileMap: true);
  			}
  
+ 			if (Main.menuMode == 15 && Main.statusText == Language.GetTextValue("Net.LostConnection"))

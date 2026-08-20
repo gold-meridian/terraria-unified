@@ -1,6 +1,6 @@
 --- src/TerrariaNetCore/Terraria/GameContent/ExtraSpawnPointManager.cs
 +++ src/Unified/Terraria/GameContent/ExtraSpawnPointManager.cs
-@@ -206,7 +_,7 @@
+@@ -221,7 +_,7 @@
  				return false;
  
  			if (settings.remix) {
@@ -9,7 +9,7 @@
  					num2 = 150;
  
  				if (!settings.skyblock && (y < GenVars.remixSurfaceLayerLow || y > GenVars.remixMushroomLayerHigh))
-@@ -216,7 +_,7 @@
+@@ -231,7 +_,7 @@
  					return false;
  			}
  

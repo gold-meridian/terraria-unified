@@ -295,7 +295,7 @@
  		float num = color.X + color.Y + color.Z;
  		float num2 = color2.X + color2.Y + color2.Z;
  		float num3 = color4.X + color4.Y + color4.Z;
-@@ -499,4 +_,30 @@
+@@ -499,6 +_,32 @@
  			slices[3] = color4 * GlobalBrightness;
  		else
  			slices[3] = color2 * GlobalBrightness;
@@ -326,3 +326,5 @@
 +		slices[2] = (total2 >= total4 ? color3 : color2) * globalBrightness;
 +		slices[3] = (total2 >= total3 ? color4 : color2) * globalBrightness;
  	}
+ 
+ 	internal static void AddGameplaySnapshotComponents()

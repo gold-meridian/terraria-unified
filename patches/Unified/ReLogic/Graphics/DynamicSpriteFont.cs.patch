@@ -1,6 +1,6 @@
 --- src/TerrariaNetCore/ReLogic/Graphics/DynamicSpriteFont.cs
 +++ src/Unified/ReLogic/Graphics/DynamicSpriteFont.cs
-@@ -148,7 +_,7 @@
+@@ -154,7 +_,7 @@
  			if (charOffsets != null)
  				position += charOffsets[i];
  

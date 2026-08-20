@@ -29,7 +29,8 @@
  	public Tile()
  	{
  		type = 0;
-@@ -73,10 +_,14 @@
+@@ -72,11 +_,15 @@
+ 		frameX = 0;
  		frameY = 0;
  	}
 +	*/
@@ -44,7 +45,7 @@
  		type = 0;
  		wall = 0;
  		liquid = 0;
-@@ -87,6 +_,8 @@
+@@ -87,7 +_,9 @@
  		frameX = 0;
  		frameY = 0;
  	}
@@ -53,6 +54,7 @@
 +	/*
  	public void ClearTile()
  	{
+ 		ClearSlope();
 @@ -109,6 +_,9 @@
  
  	public void CopyFrom(Tile from)
@@ -136,7 +138,9 @@
  		liquid = 0;
  		sTileHeader = 32;
  		bTileHeader = 0;
-@@ -208,8 +_,14 @@
+@@ -206,10 +_,16 @@
+ 		frameX = 0;
+ 		frameY = 0;
  		this.type = type;
 +		*/
  	}

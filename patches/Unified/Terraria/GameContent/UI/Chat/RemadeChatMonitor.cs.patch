@@ -1,6 +1,6 @@
 --- src/TerrariaNetCore/Terraria/GameContent/UI/Chat/RemadeChatMonitor.cs
 +++ src/Unified/Terraria/GameContent/UI/Chat/RemadeChatMonitor.cs
-@@ -35,7 +_,12 @@
+@@ -35,6 +_,11 @@
  
  	public void AddNewMessage(string text, Color color, int widthLimitInPixels = -1)
  	{
@@ -12,4 +12,3 @@
  		Trace.WriteLine("[chat] " + text);
  		if (!Main.dedServ) {
  			ChatMessageContainer chatMessageContainer = new ChatMessageContainer();
- 			chatMessageContainer.SetContents(text, color, widthLimitInPixels);

@@ -1,6 +1,6 @@
 --- src/TerrariaNetCore/Terraria/GameContent/Generation/Dungeon/Features/DungeonGlobalTraps.cs
 +++ src/Unified/Terraria/GameContent/Generation/Dungeon/Features/DungeonGlobalTraps.cs
-@@ -50,13 +_,13 @@
+@@ -52,13 +_,13 @@
  		if (data.Type == DungeonType.DualDungeon) {
  			int num8 = 30;
  			switch (WorldGen.GetWorldSize()) {

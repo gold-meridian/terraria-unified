@@ -1,6 +1,6 @@
 --- src/TerrariaNetCore/Terraria/GameContent/LeashedEntity.cs
 +++ src/Unified/Terraria/GameContent/LeashedEntity.cs
-@@ -8,7 +_,7 @@
+@@ -9,7 +_,7 @@
  
  namespace Terraria.GameContent;
  
@@ -9,7 +9,7 @@
  {
  	public class NetModule : Terraria.Net.NetModule
  	{
-@@ -230,7 +_,10 @@
+@@ -244,7 +_,10 @@
  		}
  	}
  

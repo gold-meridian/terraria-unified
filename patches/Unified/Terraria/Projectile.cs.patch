@@ -1,15 +1,15 @@
 --- src/TerrariaNetCore/Terraria/Projectile.cs
 +++ src/Unified/Terraria/Projectile.cs
-@@ -12824,7 +_,7 @@
- 		if (localAI[0] == 1f && GetStormLightningExplosionRect().Intersects(targetRect))
- 			return true;
+@@ -14075,7 +_,7 @@
+ 				return true;
+ 		}
  
 -		if (StormLightningLiquidCollisionCheck(targetRect.Center()))
 +		if (StormLightningLiquidCollisionCheck(targetRect.Center.ToVector2()))
  			return true;
  
- 		if (_lightningCollisionBounds != null && _lightningCollisionBounds.Intersects(targetRect))
-@@ -41796,10 +_,12 @@
+ 		if (customHitbox is MultiPointHitbox) {
+@@ -45108,10 +_,12 @@
  		int num2 = 2;
  		int num3 = 0;
  		while (num3 <= num) {
@@ -24,7 +24,7 @@
  
  			if (WorldGen.ActiveAndWalkableTile(p.X, p.Y)) {
  				Vector2 vector = p.ToWorldCoordinates(8f, 0f);
-@@ -42120,8 +_,10 @@
+@@ -45432,8 +_,10 @@
  			Vector2 vector5 = default(Vector2);
  			for (int i = num10; i < num11; i++) {
  				for (int j = num12; j < num13; j++) {
@@ -35,7 +35,7 @@
  
  					vector5.X = i * 16;
  					vector5.Y = j * 16;
-@@ -42250,8 +_,11 @@
+@@ -45562,8 +_,11 @@
  		}
  		else if (ai[0] == 2f) {
  			Point point3 = base.Center.ToTileCoordinates();
@@ -47,7 +47,7 @@
  
  			bool flag = true;
  			if (AI_007_GrapplingHooks_CanTileBeLatchedOnTo(Main.tile[point3.X, point3.Y]))
-@@ -42826,11 +_,14 @@
+@@ -46138,11 +_,14 @@
  			int num4 = (int)(base.Center.Y / 16f);
  			_ = position.Y / 16f;
  			int num5 = (int)((position.Y + (float)height) / 16f);
@@ -62,7 +62,7 @@
  
  			if (velocity.Y > 0f)
  				velocity.Y *= 0.5f;
-@@ -43037,11 +_,14 @@
+@@ -46349,11 +_,14 @@
  			int num8 = (int)(base.Center.Y / 16f);
  			_ = position.Y / 16f;
  			int num9 = (int)((position.Y + (float)height) / 16f);
@@ -77,7 +77,7 @@
  
  			if (velocity.Y > 0f)
  				velocity.Y *= 0.5f;
-@@ -43119,6 +_,8 @@
+@@ -46431,6 +_,8 @@
  	private float AI_061_FishingBobber_GetWaterLine(int X, int Y)
  	{
  		float result = position.Y + (float)height;
@@ -86,7 +86,7 @@
  		if (Main.tile[X, Y - 1] == null)
  			Main.tile[X, Y - 1] = new Tile();
  
-@@ -43127,6 +_,7 @@
+@@ -46439,6 +_,7 @@
  
  		if (Main.tile[X, Y + 1] == null)
  			Main.tile[X, Y + 1] = new Tile();
@@ -94,15 +94,15 @@
  
  		if (Main.tile[X, Y - 1].liquid > 0) {
  			result = Y * 16;
-@@ -61096,8 +_,11 @@
+@@ -65112,8 +_,11 @@
  
- 				int num696 = (int)position.X / 16;
- 				int num697 = (int)position.Y / 16;
+ 				int num726 = (int)position.X / 16;
+ 				int num727 = (int)position.Y / 16;
 +
 +				/*
- 				if (Main.tile[num696, num697] == null)
- 					Main.tile[num696, num697] = new Tile();
+ 				if (Main.tile[num726, num727] == null)
+ 					Main.tile[num726, num727] = new Tile();
 +				*/
  
- 				if (Main.tile[num696, num697].type == 127 && Main.tile[num696, num697].active())
- 					WorldGen.KillTile(num696, num697);
+ 				if (Main.tile[num726, num727].type == 127 && Main.tile[num726, num727].active())
+ 					WorldGen.KillTile(num726, num727);

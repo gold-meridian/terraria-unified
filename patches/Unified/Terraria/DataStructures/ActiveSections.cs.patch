@@ -1,6 +1,6 @@
 --- src/TerrariaNetCore/Terraria/DataStructures/ActiveSections.cs
 +++ src/Unified/Terraria/DataStructures/ActiveSections.cs
-@@ -3,7 +_,7 @@
+@@ -4,7 +_,7 @@
  
  namespace Terraria.DataStructures;
  
