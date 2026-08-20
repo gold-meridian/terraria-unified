@@ -1,0 +1,20 @@
+--- src/TerrariaNetCore/Terraria/Testing/StateSnapshot.cs
++++ src/Unified/Terraria/Testing/StateSnapshot.cs
+@@ -68,7 +_,7 @@
+ 		private unsafe static void BackupRange(int x0, int x1, TileData[] data)
+ 		{
+ 			int maxTilesY = Main.maxTilesY;
+-			Tile[,] tile = Main.tile;
++			Tilemap tile = Main.tile;
+ 			fixed (TileData* ptr = &data[x0 * maxTilesY]) {
+ 				TileData* ptr2 = ptr;
+ 				for (int i = x0; i < x1; i++) {
+@@ -94,7 +_,7 @@
+ 		private unsafe static void RestoreRange(int x0, int x1, TileData[] data)
+ 		{
+ 			int maxTilesY = Main.maxTilesY;
+-			Tile[,] tile = Main.tile;
++			Tilemap tile = Main.tile;
+ 			fixed (TileData* ptr = &data[x0 * maxTilesY]) {
+ 				TileData* ptr2 = ptr;
+ 				for (int i = x0; i < x1; i++) {

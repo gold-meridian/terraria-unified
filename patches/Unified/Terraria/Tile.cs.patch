@@ -45,16 +45,14 @@
  		type = 0;
  		wall = 0;
  		liquid = 0;
-@@ -87,7 +_,9 @@
+@@ -86,6 +_,7 @@
+ 		bTileHeader3 = 0;
  		frameX = 0;
  		frameY = 0;
++		*/
  	}
-+	*/
  
-+	/*
  	public void ClearTile()
- 	{
- 		ClearSlope();
 @@ -109,6 +_,9 @@
  
  	public void CopyFrom(Tile from)

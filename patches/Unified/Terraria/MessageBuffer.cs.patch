@@ -45,11 +45,11 @@
  						num24 = 0;
 +					*/
 +
-+					if (num43 <= ChestNameLengthExtender.PreferredMaxChestNameLength) {
++					if (num24 <= ChestNameLengthExtender.PreferredMaxChestNameLength) {
 +						name = reader.ReadString();
 +					}
-+					else if (num43 != 255) {
-+						num43 = 0;
++					else if (num24 != 255) {
++						num24 = 0;
 +					}
  				}
  

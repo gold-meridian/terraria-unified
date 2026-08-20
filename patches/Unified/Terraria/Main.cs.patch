@@ -44,30 +44,26 @@
  	public const int MaxWorldViewSizeWidth = 1920;
  	public const int MaxWorldViewSizeHeight = 1200;
 -	public static readonly Microsoft.Xna.Framework.Point MaxWorldViewSize = new Microsoft.Xna.Framework.Point(1920, 1200);
-+	public static readonly System.Drawing.Point MaxWorldViewSize = new(1920, 1200);
++	public static readonly System.Drawing.Point MaxWorldViewSize = new System.Drawing.Point(1920, 1200);
  	public static int maxScreenW = 1920;
  	public static int maxScreenH = 1200;
  	public static int minScreenW = 800;
-@@ -544,13 +_,23 @@
+@@ -544,13 +_,13 @@
  	public static int wofDrawAreaBottom;
  	public static int wofDrawFrameIndex;
  	public static int offScreenRange = 200;
-+	/*
- 	private static WorldSceneLayerTarget backWaterTarget;
-+	*/
+-	private static WorldSceneLayerTarget backWaterTarget;
 +	public static WorldSceneLayerTarget backWaterTarget;
  	public static WorldSceneLayerTarget waterTarget;
-+	/*
- 	private static WorldSceneLayerTarget tileTarget;
- 	private static WorldSceneLayerTarget tile2Target;
- 	private static WorldSceneLayerTarget wallTarget;
- 	private static WorldSceneLayerTarget backgroundTarget;
- 	private static WorldSceneLayerTarget backgroundTargetSwap;
-+	*/
+-	private static WorldSceneLayerTarget tileTarget;
 +	public static WorldSceneLayerTarget tileTarget;
+-	private static WorldSceneLayerTarget tile2Target;
 +	public static WorldSceneLayerTarget tile2Target;
+-	private static WorldSceneLayerTarget wallTarget;
 +	public static WorldSceneLayerTarget wallTarget;
+-	private static WorldSceneLayerTarget backgroundTarget;
 +	public static WorldSceneLayerTarget backgroundTarget;
+-	private static WorldSceneLayerTarget backgroundTargetSwap;
 +	public static WorldSceneLayerTarget backgroundTargetSwap;
  	private static bool backgroundTargetSwapPending;
  	public static RenderTarget2D skyTarget;
@@ -190,13 +186,13 @@
  	public static void SetGraphicsProfile(GraphicsProfile profile, bool forceSet)
  	{
  		if (_currentGraphicsProfile != profile || forceSet) {
-@@ -3247,6 +_,7 @@
- 
- 		instance.EnsureRenderTargetContent();
+@@ -3216,6 +_,7 @@
+ 			SetGraphicsProfileInternal();
+ 		}
  	}
 +	*/
  
- 	private static void TrySupporting8K()
+ 	private static void SetGraphicsProfileInternal()
  	{
 @@ -3415,12 +_,12 @@
  
@@ -229,7 +225,7 @@
  	{
 +		// TODO: Can emulate on Linux with some path stuff.
 +		if (!OperatingSystem.IsWindows())
-+			return;
++			return false;
 +
  		try {
  			RegistryKey currentUser = Registry.CurrentUser;
@@ -258,10 +254,11 @@
  		if (currentValue <= 162) {
  			bool currentValue9 = false;
  			uint currentValue10 = 0u;
-@@ -5600,7 +_,12 @@
+@@ -5600,7 +_,13 @@
  #if FNA
  			Console.WriteLine("SDL Video Driver: " + SDL3.SDL.SDL_GetCurrentVideoDriver());
  #endif
++
 +			/*
  			base.Content.RootDirectory = "Content";
 +			*/
@@ -271,15 +268,16 @@
  		}
  	}
  
-@@ -5682,6 +_,8 @@
- 
+@@ -5683,6 +_,9 @@
  	protected override void Initialize()
  	{
+ 		Invariant.Assert(npcFrameCount.Length == NPCID.Count, "Someone forgot to add to Main.npcFrameCount for new NPCIDs when updating NPCID.Count");
++
 +		InitUnifiedContentManager();
 +
- 		Invariant.Assert(npcFrameCount.Length == NPCID.Count, "Someone forgot to add to Main.npcFrameCount for new NPCIDs when updating NPCID.Count");
  		musicFade[50] = 1f;
  		if (dedServ)
+ 			netMode = 2;
 @@ -5730,7 +_,10 @@
  			return;
  		}
@@ -312,12 +310,13 @@
  		if (base.Services.Get<IAssetRepository>() == null)
  			AssetInitializer.CreateAssetServices(base.Services);
  
-@@ -9975,9 +_,13 @@
+@@ -9975,9 +_,14 @@
  		BackgroundViewMatrix = new SpriteViewMatrix(base.GraphicsDevice);
  		audioSystem = SoundEngine.Initialize();
  		audioSystem.SetPlayCallback(102, RainbowBoulderMusicPlayCallback);
 +
 +		ContentSources.PrepareAssets();
++
 +		/*
  		AssetSourceController = new AssetSourceController(Assets, new IContentSource[1] {
  			new XnaContentSource(base.Content.RootDirectory)
@@ -326,14 +325,6 @@
  
  		VanillaContentValidator.Instance = new VanillaContentValidator("Terraria.IO.Data.ResourcePacksDefaultInfo.tsv");
  		if (SocialAPI.Workshop != null)
-@@ -9988,6 +_,7 @@
- 		AssetInitializer.LoadSplashAssets();
- 		ChromaInitializer.Load();
- 		_gameContentLoadProcess = LoadContent_Deferred();
-+
- 		if (Setting_AssetFileWatcherEnabled)
- 			Assets.EnableAssetWatcher();
- 	}
 @@ -9999,6 +_,7 @@
  		ScreenShaderRef = Assets.Request<Effect>("ScreenShader");
  	}
@@ -757,10 +748,325 @@
  					int x = num95 * 36 + num97 * 18;
  					int y2 = num96 * 54 + num98 * 18;
 -					Microsoft.Xna.Framework.Rectangle value16 = new Microsoft.Xna.Framework.Rectangle(x, y2, 16, 16);
-+					System.Drawing.Rectangle value16 = new Microsoft.Xna.Framework.Rectangle(x, y2, 16, 16);
++					System.Drawing.Rectangle value16 = new System.Drawing.Rectangle(x, y2, 16, 16);
  					Vector2 origin6 = new Vector2(1f - (float)num97, 1.5f - (float)num98) * 16f;
  					mySpriteBatch.Draw(value15, position10, value16, alpha, rotation9, origin6, 1f, effects, 0f);
  				}
+@@ -20472,7 +_,7 @@
+ 			position11.Y += 2f;
+ 			int num99 = npcFrameCount[rCurrentNPC.type];
+ 			int num100 = rCurrentNPC.frame.Y / rCurrentNPC.frame.Height;
+-			Microsoft.Xna.Framework.Rectangle rectangle4 = value17.Frame(2, 16, num100 / num99, num100 % num99);
++			System.Drawing.Rectangle rectangle4 = value17.Frame(2, 16, num100 / num99, num100 % num99);
+ 			rectangle4.Inflate(0, -2);
+ 			Vector2 origin7 = rectangle4.Size() * new Vector2(0.5f, 1f);
+ 			Microsoft.Xna.Framework.Color color19 = Microsoft.Xna.Framework.Color.Lerp(Microsoft.Xna.Framework.Color.White, npcColor, 0.5f);
+@@ -20480,7 +_,7 @@
+ 				DrawNPCDirect_QueenSlimeWings(rCurrentNPC, mySpriteBatch, screenPos, rCurrentNPC.Center, color19);
+ 
+ 			Texture2D value18 = TextureAssets.Extra[186].Value;
+-			Microsoft.Xna.Framework.Rectangle rectangle5 = value18.Frame();
++			System.Drawing.Rectangle rectangle5 = value18.Frame();
+ 			Vector2 origin8 = rectangle5.Size() * new Vector2(0.5f, 0.5f);
+ 			Vector2 vector18 = new Vector2(rCurrentNPC.Center.X, rCurrentNPC.Center.Y);
+ 			float num101 = 0f;
+@@ -20629,7 +_,7 @@
+ 		else if (type == 576 || type == 577) {
+ 			Texture2D value21 = TextureAssets.Npc[type].Value;
+ 			Vector2 vector20 = rCurrentNPC.Bottom - screenPos;
+-			Microsoft.Xna.Framework.Rectangle rectangle6 = value21.Frame(5, 10, rCurrentNPC.frame.Y / 10, rCurrentNPC.frame.Y % 10);
++			System.Drawing.Rectangle rectangle6 = value21.Frame(5, 10, rCurrentNPC.frame.Y / 10, rCurrentNPC.frame.Y % 10);
+ 			Vector2 origin9 = rectangle6.Size() * new Vector2(0.5f, 1f);
+ 			origin9.Y -= 4f;
+ 			int num106 = 94;
+@@ -20671,7 +_,7 @@
+ 		else if (type == 696) {
+ 			Texture2D value24 = TextureAssets.Npc[type].Value;
+ 			Vector2 vector21 = rCurrentNPC.Bottom - screenPos;
+-			Microsoft.Xna.Framework.Rectangle rectangle7 = value24.Frame(6, 27, rCurrentNPC.frame.Y / 9, rCurrentNPC.frame.Y % 9);
++			System.Drawing.Rectangle rectangle7 = value24.Frame(6, 27, rCurrentNPC.frame.Y / 9, rCurrentNPC.frame.Y % 9);
+ 			Vector2 origin10 = rectangle7.Size() * new Vector2(0.5f, 1f);
+ 			origin10.Y -= 4f;
+ 			Microsoft.Xna.Framework.Color newColor4 = npcColor;
+@@ -20696,8 +_,8 @@
+ 		else if (type == 594) {
+ 			Texture2D value25 = TextureAssets.Npc[type].Value;
+ 			Vector2 position13 = rCurrentNPC.Top - screenPos;
+-			Microsoft.Xna.Framework.Rectangle rectangle8 = value25.Frame(8, 1, rCurrentNPC.frame.Y);
++			System.Drawing.Rectangle rectangle8 = value25.Frame(8, 1, rCurrentNPC.frame.Y);
+-			Microsoft.Xna.Framework.Rectangle value26 = value25.Frame(8);
++			System.Drawing.Rectangle value26 = value25.Frame(8);
+ 			Vector2 origin11 = rectangle8.Size() * new Vector2(0.5f, 0f);
+ 			Microsoft.Xna.Framework.Color color22 = npcColor;
+ 			float scale5 = 1f;
+@@ -20716,7 +_,7 @@
+ 		else if (type == 686) {
+ 			Texture2D value27 = TextureAssets.Npc[type].Value;
+ 			Vector2 position14 = rCurrentNPC.Top - screenPos;
+-			Microsoft.Xna.Framework.Rectangle rectangle9 = value27.Frame();
++			System.Drawing.Rectangle rectangle9 = value27.Frame();
+ 			Vector2 origin12 = rectangle9.Size() * new Vector2(0.5f, 0f);
+ 			Microsoft.Xna.Framework.Color newColor5 = npcColor;
+ 			mySpriteBatch.Draw(value27, position14, rectangle9, rCurrentNPC.GetAlpha(newColor5), rCurrentNPC.rotation, origin12, rCurrentNPC.scale, spriteEffects, 0f);
+@@ -20724,7 +_,7 @@
+ 		else if (type == 564 || type == 565) {
+ 			Texture2D value28 = TextureAssets.Npc[type].Value;
+ 			Vector2 vector23 = rCurrentNPC.Bottom - screenPos;
+-			Microsoft.Xna.Framework.Rectangle rectangle10 = value28.Frame(5, 9, rCurrentNPC.frame.Y / 9, rCurrentNPC.frame.Y % 9);
++			System.Drawing.Rectangle rectangle10 = value28.Frame(5, 9, rCurrentNPC.frame.Y / 9, rCurrentNPC.frame.Y % 9);
+ 			Vector2 origin13 = rectangle10.Size() * new Vector2(0.5f, 1f);
+ 			origin13.Y -= 10f;
+ 			int num113 = 52;
+@@ -20800,7 +_,7 @@
+ 		else if (type == 548) {
+ 			Texture2D value31 = TextureAssets.Npc[type].Value;
+ 			Vector2 vector24 = rCurrentNPC.Bottom - screenPos;
+-			Microsoft.Xna.Framework.Rectangle rectangle11 = value31.Frame();
++			System.Drawing.Rectangle rectangle11 = value31.Frame();
+ 			Vector2 origin14 = rectangle11.Size() / 2f;
+ 			origin14.Y += 30f;
+ 			origin14.Y += 8f;
+@@ -20921,7 +_,7 @@
+ 				case 549: {
+ 					Texture2D value84 = TextureAssets.Npc[type].Value;
+ 					Vector2 vector75 = rCurrentNPC.Center - screenPos;
+-					Microsoft.Xna.Framework.Rectangle frame9 = rCurrentNPC.frame;
++					System.Drawing.Rectangle frame9 = rCurrentNPC.frame;
+ 					Vector2 origin27 = new Vector2(70f, 127f);
+ 					origin27.Y += 8f;
+ 					Vector2 scale10 = new Vector2(rCurrentNPC.scale);
+@@ -21080,7 +_,7 @@
+ 							num319 = 1f - rCurrentNPC.ai[3] / 30f;
+ 
+ 						Terraria.Graphics.Effects.Filters.Scene[key].GetShader().UseIntensity(1f + num319).UseProgress(0f);
+-						DrawData value70 = new DrawData(Assets.Request<Texture2D>("Images/Misc/Perlin").Value, vector71 + new Vector2(300f, 300f), new Microsoft.Xna.Framework.Rectangle(0, 0, 600, 600), Microsoft.Xna.Framework.Color.White * (num318 * 0.8f + 0.2f), rCurrentNPC.rotation, new Vector2(300f, 300f), rCurrentNPC.scale * (1f + num319 * 0.05f), spriteEffects);
++						DrawData value70 = new DrawData(Assets.Request<Texture2D>("Images/Misc/Perlin").Value, vector71 + new Vector2(300f, 300f), new System.Drawing.Rectangle(0, 0, 600, 600), Microsoft.Xna.Framework.Color.White * (num318 * 0.8f + 0.2f), rCurrentNPC.rotation, new Vector2(300f, 300f), rCurrentNPC.scale * (1f + num319 * 0.05f), spriteEffects);
+ 						GameShaders.Misc["ForceField"].UseColor(new Vector3(1f + num319 * 0.5f));
+ 						GameShaders.Misc["ForceField"].Apply(value70);
+ 						value70.Draw(mySpriteBatch);
+@@ -21093,7 +_,7 @@
+ 						float num320 = rCurrentNPC.ai[3] / 120f;
+ 						float num321 = Math.Min(rCurrentNPC.ai[3] / 30f, 1f);
+ 						Terraria.Graphics.Effects.Filters.Scene[key].GetShader().UseIntensity(Math.Min(5f, 15f * num320) + 1f).UseProgress(num320);
+-						DrawData value71 = new DrawData(Assets.Request<Texture2D>("Images/Misc/Perlin").Value, vector71 + new Vector2(300f, 300f), new Microsoft.Xna.Framework.Rectangle(0, 0, 600, 600), new Microsoft.Xna.Framework.Color(new Vector4(1f - (float)Math.Sqrt(num321))), rCurrentNPC.rotation, new Vector2(300f, 300f), rCurrentNPC.scale * (1f + num321), spriteEffects);
++						DrawData value71 = new DrawData(Assets.Request<Texture2D>("Images/Misc/Perlin").Value, vector71 + new Vector2(300f, 300f), new System.Drawing.Rectangle(0, 0, 600, 600), new Microsoft.Xna.Framework.Color(new Vector4(1f - (float)Math.Sqrt(num321))), rCurrentNPC.rotation, new Vector2(300f, 300f), rCurrentNPC.scale * (1f + num321), spriteEffects);
+ 						GameShaders.Misc["ForceField"].UseColor(new Vector3(2f));
+ 						GameShaders.Misc["ForceField"].Apply(value71);
+ 						value71.Draw(mySpriteBatch);
+@@ -21366,7 +_,7 @@
+ 					int num322 = rCurrentNPC.frame.Y / (TextureAssets.Npc[type].Height() / npcFrameCount[type]);
+ 					Texture2D value72 = TextureAssets.Npc[type].Value;
+ 					Texture2D value73 = TextureAssets.Extra[30].Value;
+-					Microsoft.Xna.Framework.Rectangle rectangle14 = value73.Frame();
++					System.Drawing.Rectangle rectangle14 = value73.Frame();
+ 					rectangle14.Height /= 2;
+ 					if (num322 >= 4)
+ 						rectangle14.Y += rectangle14.Height;
+@@ -21488,7 +_,7 @@
+ 				default:
+ 					if (type == 491) {
+ 						Texture2D value34 = TextureAssets.Npc[rCurrentNPC.type].Value;
+-						Microsoft.Xna.Framework.Rectangle frame2 = rCurrentNPC.frame;
++						System.Drawing.Rectangle frame2 = rCurrentNPC.frame;
+ 						Vector2 origin15 = frame2.OriginFlip(new Vector2(208f, 460f), spriteEffects);
+ 						Vector2 vector25 = rCurrentNPC.Center - screenPos;
+ 						Vector2 vector26 = new Vector2(((spriteEffects & SpriteEffects.FlipHorizontally) == 0) ? 1 : (-1), 1f);
+@@ -21623,7 +_,7 @@
+ 						Vector2 vector38 = new Vector2(30f, 66f);
+ 						Vector2 vector39 = new Vector2(1f * (0f - vector36.X), 3f);
+ 						Texture2D value43 = TextureAssets.Extra[26].Value;
+-						Microsoft.Xna.Framework.Rectangle value44 = value43.Frame();
++						System.Drawing.Rectangle value44 = value43.Frame();
+ 						value44.Height /= 4;
+ 						Vector2 vector40 = center3 + vector33 * vector36;
+ 						Vector2 vector41 = rCurrentNPC.Center + vector34;
+@@ -21683,17 +_,17 @@
+ 						Vector2 vector46 = new Vector2(0f, 0f);
+ 						Texture2D value48 = TextureAssets.Extra[25].Value;
+ 						Vector2 vector47 = new Vector2(0f, 214f).RotatedBy(rCurrentNPC.rotation);
+-						Microsoft.Xna.Framework.Rectangle rectangle12 = value48.Frame();
++						System.Drawing.Rectangle rectangle12 = value48.Frame();
+ 						rectangle12.Height /= 3;
+ 						rectangle12.Y += rectangle12.Height * (int)(rCurrentNPC.localAI[2] / 7f);
+ 						Texture2D value49 = TextureAssets.Extra[29].Value;
+ 						Vector2 vector48 = new Vector2(0f, 4f).RotatedBy(rCurrentNPC.rotation);
+-						Microsoft.Xna.Framework.Rectangle rectangle13 = value49.Frame();
++						System.Drawing.Rectangle rectangle13 = value49.Frame();
+ 						rectangle13.Height /= 4;
+ 						int num157 = (int)(rCurrentNPC.localAI[3] / 5f);
+ 						rectangle13.Y += rectangle13.Height * num157;
+ 						Texture2D value50 = TextureAssets.Extra[26].Value;
+-						Microsoft.Xna.Framework.Rectangle value51 = value50.Frame();
++						System.Drawing.Rectangle value51 = value50.Frame();
+ 						value51.Height /= 4;
+ 						_ = npc[(int)rCurrentNPC.ai[3]].Center;
+ 						Microsoft.Xna.Framework.Color moonLordColoring3 = GetMoonLordColoring(rCurrentNPC);
+@@ -21872,7 +_,7 @@
+ 								spinningpoint6 = npc[num197].velocity;
+ 							}
+ 
+-							Microsoft.Xna.Framework.Rectangle frame3 = rCurrentNPC.frame;
++							System.Drawing.Rectangle frame3 = rCurrentNPC.frame;
+ 							mySpriteBatch.Draw(TextureAssets.Npc[type].Value, new Vector2(position23.X - screenPos.X + (float)(rCurrentNPC.width / 2) - (float)TextureAssets.Npc[type].Width() * rCurrentNPC.scale / 2f + halfSize.X * rCurrentNPC.scale, position23.Y - screenPos.Y + (float)rCurrentNPC.height - (float)TextureAssets.Npc[type].Height() * rCurrentNPC.scale / (float)npcFrameCount[type] + 4f + halfSize.Y * rCurrentNPC.scale + num47 + num46 + rCurrentNPC.gfxOffY), frame3, rCurrentNPC.GetAlpha(npcColor), rCurrentNPC.rotation, halfSize, rCurrentNPC.scale, spriteEffects, 0f);
+ 							if (rCurrentNPC.color != default(Microsoft.Xna.Framework.Color))
+ 								mySpriteBatch.Draw(TextureAssets.Npc[type].Value, new Vector2(position23.X - screenPos.X + (float)(rCurrentNPC.width / 2) - (float)TextureAssets.Npc[type].Width() * rCurrentNPC.scale / 2f + halfSize.X * rCurrentNPC.scale, position23.Y - screenPos.Y + (float)rCurrentNPC.height - (float)TextureAssets.Npc[type].Height() * rCurrentNPC.scale / (float)npcFrameCount[type] + 4f + halfSize.Y * rCurrentNPC.scale + num47 + num46 + rCurrentNPC.gfxOffY), frame3, rCurrentNPC.GetColor(npcColor), rCurrentNPC.rotation, halfSize, rCurrentNPC.scale, spriteEffects, 0f);
+@@ -21910,7 +_,7 @@
+ 							value54 = TextureAssets.GlowMask[100].Value;
+ 							mySpriteBatch.Draw(value54, new Vector2(rCurrentNPC.position.X - screenPos.X + (float)(rCurrentNPC.width / 2) - (float)TextureAssets.Npc[type].Width() * rCurrentNPC.scale / 2f + halfSize.X * rCurrentNPC.scale, rCurrentNPC.position.Y - screenPos.Y + (float)rCurrentNPC.height - (float)TextureAssets.Npc[type].Height() * rCurrentNPC.scale / (float)npcFrameCount[type] + 4f + halfSize.Y * rCurrentNPC.scale + num47 + num46 + rCurrentNPC.gfxOffY), rCurrentNPC.frame, new Microsoft.Xna.Framework.Color(127 - rCurrentNPC.alpha / 2, 127 - rCurrentNPC.alpha / 2, 127 - rCurrentNPC.alpha / 2, 0), rCurrentNPC.rotation, halfSize, rCurrentNPC.scale, spriteEffects, 0f);
+ 							value54 = TextureAssets.Extra[20].Value;
+-							Microsoft.Xna.Framework.Rectangle value55 = value54.Frame(1, 4, 0, (int)rCurrentNPC.ai[0] + 1);
++							System.Drawing.Rectangle value55 = value54.Frame(1, 4, 0, (int)rCurrentNPC.ai[0] + 1);
+ 							Vector2 position25 = new Vector2(rCurrentNPC.position.X - screenPos.X + (float)(rCurrentNPC.width / 2) - (float)value54.Width * rCurrentNPC.scale / 2f + halfSize.X * rCurrentNPC.scale, rCurrentNPC.position.Y - screenPos.Y + (float)rCurrentNPC.height - (float)TextureAssets.Npc[type].Height() * rCurrentNPC.scale / (float)npcFrameCount[type] + 4f + halfSize.Y * rCurrentNPC.scale + num47 + num46 + rCurrentNPC.gfxOffY + 18f + 6f);
+ 							mySpriteBatch.Draw(value54, position25, value55, rCurrentNPC.GetAlpha(npcColor), rCurrentNPC.rotation, halfSize, rCurrentNPC.scale, spriteEffects, 0f);
+ 							value54 = TextureAssets.GlowMask[101].Value;
+@@ -21965,7 +_,7 @@
+ 								white5.G = (byte)(255 * (10 - num210) / 20);
+ 								white5.B = (byte)(255 * (10 - num210) / 20);
+ 								white5.A = 0;
+-								Microsoft.Xna.Framework.Rectangle frame4 = rCurrentNPC.frame;
++								System.Drawing.Rectangle frame4 = rCurrentNPC.frame;
+ 								int num211 = (num209 - 3 - num210) % 3;
+ 								if (num211 < 0)
+ 									num211 += 3;
+@@ -22000,7 +_,7 @@
+ 								if (num216 < 0)
+ 									num216 += 4;
+ 
+-								Microsoft.Xna.Framework.Rectangle value58 = value56.Frame(1, 4, 0, num216);
++								System.Drawing.Rectangle value58 = value56.Frame(1, 4, 0, num216);
+ 								mySpriteBatch.Draw(value56, new Vector2(rCurrentNPC.oldPos[num215].X - screenPos.X + (float)(rCurrentNPC.width / 2) - (float)TextureAssets.Npc[type].Width() * rCurrentNPC.scale / 2f + halfSize.X * rCurrentNPC.scale, rCurrentNPC.oldPos[num215].Y - screenPos.Y + (float)rCurrentNPC.height - (float)TextureAssets.Npc[type].Height() * rCurrentNPC.scale / (float)npcFrameCount[type] + 4f + halfSize.Y * rCurrentNPC.scale + num47), value58, value57, rCurrentNPC.oldRot[num215] + num213, origin23, MathHelper.Lerp(0.1f, 1.2f, (10f - (float)num215) / 10f), spriteEffects, 0f);
+ 							}
+ 						}
+@@ -22016,7 +_,7 @@
+ 								white6.B = (byte)(255 * (10 - num219) / 20);
+ 								white6.A = (byte)(255 * (10 - num219) / 20);
+ 								white6 = Microsoft.Xna.Framework.Color.Lerp(white6, Microsoft.Xna.Framework.Color.Transparent, (float)num219 / 6f);
+-								Microsoft.Xna.Framework.Rectangle frame5 = rCurrentNPC.frame;
++								System.Drawing.Rectangle frame5 = rCurrentNPC.frame;
+ 								int num220 = (num218 - 4 - num219) % 4;
+ 								if (num220 < 0)
+ 									num220 += 4;
+@@ -22029,12 +_,12 @@
+ 						if (rCurrentNPC.type == 390 && rCurrentNPC.IsABestiaryIconDummy) {
+ 							LoadNPC(391);
+ 							Texture2D value59 = TextureAssets.Npc[391].Value;
+-							Microsoft.Xna.Framework.Rectangle value60 = value59.Frame(1, npcFrameCount[391], 0, (int)rCurrentNPC.localAI[3]);
++							System.Drawing.Rectangle value60 = value59.Frame(1, npcFrameCount[391], 0, (int)rCurrentNPC.localAI[3]);
+ 							Vector2 vector55 = new Vector2(-rCurrentNPC.width - 8, 10f);
+ 							mySpriteBatch.Draw(value59, new Vector2(rCurrentNPC.position.X - screenPos.X + (float)(rCurrentNPC.width / 2) - (float)TextureAssets.Npc[type].Width() * rCurrentNPC.scale / 2f + halfSize.X * rCurrentNPC.scale, rCurrentNPC.position.Y - screenPos.Y + (float)rCurrentNPC.height - (float)TextureAssets.Npc[type].Height() * rCurrentNPC.scale / (float)npcFrameCount[type] + 4f + halfSize.Y * rCurrentNPC.scale + num47 + num46 + rCurrentNPC.gfxOffY) + vector55, value60, rCurrentNPC.GetAlpha(npcColor), rCurrentNPC.rotation, halfSize, rCurrentNPC.scale, spriteEffects, 0f);
+ 						}
+ 
+-						Microsoft.Xna.Framework.Rectangle frame6 = rCurrentNPC.frame;
++						System.Drawing.Rectangle frame6 = rCurrentNPC.frame;
+ 						if (type == 182 || type == 289)
+ 							frame6.Height -= 2;
+ 
+@@ -22171,7 +_,7 @@
+ 								case 681: {
+ 									if (rCurrentNPC.IsAPortraitDummy) {
+ 										Matrix uIScaleMatrix = UIScaleMatrix;
+-										Microsoft.Xna.Framework.Rectangle scissorRectangle = mySpriteBatch.GraphicsDevice.ScissorRectangle;
++										System.Drawing.Rectangle scissorRectangle = mySpriteBatch.GraphicsDevice.ScissorRectangle;
+ 										mySpriteBatch.End();
+ 										mySpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, ScissorState, null, uIScaleMatrix);
+ 										mySpriteBatch.GraphicsDevice.ScissorRectangle = scissorRectangle;
+@@ -22188,7 +_,7 @@
+ 									pixelShader.CurrentTechnique.Passes[0].Apply();
+ 									if (rCurrentNPC.IsAPortraitDummy) {
+ 										Matrix uIScaleMatrix2 = UIScaleMatrix;
+-										Microsoft.Xna.Framework.Rectangle scissorRectangle2 = mySpriteBatch.GraphicsDevice.ScissorRectangle;
++										System.Drawing.Rectangle scissorRectangle2 = mySpriteBatch.GraphicsDevice.ScissorRectangle;
+ 										mySpriteBatch.End();
+ 										mySpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, ScissorState, null, uIScaleMatrix2);
+ 										mySpriteBatch.GraphicsDevice.ScissorRectangle = scissorRectangle2;
+@@ -22373,7 +_,7 @@
+ 										num259 *= num261;
+ 										num260 *= num261;
+ 										Microsoft.Xna.Framework.Color color34 = Lighting.GetColor((int)vector65.X / 16, (int)(vector65.Y / 16f));
+-										spriteBatch.Draw(TextureAssets.Chain12.Value, new Vector2(vector65.X - screenPosition.X, vector65.Y - screenPosition.Y), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Chain12.Width(), TextureAssets.Chain12.Height()), color34, rotation10, new Vector2((float)TextureAssets.Chain12.Width() * 0.5f, 0f), scale8, SpriteEffects.None, 0f);
++										spriteBatch.Draw(TextureAssets.Chain12.Value, new Vector2(vector65.X - screenPosition.X, vector65.Y - screenPosition.Y), new System.Drawing.Rectangle(0, 0, TextureAssets.Chain12.Width(), TextureAssets.Chain12.Height()), color34, rotation10, new Vector2((float)TextureAssets.Chain12.Width() * 0.5f, 0f), scale8, SpriteEffects.None, 0f);
+ 										vector65.X += num259;
+ 										vector65.Y += num260;
+ 										num259 = x2 - vector65.X;
+@@ -22465,27 +_,27 @@
+ 							Microsoft.Xna.Framework.Color color41 = new Microsoft.Xna.Framework.Color(mouseTextColor, mouseTextColor, mouseTextColor, 0);
+ 							if (rCurrentNPC.frame.Y < 222) {
+ 								if (!getGoodWorld)
+-									mySpriteBatch.Draw(TextureAssets.Golem[1].Value, new Vector2(rCurrentNPC.Center.X - screenPos.X - 20f, rCurrentNPC.Center.Y - screenPos.Y - 27f), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Golem[1].Width(), TextureAssets.Golem[1].Height() / 2), color41, 0f, default(Vector2), 1f, SpriteEffects.None, 0f);
++									mySpriteBatch.Draw(TextureAssets.Golem[1].Value, new Vector2(rCurrentNPC.Center.X - screenPos.X - 20f, rCurrentNPC.Center.Y - screenPos.Y - 27f), new System.Drawing.Rectangle(0, 0, TextureAssets.Golem[1].Width(), TextureAssets.Golem[1].Height() / 2), color41, 0f, default(Vector2), 1f, SpriteEffects.None, 0f);
+ 
+-								Microsoft.Xna.Framework.Rectangle value63 = frame6;
++								System.Drawing.Rectangle value63 = frame6;
+ 								value63.Y = 0;
+ 								mySpriteBatch.Draw(TextureAssets.Extra[107].Value, new Vector2(rCurrentNPC.position.X - screenPos.X + (float)(rCurrentNPC.width / 2) - (float)TextureAssets.Npc[type].Width() * rCurrentNPC.scale / 2f + halfSize.X * rCurrentNPC.scale, rCurrentNPC.position.Y - screenPos.Y + (float)rCurrentNPC.height - (float)TextureAssets.Npc[type].Height() * rCurrentNPC.scale / (float)npcFrameCount[type] + 4f + halfSize.Y * rCurrentNPC.scale + num47 + num46 + rCurrentNPC.gfxOffY), value63, color41, rCurrentNPC.rotation, halfSize, rCurrentNPC.scale, spriteEffects, 0f);
+ 							}
+ 							else if (!getGoodWorld && rCurrentNPC.frame.Y < 444) {
+-								mySpriteBatch.Draw(TextureAssets.Golem[2].Value, new Vector2(rCurrentNPC.Center.X - screenPos.X + 26f, rCurrentNPC.Center.Y - screenPos.Y - 28f), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Golem[2].Width(), TextureAssets.Golem[2].Height() / 4), color41, 0f, default(Vector2), 1f, SpriteEffects.None, 0f);
++								mySpriteBatch.Draw(TextureAssets.Golem[2].Value, new Vector2(rCurrentNPC.Center.X - screenPos.X + 26f, rCurrentNPC.Center.Y - screenPos.Y - 28f), new System.Drawing.Rectangle(0, 0, TextureAssets.Golem[2].Width(), TextureAssets.Golem[2].Height() / 4), color41, 0f, default(Vector2), 1f, SpriteEffects.None, 0f);
+ 							}
+ 							else if (!getGoodWorld) {
+-								mySpriteBatch.Draw(TextureAssets.Golem[2].Value, new Vector2(rCurrentNPC.Center.X - screenPos.X - 38f, rCurrentNPC.Center.Y - screenPos.Y - 28f), new Microsoft.Xna.Framework.Rectangle(0, TextureAssets.Golem[2].Height() / 2, TextureAssets.Golem[2].Width(), TextureAssets.Golem[2].Height() / 4), color41, 0f, default(Vector2), 1f, SpriteEffects.None, 0f);
++								mySpriteBatch.Draw(TextureAssets.Golem[2].Value, new Vector2(rCurrentNPC.Center.X - screenPos.X - 38f, rCurrentNPC.Center.Y - screenPos.Y - 28f), new System.Drawing.Rectangle(0, TextureAssets.Golem[2].Height() / 2, TextureAssets.Golem[2].Width(), TextureAssets.Golem[2].Height() / 4), color41, 0f, default(Vector2), 1f, SpriteEffects.None, 0f);
+ 							}
+ 						}
+ 						else if (type == 249 && !getGoodWorld) {
+ 							Microsoft.Xna.Framework.Color color42 = new Microsoft.Xna.Framework.Color(mouseTextColor, mouseTextColor, mouseTextColor, 0);
+ 							if (!getGoodWorld)
+-								mySpriteBatch.Draw(TextureAssets.Golem[1].Value, new Vector2(rCurrentNPC.Center.X - screenPos.X - 20f, rCurrentNPC.Center.Y - screenPos.Y - 47f), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Golem[1].Width(), TextureAssets.Golem[1].Height() / 2), color42, 0f, default(Vector2), 1f, SpriteEffects.None, 0f);
++								mySpriteBatch.Draw(TextureAssets.Golem[1].Value, new Vector2(rCurrentNPC.Center.X - screenPos.X - 20f, rCurrentNPC.Center.Y - screenPos.Y - 47f), new System.Drawing.Rectangle(0, 0, TextureAssets.Golem[1].Width(), TextureAssets.Golem[1].Height() / 2), color42, 0f, default(Vector2), 1f, SpriteEffects.None, 0f);
+ 
+ 							int num270 = (int)rCurrentNPC.frameCounter / 4;
+ 							Texture2D value64 = TextureAssets.Extra[106].Value;
+-							Microsoft.Xna.Framework.Rectangle value65 = value64.Frame(1, 8);
++							System.Drawing.Rectangle value65 = value64.Frame(1, 8);
+ 							_ = Microsoft.Xna.Framework.Color.White;
+ 							value65.Y += value65.Height * 2 * num270 + frame6.Y;
+ 							mySpriteBatch.Draw(value64, new Vector2(rCurrentNPC.position.X - screenPos.X + (float)(rCurrentNPC.width / 2) - (float)TextureAssets.Npc[type].Width() * rCurrentNPC.scale / 2f + halfSize.X * rCurrentNPC.scale, rCurrentNPC.position.Y - screenPos.Y + (float)rCurrentNPC.height - (float)TextureAssets.Npc[type].Height() * rCurrentNPC.scale / (float)npcFrameCount[type] + 4f + halfSize.Y * rCurrentNPC.scale + num47 + num46 + rCurrentNPC.gfxOffY), value65, color42, rCurrentNPC.rotation, halfSize, rCurrentNPC.scale, spriteEffects, 0f);
+@@ -22505,7 +_,7 @@
+ 							Vector2 origin24 = Vector2.Zero;
+ 							int num271 = TextureAssets.Npc[type].Height() / npcFrameCount[type];
+ 							int num272 = rCurrentNPC.frame.Y / num271;
+-							Microsoft.Xna.Framework.Rectangle value66 = new Microsoft.Xna.Framework.Rectangle(0, 0, 32, 42);
++							System.Drawing.Rectangle value66 = new System.Drawing.Rectangle(0, 0, 32, 42);
+ 							switch (num272) {
+ 								case 0:
+ 									zero4 += new Vector2(8f, 32f);
+@@ -22580,7 +_,7 @@
+ 							Vector2 origin25 = Vector2.Zero;
+ 							int num274 = TextureAssets.Npc[type].Height() / npcFrameCount[type];
+ 							int num275 = rCurrentNPC.frame.Y / num274;
+-							Microsoft.Xna.Framework.Rectangle value67 = new Microsoft.Xna.Framework.Rectangle(0, 0, 30, 42);
++							System.Drawing.Rectangle value67 = new System.Drawing.Rectangle(0, 0, 30, 42);
+ 							switch (num275) {
+ 								case 0:
+ 									zero5 += new Vector2(8f, 30f);
+@@ -22726,7 +_,7 @@
+ 								color46.G = (byte)(0.5 * (double)(int)color46.G * (double)(10 - num281) / 20.0);
+ 								color46.B = (byte)(0.5 * (double)(int)color46.B * (double)(10 - num281) / 20.0);
+ 								color46.A = (byte)(0.5 * (double)(int)color46.A * (double)(10 - num281) / 20.0);
+-								Microsoft.Xna.Framework.Rectangle frame7 = rCurrentNPC.frame;
++								System.Drawing.Rectangle frame7 = rCurrentNPC.frame;
+ 								int num282 = TextureAssets.Npc[type].Height() / npcFrameCount[type];
+ 								frame7.Y -= num282 * num281;
+ 								while (frame7.Y < 0) {
+@@ -22745,7 +_,7 @@
+ 								color47.G = (byte)(0.5 * (double)(int)color47.G * (double)(10 - num283) / 20.0);
+ 								color47.B = (byte)(0.5 * (double)(int)color47.B * (double)(10 - num283) / 20.0);
+ 								color47.A = (byte)(0.5 * (double)(int)color47.A * (double)(10 - num283) / 20.0);
+-								Microsoft.Xna.Framework.Rectangle frame8 = rCurrentNPC.frame;
++								System.Drawing.Rectangle frame8 = rCurrentNPC.frame;
+ 								int num284 = TextureAssets.Npc[type].Height() / npcFrameCount[type];
+ 								frame8.Y -= num284 * num283;
+ 								while (frame8.Y < 0) {
+@@ -22991,7 +_,7 @@
+ 		}
+ 
+ 		if (rCurrentNPC.confused)
+-			mySpriteBatch.Draw(TextureAssets.Confuse.Value, new Vector2(rCurrentNPC.position.X - screenPos.X + (float)(rCurrentNPC.width / 2) - (float)TextureAssets.Npc[type].Width() * rCurrentNPC.scale / 2f + halfSize.X * rCurrentNPC.scale, rCurrentNPC.position.Y - screenPos.Y + (float)rCurrentNPC.height - (float)TextureAssets.Npc[type].Height() * rCurrentNPC.scale / (float)npcFrameCount[type] + 4f + halfSize.Y * rCurrentNPC.scale + num47 + num46 - (float)TextureAssets.Confuse.Height() - 20f), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Confuse.Width(), TextureAssets.Confuse.Height()), rCurrentNPC.GetShimmerColor(new Microsoft.Xna.Framework.Color(250, 250, 250, 70)), rCurrentNPC.velocity.X * -0.05f, new Vector2(TextureAssets.Confuse.Width() / 2, TextureAssets.Confuse.Height() / 2), essScale + 0.2f, SpriteEffects.None, 0f);
++			mySpriteBatch.Draw(TextureAssets.Confuse.Value, new Vector2(rCurrentNPC.position.X - screenPos.X + (float)(rCurrentNPC.width / 2) - (float)TextureAssets.Npc[type].Width() * rCurrentNPC.scale / 2f + halfSize.X * rCurrentNPC.scale, rCurrentNPC.position.Y - screenPos.Y + (float)rCurrentNPC.height - (float)TextureAssets.Npc[type].Height() * rCurrentNPC.scale / (float)npcFrameCount[type] + 4f + halfSize.Y * rCurrentNPC.scale + num47 + num46 - (float)TextureAssets.Confuse.Height() - 20f), new System.Drawing.Rectangle(0, 0, TextureAssets.Confuse.Width(), TextureAssets.Confuse.Height()), rCurrentNPC.GetShimmerColor(new Microsoft.Xna.Framework.Color(250, 250, 250, 70)), rCurrentNPC.velocity.X * -0.05f, new Vector2(TextureAssets.Confuse.Width() / 2, TextureAssets.Confuse.Height() / 2), essScale + 0.2f, SpriteEffects.None, 0f);
+ 	}
+ 
+ 	private static void GetMoonlordSmolBulletWarningTimes(out int framesBeforeSmolBeam, out int framesBeforeSmolBeam2)
 @@ -23015,7 +_,7 @@
  	{
  		Texture2D value = TextureAssets.Npc[typeCache].Value;
@@ -962,6 +1268,15 @@
  		Vector2 origin = rectangle.Size() / 2f;
  		float num = proj.scale * 1.1f;
  		SpriteEffects effects = ((!(proj.ai[0] >= 0f)) ? SpriteEffects.FlipVertically : SpriteEffects.None);
+@@ -24281,7 +_,7 @@
+ 	{
+ 		Vector2 vector = proj.Center - screenPosition;
+ 		Asset<Texture2D> asset = TextureAssets.Projectile[proj.type];
+-		Microsoft.Xna.Framework.Rectangle rectangle = asset.Frame(1, 4);
++		System.Drawing.Rectangle rectangle = asset.Frame(1, 4);
+ 		Vector2 origin = rectangle.Size() / 2f;
+ 		float num = proj.scale * 1.1f;
+ 		SpriteEffects effects = ((!(proj.ai[0] >= 0f)) ? SpriteEffects.FlipVertically : SpriteEffects.None);
 @@ -24321,7 +_,7 @@
  	private void DrawProj_TrueNightsEdge(Projectile proj)
  	{
@@ -1063,6 +1378,1082 @@
  			}
  		}
  		else if (proj.type == 186) {
+@@ -25034,7 +_,7 @@
+ 			float num40 = (float)TextureAssets.Chain17.Height() - num39;
+ 			if (num39 > 0f && proj.ai[1] > 0f) {
+ 				Microsoft.Xna.Framework.Color color13 = Lighting.GetColor((int)proj.position.X / 16, (int)proj.position.Y / 16);
+-				EntitySpriteDraw(TextureAssets.Chain17.Value, vector4 - screenPosition, new Microsoft.Xna.Framework.Rectangle(0, (int)num40, TextureAssets.Chain17.Width(), (int)num39), color13, proj.rotation, new Vector2(TextureAssets.Chain17.Width() / 2, 0f), 1f, SpriteEffects.None);
++				EntitySpriteDraw(TextureAssets.Chain17.Value, vector4 - screenPosition, new System.Drawing.Rectangle(0, (int)num40, TextureAssets.Chain17.Width(), (int)num39), color13, proj.rotation, new Vector2(TextureAssets.Chain17.Width() / 2, 0f), 1f, SpriteEffects.None);
+ 			}
+ 		}
+ 		else if (proj.type == 74) {
+@@ -25063,7 +_,7 @@
+ 				num41 = mountedCenter.X - vector5.X;
+ 				num42 = mountedCenter.Y - vector5.Y;
+ 				Microsoft.Xna.Framework.Color color14 = Lighting.GetColor((int)vector5.X / 16, (int)(vector5.Y / 16f));
+-				EntitySpriteDraw(TextureAssets.Chain9.Value, new Vector2(vector5.X - screenPosition.X, vector5.Y - screenPosition.Y), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Chain8.Width(), TextureAssets.Chain8.Height()), color14, rotation3, new Vector2((float)TextureAssets.Chain8.Width() * 0.5f, (float)TextureAssets.Chain8.Height() * 0.5f), 1f, SpriteEffects.None);
++				EntitySpriteDraw(TextureAssets.Chain9.Value, new Vector2(vector5.X - screenPosition.X, vector5.Y - screenPosition.Y), new System.Drawing.Rectangle(0, 0, TextureAssets.Chain8.Width(), TextureAssets.Chain8.Height()), color14, rotation3, new Vector2((float)TextureAssets.Chain8.Width() * 0.5f, (float)TextureAssets.Chain8.Height() * 0.5f), 1f, SpriteEffects.None);
+ 			}
+ 		}
+ 		else if (proj.type == 171) {
+@@ -25110,7 +_,7 @@
+ 				vector6.Y = array[num54].Y;
+ 				float rotation4 = array2[num54];
+ 				Microsoft.Xna.Framework.Color color15 = Lighting.GetColor((int)vector6.X / 16, (int)(vector6.Y / 16f));
+-				EntitySpriteDraw(TextureAssets.Chain16.Value, new Vector2(vector6.X - screenPosition.X, vector6.Y - screenPosition.Y), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Chain16.Width(), TextureAssets.Chain16.Height()), color15, rotation4, new Vector2((float)TextureAssets.Chain16.Width() * 0.5f, (float)TextureAssets.Chain16.Height() * 0.5f), 0.8f, SpriteEffects.None);
++				EntitySpriteDraw(TextureAssets.Chain16.Value, new Vector2(vector6.X - screenPosition.X, vector6.Y - screenPosition.Y), new System.Drawing.Rectangle(0, 0, TextureAssets.Chain16.Width(), TextureAssets.Chain16.Height()), color15, rotation4, new Vector2((float)TextureAssets.Chain16.Width() * 0.5f, (float)TextureAssets.Chain16.Height() * 0.5f), 0.8f, SpriteEffects.None);
+ 			}
+ 		}
+ 		else if (proj.type == 475) {
+@@ -25159,9 +_,9 @@
+ 				float rotation5 = array4[num66];
+ 				Microsoft.Xna.Framework.Color color16 = Lighting.GetColor((int)vector7.X / 16, (int)(vector7.Y / 16f));
+ 				if (num65 % 2 == 0)
+-					EntitySpriteDraw(TextureAssets.Chain38.Value, new Vector2(vector7.X - screenPosition.X, vector7.Y - screenPosition.Y), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Chain38.Width(), TextureAssets.Chain38.Height()), color16, rotation5, new Vector2((float)TextureAssets.Chain38.Width() * 0.5f, (float)TextureAssets.Chain38.Height() * 0.5f), 0.8f, SpriteEffects.None);
++					EntitySpriteDraw(TextureAssets.Chain38.Value, new Vector2(vector7.X - screenPosition.X, vector7.Y - screenPosition.Y), new System.Drawing.Rectangle(0, 0, TextureAssets.Chain38.Width(), TextureAssets.Chain38.Height()), color16, rotation5, new Vector2((float)TextureAssets.Chain38.Width() * 0.5f, (float)TextureAssets.Chain38.Height() * 0.5f), 0.8f, SpriteEffects.None);
+ 				else
+-					EntitySpriteDraw(TextureAssets.Chain39.Value, new Vector2(vector7.X - screenPosition.X, vector7.Y - screenPosition.Y), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Chain39.Width(), TextureAssets.Chain39.Height()), color16, rotation5, new Vector2((float)TextureAssets.Chain39.Width() * 0.5f, (float)TextureAssets.Chain39.Height() * 0.5f), 0.8f, SpriteEffects.None);
++					EntitySpriteDraw(TextureAssets.Chain39.Value, new Vector2(vector7.X - screenPosition.X, vector7.Y - screenPosition.Y), new System.Drawing.Rectangle(0, 0, TextureAssets.Chain39.Width(), TextureAssets.Chain39.Height()), color16, rotation5, new Vector2((float)TextureAssets.Chain39.Width() * 0.5f, (float)TextureAssets.Chain39.Height() * 0.5f), 0.8f, SpriteEffects.None);
+ 
+ 				num65++;
+ 			}
+@@ -25216,7 +_,7 @@
+ 					num79 = 6;
+ 
+ 				num79 += num77 % 2;
+-				EntitySpriteDraw(TextureAssets.Chains[num79].Value, new Vector2(vector8.X - screenPosition.X, vector8.Y - screenPosition.Y), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Chains[num79].Width(), TextureAssets.Chains[num79].Height()), color17, rotation6, new Vector2((float)TextureAssets.Chains[num79].Width() * 0.5f, (float)TextureAssets.Chains[num79].Height() * 0.5f), 0.8f, SpriteEffects.None);
++				EntitySpriteDraw(TextureAssets.Chains[num79].Value, new Vector2(vector8.X - screenPosition.X, vector8.Y - screenPosition.Y), new System.Drawing.Rectangle(0, 0, TextureAssets.Chains[num79].Width(), TextureAssets.Chains[num79].Height()), color17, rotation6, new Vector2((float)TextureAssets.Chains[num79].Width() * 0.5f, (float)TextureAssets.Chains[num79].Height() * 0.5f), 0.8f, SpriteEffects.None);
+ 				num77++;
+ 			}
+ 		}
+@@ -25246,7 +_,7 @@
+ 				num80 = mountedCenter.X - vector9.X;
+ 				num81 = mountedCenter.Y - vector9.Y;
+ 				Microsoft.Xna.Framework.Color color18 = Lighting.GetColor((int)vector9.X / 16, (int)(vector9.Y / 16f));
+-				EntitySpriteDraw(TextureAssets.Chain15.Value, new Vector2(vector9.X - screenPosition.X, vector9.Y - screenPosition.Y), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Chain15.Width(), TextureAssets.Chain15.Height()), color18, rotation7, new Vector2((float)TextureAssets.Chain15.Width() * 0.5f, (float)TextureAssets.Chain15.Height() * 0.5f), 1f, SpriteEffects.None);
++				EntitySpriteDraw(TextureAssets.Chain15.Value, new Vector2(vector9.X - screenPosition.X, vector9.Y - screenPosition.Y), new System.Drawing.Rectangle(0, 0, TextureAssets.Chain15.Width(), TextureAssets.Chain15.Height()), color18, rotation7, new Vector2((float)TextureAssets.Chain15.Width() * 0.5f, (float)TextureAssets.Chain15.Height() * 0.5f), 1f, SpriteEffects.None);
+ 			}
+ 		}
+ 		else if (proj.type == 393 || proj.type == 394 || proj.type == 395) {
+@@ -25280,7 +_,7 @@
+ 					x = vector10.X;
+ 					y = vector10.Y;
+ 					Microsoft.Xna.Framework.Color color19 = Lighting.GetColor((int)center.X / 16, (int)(center.Y / 16f));
+-					EntitySpriteDraw(TextureAssets.Chain.Value, new Vector2(center.X - screenPosition.X, center.Y - screenPosition.Y), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Chain.Width(), TextureAssets.Chain.Height()), color19, num83, new Vector2((float)TextureAssets.Chain.Width() * 0.5f, (float)TextureAssets.Chain.Height() * 0.5f), 1f, SpriteEffects.None);
++					EntitySpriteDraw(TextureAssets.Chain.Value, new Vector2(center.X - screenPosition.X, center.Y - screenPosition.Y), new System.Drawing.Rectangle(0, 0, TextureAssets.Chain.Width(), TextureAssets.Chain.Height()), color19, num83, new Vector2((float)TextureAssets.Chain.Width() * 0.5f, (float)TextureAssets.Chain.Height() * 0.5f), 1f, SpriteEffects.None);
+ 				}
+ 
+ 				LoadProjectile(13);
+@@ -25315,7 +_,7 @@
+ 				num86 = mountedCenter.X - vector11.X;
+ 				num87 = mountedCenter.Y - vector11.Y;
+ 				Microsoft.Xna.Framework.Color color21 = Lighting.GetColor((int)vector11.X / 16, (int)(vector11.Y / 16f));
+-				EntitySpriteDraw(TextureAssets.GemChain[num85].Value, new Vector2(vector11.X - screenPosition.X, vector11.Y - screenPosition.Y), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.GemChain[num85].Width(), TextureAssets.GemChain[num85].Height()), color21, rotation8, new Vector2((float)TextureAssets.GemChain[num85].Width() * 0.5f, (float)TextureAssets.GemChain[num85].Height() * 0.5f), 1f, SpriteEffects.None);
++				EntitySpriteDraw(TextureAssets.GemChain[num85].Value, new Vector2(vector11.X - screenPosition.X, vector11.Y - screenPosition.Y), new System.Drawing.Rectangle(0, 0, TextureAssets.GemChain[num85].Width(), TextureAssets.GemChain[num85].Height()), color21, rotation8, new Vector2((float)TextureAssets.GemChain[num85].Width() * 0.5f, (float)TextureAssets.GemChain[num85].Height() * 0.5f), 1f, SpriteEffects.None);
+ 			}
+ 		}
+ 		else if (proj.type == 753) {
+@@ -25444,7 +_,7 @@
+ 				num98 = player.position.X + (float)(player.width / 2) - vector15.X;
+ 				num99 = player.position.Y + (float)(player.height / 2) - vector15.Y;
+ 				Microsoft.Xna.Framework.Color color25 = Lighting.GetColor((int)vector15.X / 16, (int)(vector15.Y / 16f));
+-				EntitySpriteDraw(TextureAssets.Chain20.Value, new Vector2(vector15.X - screenPosition.X, vector15.Y - screenPosition.Y), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Chain20.Width(), TextureAssets.Chain20.Height()), color25, num100 - 0.785f, new Vector2((float)TextureAssets.Chain20.Width() * 0.5f, (float)TextureAssets.Chain20.Height() * 0.5f), 1f, SpriteEffects.None);
++				EntitySpriteDraw(TextureAssets.Chain20.Value, new Vector2(vector15.X - screenPosition.X, vector15.Y - screenPosition.Y), new System.Drawing.Rectangle(0, 0, TextureAssets.Chain20.Width(), TextureAssets.Chain20.Height()), color25, num100 - 0.785f, new Vector2((float)TextureAssets.Chain20.Width() * 0.5f, (float)TextureAssets.Chain20.Height() * 0.5f), 1f, SpriteEffects.None);
+ 			}
+ 		}
+ 		else if (proj.type == 322) {
+@@ -25473,7 +_,7 @@
+ 				num102 = mountedCenter.X - vector16.X;
+ 				num103 = mountedCenter.Y - vector16.Y;
+ 				Microsoft.Xna.Framework.Color color26 = Lighting.GetColor((int)vector16.X / 16, (int)(vector16.Y / 16f));
+-				EntitySpriteDraw(TextureAssets.Chain29.Value, new Vector2(vector16.X - screenPosition.X, vector16.Y - screenPosition.Y), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Chain29.Width(), TextureAssets.Chain29.Height()), color26, rotation12, new Vector2((float)TextureAssets.Chain29.Width() * 0.5f, (float)TextureAssets.Chain29.Height() * 0.5f), 1f, SpriteEffects.None);
++				EntitySpriteDraw(TextureAssets.Chain29.Value, new Vector2(vector16.X - screenPosition.X, vector16.Y - screenPosition.Y), new System.Drawing.Rectangle(0, 0, TextureAssets.Chain29.Width(), TextureAssets.Chain29.Height()), color26, rotation12, new Vector2((float)TextureAssets.Chain29.Width() * 0.5f, (float)TextureAssets.Chain29.Height() * 0.5f), 1f, SpriteEffects.None);
+ 			}
+ 		}
+ 		else if (proj.type == 315) {
+@@ -25502,7 +_,7 @@
+ 				num105 = mountedCenter.X - vector17.X;
+ 				num106 = mountedCenter.Y - vector17.Y;
+ 				Microsoft.Xna.Framework.Color color27 = Lighting.GetColor((int)vector17.X / 16, (int)(vector17.Y / 16f));
+-				EntitySpriteDraw(TextureAssets.Chain28.Value, new Vector2(vector17.X - screenPosition.X, vector17.Y - screenPosition.Y), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Chain28.Width(), TextureAssets.Chain28.Height()), color27, rotation13, new Vector2((float)TextureAssets.Chain28.Width() * 0.5f, (float)TextureAssets.Chain28.Height() * 0.5f), 1f, SpriteEffects.None);
++				EntitySpriteDraw(TextureAssets.Chain28.Value, new Vector2(vector17.X - screenPosition.X, vector17.Y - screenPosition.Y), new System.Drawing.Rectangle(0, 0, TextureAssets.Chain28.Width(), TextureAssets.Chain28.Height()), color27, rotation13, new Vector2((float)TextureAssets.Chain28.Width() * 0.5f, (float)TextureAssets.Chain28.Height() * 0.5f), 1f, SpriteEffects.None);
+ 			}
+ 		}
+ 		else if (proj.type == 331) {
+@@ -25531,7 +_,7 @@
+ 				num108 = mountedCenter.X - vector18.X;
+ 				num109 = mountedCenter.Y - vector18.Y;
+ 				Microsoft.Xna.Framework.Color color28 = Lighting.GetColor((int)vector18.X / 16, (int)(vector18.Y / 16f));
+-				EntitySpriteDraw(TextureAssets.Chain30.Value, new Vector2(vector18.X - screenPosition.X, vector18.Y - screenPosition.Y), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Chain30.Width(), TextureAssets.Chain30.Height()), color28, rotation14, new Vector2((float)TextureAssets.Chain30.Width() * 0.5f, (float)TextureAssets.Chain30.Height() * 0.5f), 1f, SpriteEffects.None);
++				EntitySpriteDraw(TextureAssets.Chain30.Value, new Vector2(vector18.X - screenPosition.X, vector18.Y - screenPosition.Y), new System.Drawing.Rectangle(0, 0, TextureAssets.Chain30.Width(), TextureAssets.Chain30.Height()), color28, rotation14, new Vector2((float)TextureAssets.Chain30.Width() * 0.5f, (float)TextureAssets.Chain30.Height() * 0.5f), 1f, SpriteEffects.None);
+ 			}
+ 		}
+ 		else if (proj.type == 332) {
+@@ -25575,8 +_,8 @@
+ 				num112 = mountedCenter.X - vector19.X;
+ 				num113 = mountedCenter.Y - vector19.Y;
+ 				Microsoft.Xna.Framework.Color color29 = Lighting.GetColor((int)vector19.X / 16, (int)(vector19.Y / 16f));
+-				EntitySpriteDraw(TextureAssets.Chain31.Value, new Vector2(vector19.X - screenPosition.X, vector19.Y - screenPosition.Y), new Microsoft.Xna.Framework.Rectangle(0, TextureAssets.Chain31.Height() / 4 * num111, TextureAssets.Chain31.Width(), TextureAssets.Chain31.Height() / 4), color29, rotation15, new Vector2((float)TextureAssets.Chain30.Width() * 0.5f, TextureAssets.Chain30.Height() / 8), 1f, SpriteEffects.None);
++				EntitySpriteDraw(TextureAssets.Chain31.Value, new Vector2(vector19.X - screenPosition.X, vector19.Y - screenPosition.Y), new System.Drawing.Rectangle(0, TextureAssets.Chain31.Height() / 4 * num111, TextureAssets.Chain31.Width(), TextureAssets.Chain31.Height() / 4), color29, rotation15, new Vector2((float)TextureAssets.Chain30.Width() * 0.5f, TextureAssets.Chain30.Height() / 8), 1f, SpriteEffects.None);
+-				EntitySpriteDraw(TextureAssets.Chain32.Value, new Vector2(vector19.X - screenPosition.X, vector19.Y - screenPosition.Y), new Microsoft.Xna.Framework.Rectangle(0, TextureAssets.Chain31.Height() / 4 * num111, TextureAssets.Chain31.Width(), TextureAssets.Chain31.Height() / 4), new Microsoft.Xna.Framework.Color(200, 200, 200, 0), rotation15, new Vector2((float)TextureAssets.Chain30.Width() * 0.5f, TextureAssets.Chain30.Height() / 8), 1f, SpriteEffects.None);
++				EntitySpriteDraw(TextureAssets.Chain32.Value, new Vector2(vector19.X - screenPosition.X, vector19.Y - screenPosition.Y), new System.Drawing.Rectangle(0, TextureAssets.Chain31.Height() / 4 * num111, TextureAssets.Chain31.Width(), TextureAssets.Chain31.Height() / 4), new Microsoft.Xna.Framework.Color(200, 200, 200, 0), rotation15, new Vector2((float)TextureAssets.Chain30.Width() * 0.5f, TextureAssets.Chain30.Height() / 8), 1f, SpriteEffects.None);
+ 				num111++;
+ 				if (num111 > 3)
+ 					num111 = 0;
+@@ -25614,14 +_,14 @@
+ 				value11 = TextureAssets.Chains[16].Value;
+ 
+ 			Vector2 center2 = proj.Center;
+-			Microsoft.Xna.Framework.Rectangle? sourceRectangle = null;
++			System.Drawing.Rectangle? sourceRectangle = null;
+ 			Vector2 origin5 = new Vector2((float)value11.Width * 0.5f, (float)value11.Height * 0.5f);
+ 			float num115 = value11.Height;
+ 			float num116 = 0f;
+ 			if (proj.type == 446) {
+ 				int num117 = 7;
+ 				int num118 = (int)proj.localAI[0] / num117;
+-				sourceRectangle = new Microsoft.Xna.Framework.Rectangle(0, value11.Height / 4 * num118, value11.Width, value11.Height / 4);
++				sourceRectangle = new System.Drawing.Rectangle(0, value11.Height / 4 * num118, value11.Width, value11.Height / 4);
+ 				origin5.Y /= 4f;
+ 				num115 /= 4f;
+ 			}
+@@ -25744,7 +_,7 @@
+ 				num122 = mountedCenter.X - vector25.X;
+ 				num123 = mountedCenter.Y - vector25.Y;
+ 				Microsoft.Xna.Framework.Color color32 = Lighting.GetColor((int)vector25.X / 16, (int)(vector25.Y / 16f));
+-				EntitySpriteDraw(TextureAssets.Chain.Value, new Vector2(vector25.X - screenPosition.X, vector25.Y - screenPosition.Y), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Chain.Width(), TextureAssets.Chain.Height()), color32, rotation17, new Vector2((float)TextureAssets.Chain.Width() * 0.5f, (float)TextureAssets.Chain.Height() * 0.5f), 1f, SpriteEffects.None);
++				EntitySpriteDraw(TextureAssets.Chain.Value, new Vector2(vector25.X - screenPosition.X, vector25.Y - screenPosition.Y), new System.Drawing.Rectangle(0, 0, TextureAssets.Chain.Width(), TextureAssets.Chain.Height()), color32, rotation17, new Vector2((float)TextureAssets.Chain.Width() * 0.5f, (float)TextureAssets.Chain.Height() * 0.5f), 1f, SpriteEffects.None);
+ 			}
+ 		}
+ 		else if (proj.type == 262) {
+@@ -25788,7 +_,7 @@
+ 				x3 = mountedCenter.X - vector26.X;
+ 				y3 = mountedCenter.Y - vector26.Y;
+ 				Microsoft.Xna.Framework.Color color33 = Lighting.GetColor((int)vector26.X / 16, (int)(vector26.Y / 16f));
+-				EntitySpriteDraw(TextureAssets.Chain22.Value, new Vector2(vector26.X - screenPosition.X, vector26.Y - screenPosition.Y), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Chain22.Width(), TextureAssets.Chain22.Height()), color33, rotation18, new Vector2((float)TextureAssets.Chain22.Width() * 0.5f, (float)TextureAssets.Chain22.Height() * 0.5f), 1f, SpriteEffects.None);
++				EntitySpriteDraw(TextureAssets.Chain22.Value, new Vector2(vector26.X - screenPosition.X, vector26.Y - screenPosition.Y), new System.Drawing.Rectangle(0, 0, TextureAssets.Chain22.Width(), TextureAssets.Chain22.Height()), color33, rotation18, new Vector2((float)TextureAssets.Chain22.Width() * 0.5f, (float)TextureAssets.Chain22.Height() * 0.5f), 1f, SpriteEffects.None);
+ 			}
+ 		}
+ 		else if (proj.type == 273) {
+@@ -25944,7 +_,7 @@
+ 				}
+ 
+ 				Microsoft.Xna.Framework.Color color35 = Lighting.GetColor((int)origin6.X / 16, (int)(origin6.Y / 16f));
+-				EntitySpriteDraw(TextureAssets.Chain40.Value, new Vector2(origin6.X - screenPosition.X, origin6.Y - screenPosition.Y), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Chain40.Width(), TextureAssets.Chain40.Height()), color35, rotation20, new Vector2((float)TextureAssets.Chain40.Width() * 0.5f, (float)TextureAssets.Chain40.Height() * 0.5f), num135, SpriteEffects.None);
++				EntitySpriteDraw(TextureAssets.Chain40.Value, new Vector2(origin6.X - screenPosition.X, origin6.Y - screenPosition.Y), new System.Drawing.Rectangle(0, 0, TextureAssets.Chain40.Width(), TextureAssets.Chain40.Height()), color35, rotation20, new Vector2((float)TextureAssets.Chain40.Width() * 0.5f, (float)TextureAssets.Chain40.Height() * 0.5f), num135, SpriteEffects.None);
+ 			}
+ 		}
+ 		else if (proj.type == 271) {
+@@ -25988,7 +_,7 @@
+ 				x9 = mountedCenter.X - vector30.X;
+ 				y9 = mountedCenter.Y - vector30.Y;
+ 				Microsoft.Xna.Framework.Color color36 = Lighting.GetColor((int)vector30.X / 16, (int)(vector30.Y / 16f));
+-				EntitySpriteDraw(TextureAssets.Chain18.Value, new Vector2(vector30.X - screenPosition.X, vector30.Y - screenPosition.Y), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Chain18.Width(), TextureAssets.Chain18.Height()), color36, rotation21, new Vector2((float)TextureAssets.Chain18.Width() * 0.5f, (float)TextureAssets.Chain18.Height() * 0.5f), 1f, SpriteEffects.None);
++				EntitySpriteDraw(TextureAssets.Chain18.Value, new Vector2(vector30.X - screenPosition.X, vector30.Y - screenPosition.Y), new System.Drawing.Rectangle(0, 0, TextureAssets.Chain18.Width(), TextureAssets.Chain18.Height()), color36, rotation21, new Vector2((float)TextureAssets.Chain18.Width() * 0.5f, (float)TextureAssets.Chain18.Height() * 0.5f), 1f, SpriteEffects.None);
+ 			}
+ 		}
+ 		else if (proj.aiStyle == 13) {
+@@ -26085,7 +_,7 @@
+ 				}
+ 
+ 				Microsoft.Xna.Framework.Color color37 = Lighting.GetColor((int)vector31.X / 16, (int)(vector31.Y / 16f));
+-				EntitySpriteDraw(TextureAssets.Chain.Value, new Vector2(vector31.X - screenPosition.X, vector31.Y - screenPosition.Y), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Chain.Width(), TextureAssets.Chain.Height()), color37, rotation22, new Vector2((float)TextureAssets.Chain.Width() * 0.5f, (float)TextureAssets.Chain.Height() * 0.5f), 1f, SpriteEffects.None);
++				EntitySpriteDraw(TextureAssets.Chain.Value, new Vector2(vector31.X - screenPosition.X, vector31.Y - screenPosition.Y), new System.Drawing.Rectangle(0, 0, TextureAssets.Chain.Width(), TextureAssets.Chain.Height()), color37, rotation22, new Vector2((float)TextureAssets.Chain.Width() * 0.5f, (float)TextureAssets.Chain.Height() * 0.5f), 1f, SpriteEffects.None);
+ 			}
+ 		}
+ 		else if (proj.aiStyle == 15) {
+@@ -26526,7 +_,7 @@
+ 
+ 		if (proj.aiStyle == 1 && new Projectile.AI_001_Features(proj.ai[2]).PhoenixQuivered) {
+ 			Texture2D value13 = TextureAssets.Extra[91].Value;
+-			Microsoft.Xna.Framework.Rectangle value14 = value13.Frame();
++			System.Drawing.Rectangle value14 = value13.Frame();
+ 			Vector2 origin7 = new Vector2((float)value14.Width / 2f, 10f);
+ 			Vector2 vector35 = new Vector2(0.6f, 0.8f);
+ 			float num154 = 0.5f + 0.05f * (float)Math.Sin(GlobalTimeWrappedHourly % 1f * ((float)Math.PI * 2f));
+@@ -26581,7 +_,7 @@
+ 				alpha.A = (byte)((float)(int)alpha.A * num159);
+ 				int num160 = TextureAssets.Projectile[proj.type].Height() / projFrames[proj.type];
+ 				int y10 = num160 * proj.frame;
+-				EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152 - num157, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY - num158), new Microsoft.Xna.Framework.Rectangle(0, y10, TextureAssets.Projectile[proj.type].Width(), num160), alpha, proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale, dir);
++				EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152 - num157, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY - num158), new System.Drawing.Rectangle(0, y10, TextureAssets.Projectile[proj.type].Width(), num160), alpha, proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale, dir);
+ 			}
+ 		}
+ 
+@@ -26606,7 +_,7 @@
+ 				dir = SpriteEffects.None;
+ 			}
+ 
+-			Microsoft.Xna.Framework.Rectangle rectangle4 = new Microsoft.Xna.Framework.Rectangle(0, y11, value15.Width, num161);
++			System.Drawing.Rectangle rectangle4 = new System.Drawing.Rectangle(0, y11, value15.Width, num161);
+ 			Vector2 origin8 = rectangle4.Size() / 2f;
+ 			Vector2 zero = Vector2.Zero;
+ 			float num162 = 0f;
+@@ -26685,7 +_,7 @@
+ 			float num167 = 1f;
+ 			float num168 = 15f;
+ 			float num169 = 0f;
+-			Microsoft.Xna.Framework.Rectangle value16 = rectangle4;
++			System.Drawing.Rectangle value16 = rectangle4;
+ 			UnifiedRandom unifiedRandom = null;
+ 			if (proj.type == 1055) {
+ 				num165 = 1;
+@@ -26761,7 +_,7 @@
+ 				num164 = 0;
+ 				num165 = -3;
+ 				num167 = 1.3f;
+-				rectangle4 = new Microsoft.Xna.Framework.Rectangle(0, 20 * proj.frame, 32, 18);
++				rectangle4 = new System.Drawing.Rectangle(0, 20 * proj.frame, 32, 18);
+ 				value16 = rectangle4;
+ 				origin8 = rectangle4.Size() / 2f;
+ 			}
+@@ -26901,7 +_,7 @@
+ 				num164 = 3;
+ 				num165 = 1;
+ 				num167 = 8f;
+-				rectangle4 = new Microsoft.Xna.Framework.Rectangle(38 * proj.frame, 0, 38, 38);
++				rectangle4 = new System.Drawing.Rectangle(38 * proj.frame, 0, 38, 38);
+ 				value16 = rectangle4;
+ 				origin8 = rectangle4.Size() / 2f;
+ 			}
+@@ -27241,7 +_,7 @@
+ 			if (proj.type == 864) {
+ 				Microsoft.Xna.Framework.Color floatingDaggerMinionGlowColor = proj.GetFloatingDaggerMinionGlowColor();
+ 				floatingDaggerMinionGlowColor.A /= 4;
+-				Microsoft.Xna.Framework.Rectangle value18 = rectangle4;
++				System.Drawing.Rectangle value18 = rectangle4;
+ 				value18.Y += value18.Height;
+ 				for (int num183 = 0; num183 < 4; num183++) {
+ 					EntitySpriteDraw(value15, proj.Center - screenPosition + new Vector2(0f, proj.gfxOffY) + proj.rotation.ToRotationVector2().RotatedBy((float)Math.PI / 2f * (float)num183) * 2f, value18, floatingDaggerMinionGlowColor, proj.rotation, origin8, proj.scale, dir);
+@@ -27469,7 +_,7 @@
+ 
+ 			if (proj.type == 754) {
+ 				Texture2D value21 = TextureAssets.Projectile[proj.type].Value;
+-				Microsoft.Xna.Framework.Rectangle rectangle5 = value21.Frame(5, 2, proj.frame);
++				System.Drawing.Rectangle rectangle5 = value21.Frame(5, 2, proj.frame);
+ 				rectangle5.Width -= 2;
+ 				rectangle5.Height -= 2;
+ 				Vector2 origin10 = new Vector2(rectangle5.Width / 2, 0f);
+@@ -27490,7 +_,7 @@
+ 				for (float num206 = y12; num206 < num205; num206 += (float)rectangle5.Height) {
+ 					Vector2 vector42 = top;
+ 					vector42.Y = num206;
+-					Microsoft.Xna.Framework.Rectangle value22 = rectangle5;
++					System.Drawing.Rectangle value22 = rectangle5;
+ 					float num207 = num205 - num206;
+ 					if (num207 < (float)value22.Height)
+ 						value22.Height = (int)num207;
+@@ -27512,11 +_,11 @@
+ 
+ 			if (proj.type == 12 || proj.type == 728 || proj.type == 955) {
+ 				Texture2D value23 = TextureAssets.Projectile[proj.type].Value;
+-				Microsoft.Xna.Framework.Rectangle rectangle6 = new Microsoft.Xna.Framework.Rectangle(0, 0, value23.Width, value23.Height);
++				System.Drawing.Rectangle rectangle6 = new System.Drawing.Rectangle(0, 0, value23.Width, value23.Height);
+ 				Vector2 origin11 = rectangle6.Size() / 2f;
+ 				Microsoft.Xna.Framework.Color alpha3 = proj.GetAlpha(projectileColor);
+ 				Texture2D value24 = TextureAssets.Extra[91].Value;
+-				Microsoft.Xna.Framework.Rectangle value25 = value24.Frame();
++				System.Drawing.Rectangle value25 = value24.Frame();
+ 				Vector2 origin12 = new Vector2((float)value25.Width / 2f, 10f);
+ 				Vector2 vector43 = new Vector2(0f, proj.gfxOffY);
+ 				Vector2 spinningpoint = new Vector2(0f, -10f);
+@@ -27566,7 +_,7 @@
+ 
+ 			if (proj.type == 756) {
+ 				Texture2D value26 = TextureAssets.Projectile[proj.type].Value;
+-				Microsoft.Xna.Framework.Rectangle value27 = value26.Frame(1, 6, 0, proj.frame);
++				System.Drawing.Rectangle value27 = value26.Frame(1, 6, 0, proj.frame);
+ 				Vector2 origin13 = new Vector2(16f, value27.Height / 2);
+ 				Microsoft.Xna.Framework.Color alpha4 = proj.GetAlpha(projectileColor);
+ 				Vector2 scale2 = new Vector2(proj.scale);
+@@ -27582,7 +_,7 @@
+ 
+ 			if (proj.type == 961) {
+ 				Texture2D value28 = TextureAssets.Projectile[proj.type].Value;
+-				Microsoft.Xna.Framework.Rectangle value29 = value28.Frame(1, 5, 0, proj.frame);
++				System.Drawing.Rectangle value29 = value28.Frame(1, 5, 0, proj.frame);
+ 				Vector2 origin14 = new Vector2(16f, value29.Height / 2);
+ 				Microsoft.Xna.Framework.Color alpha5 = proj.GetAlpha(projectileColor);
+ 				Vector2 vector48 = new Vector2(proj.scale);
+@@ -27604,7 +_,7 @@
+ 
+ 			if (proj.type == 1041) {
+ 				Texture2D value30 = TextureAssets.Projectile[proj.type].Value;
+-				Microsoft.Xna.Framework.Rectangle value31 = value30.Frame(1, 8, 0, proj.frame);
++				System.Drawing.Rectangle value31 = value30.Frame(1, 8, 0, proj.frame);
+ 				Vector2 origin15 = new Vector2(16f, value31.Height / 2);
+ 				Microsoft.Xna.Framework.Color alpha6 = proj.GetAlpha(projectileColor);
+ 				Vector2 scale3 = new Vector2(proj.scale);
+@@ -27621,11 +_,11 @@
+ 
+ 			if (proj.type == 723 || proj.type == 726 || proj.type == 725 || proj.type == 724 || proj.type == 9 || proj.type == 1133) {
+ 				Texture2D value32 = TextureAssets.Projectile[proj.type].Value;
+-				Microsoft.Xna.Framework.Rectangle rectangle7 = new Microsoft.Xna.Framework.Rectangle(0, 0, value32.Width, value32.Height);
++				System.Drawing.Rectangle rectangle7 = new System.Drawing.Rectangle(0, 0, value32.Width, value32.Height);
+ 				Vector2 origin16 = rectangle7.Size() / 2f;
+ 				Microsoft.Xna.Framework.Color color58 = proj.GetAlpha(projectileColor);
+ 				Texture2D value33 = TextureAssets.Extra[91].Value;
+-				Microsoft.Xna.Framework.Rectangle value34 = value33.Frame();
++				System.Drawing.Rectangle value34 = value33.Frame();
+ 				Vector2 origin17 = new Vector2((float)value34.Width / 2f, 10f);
+ 				_ = Microsoft.Xna.Framework.Color.White * 0.2f;
+ 				Vector2 vector52 = new Vector2(0f, proj.gfxOffY);
+@@ -27731,7 +_,7 @@
+ 					int num228 = 424 + Math.Max(0, Math.Min(2, (int)proj.ai[0]));
+ 					instance.LoadProjectile(num228);
+ 					value32 = TextureAssets.Projectile[num228].Value;
+-					rectangle7 = new Microsoft.Xna.Framework.Rectangle(0, 0, value32.Width, value32.Height);
++					rectangle7 = new System.Drawing.Rectangle(0, 0, value32.Width, value32.Height);
+ 					origin16 = rectangle7.Size() / 2f;
+ 					num216 = 0.9f;
+ 					num217 = 0f;
+@@ -27835,7 +_,7 @@
+ 			}
+ 
+ 			if (proj.type == 440 || proj.type == 449 || proj.type == 606) {
+-				Microsoft.Xna.Framework.Rectangle value51 = new Microsoft.Xna.Framework.Rectangle((int)screenPosition.X - 500, (int)screenPosition.Y - 500, screenWidth + 1000, screenHeight + 1000);
++				System.Drawing.Rectangle value51 = new System.Drawing.Rectangle((int)screenPosition.X - 500, (int)screenPosition.Y - 500, screenWidth + 1000, screenHeight + 1000);
+ 				if (proj.getRect().Intersects(value51)) {
+ 					Vector2 vector57 = new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY);
+ 					float num237 = 100f;
+@@ -27895,7 +_,7 @@
+ 						num247 *= num247;
+ 						num247 *= 0.8f;
+ 						Vector2 position8 = Vector2.SmoothStep(center5, value53, num245);
+-						Microsoft.Xna.Framework.Rectangle rectangle8 = value52.Frame(1, 7, 0, (int)(num245 * 7f));
++						System.Drawing.Rectangle rectangle8 = value52.Frame(1, 7, 0, (int)(num245 * 7f));
+ 						EntitySpriteDraw(value52, position8, rectangle8, transparent, proj.rotation + (float)Math.PI * 2f * (num245 + GlobalTimeWrappedHourly * 1.2f) * 0.2f + (float)num246 * ((float)Math.PI * 2f / 5f), rectangle8.Size() / 2f, num247, SpriteEffects.None);
+ 					}
+ 				}
+@@ -27908,8 +_,8 @@
+ 					return;
+ 
+ 				Player player4 = player;
+-				Microsoft.Xna.Framework.Point point = new Vector2(proj.ai[0], proj.ai[1]).ToPoint();
++				System.Drawing.Point point = new Vector2(proj.ai[0], proj.ai[1]).ToPoint();
+-				Microsoft.Xna.Framework.Point point2 = proj.Center.ToTileCoordinates();
++				System.Drawing.Point point2 = proj.Center.ToTileCoordinates();
+ 				Microsoft.Xna.Framework.Color color71 = new Microsoft.Xna.Framework.Color(255, 255, 255, 0);
+ 				Microsoft.Xna.Framework.Color color72 = new Microsoft.Xna.Framework.Color(127, 127, 127, 0);
+ 				int num248 = 1;
+@@ -27942,7 +_,7 @@
+ 				color72.A = 0;
+ 				if (point == point2) {
+ 					Vector2 position9 = point2.ToVector2() * 16f - screenPosition;
+-					Microsoft.Xna.Framework.Rectangle value54 = new Microsoft.Xna.Framework.Rectangle(0, 0, 16, 16);
++					System.Drawing.Rectangle value54 = new System.Drawing.Rectangle(0, 0, 16, 16);
+ 					if (flag32)
+ 						EntitySpriteDraw(TextureAssets.WireUi[11].Value, position9, null, color71, 0f, Vector2.Zero, 1f, SpriteEffects.None);
+ 
+@@ -27956,7 +_,7 @@
+ 					int num250 = point2.Y - point.Y;
+ 					int num251 = Math.Sign(num250);
+ 					Vector2 position10 = point.ToVector2() * 16f - screenPosition;
+-					Microsoft.Xna.Framework.Rectangle value55 = new Microsoft.Xna.Framework.Rectangle((num250 * num248 > 0) ? 72 : 18, 0, 16, 16);
++					System.Drawing.Rectangle value55 = new System.Drawing.Rectangle((num250 * num248 > 0) ? 72 : 18, 0, 16, 16);
+ 					if (flag32)
+ 						EntitySpriteDraw(TextureAssets.WireUi[11].Value, position10, null, color71, 0f, Vector2.Zero, 1f, SpriteEffects.None);
+ 
+@@ -27976,7 +_,7 @@
+ 					}
+ 
+ 					position10 = point2.ToVector2() * 16f - screenPosition;
+-					value55 = new Microsoft.Xna.Framework.Rectangle((num250 * num248 > 0) ? 18 : 72, 0, 16, 16);
++					value55 = new System.Drawing.Rectangle((num250 * num248 > 0) ? 18 : 72, 0, 16, 16);
+ 					if (flag32)
+ 						EntitySpriteDraw(TextureAssets.WireUi[11].Value, position10, null, color71, 0f, Vector2.Zero, 1f, SpriteEffects.None);
+ 
+@@ -27990,7 +_,7 @@
+ 					int num253 = point2.X - point.X;
+ 					int num254 = Math.Sign(num253);
+ 					Vector2 position11 = point.ToVector2() * 16f - screenPosition;
+-					Microsoft.Xna.Framework.Rectangle value56 = new Microsoft.Xna.Framework.Rectangle((num253 > 0) ? 36 : 144, 0, 16, 16);
++					System.Drawing.Rectangle value56 = new System.Drawing.Rectangle((num253 > 0) ? 36 : 144, 0, 16, 16);
+ 					if (flag32)
+ 						EntitySpriteDraw(TextureAssets.WireUi[11].Value, position11, null, color71, 0f, Vector2.Zero, 1f, SpriteEffects.None);
+ 
+@@ -28010,7 +_,7 @@
+ 					}
+ 
+ 					position11 = point2.ToVector2() * 16f - screenPosition;
+-					value56 = new Microsoft.Xna.Framework.Rectangle((num253 > 0) ? 144 : 36, 0, 16, 16);
++					value56 = new System.Drawing.Rectangle((num253 > 0) ? 144 : 36, 0, 16, 16);
+ 					if (flag32)
+ 						EntitySpriteDraw(TextureAssets.WireUi[11].Value, position11, null, color71, 0f, Vector2.Zero, 1f, SpriteEffects.None);
+ 
+@@ -28024,7 +_,7 @@
+ 				Math.Abs(point.Y - point2.Y);
+ 				int num256 = Math.Sign(point2.X - point.X);
+ 				int num257 = Math.Sign(point2.Y - point.Y);
+-				Microsoft.Xna.Framework.Point p = default(Microsoft.Xna.Framework.Point);
++				System.Drawing.Point p = default(System.Drawing.Point);
+ 				bool flag33 = false;
+ 				bool flag34 = player4.direction == 1;
+ 				int num258;
+@@ -28044,7 +_,7 @@
+ 				}
+ 
+ 				Vector2 position12 = point.ToVector2() * 16f - screenPosition;
+-				Microsoft.Xna.Framework.Rectangle value57 = new Microsoft.Xna.Framework.Rectangle(0, 0, 16, 16);
++				System.Drawing.Rectangle value57 = new System.Drawing.Rectangle(0, 0, 16, 16);
+ 				if (!flag34)
+ 					value57.X = ((num260 > 0) ? 36 : 144);
+ 				else
+@@ -28096,7 +_,7 @@
+ 				}
+ 
+ 				position12 = p.ToVector2() * 16f - screenPosition;
+-				value57 = new Microsoft.Xna.Framework.Rectangle(0, 0, 16, 16);
++				value57 = new System.Drawing.Rectangle(0, 0, 16, 16);
+ 				if (!flag34) {
+ 					value57.X += ((num256 > 0) ? 144 : 36);
+ 					value57.X += ((num257 * num248 > 0) ? 72 : 18);
+@@ -28139,7 +_,7 @@
+ 				}
+ 
+ 				position12 = point2.ToVector2() * 16f - screenPosition;
+-				value57 = new Microsoft.Xna.Framework.Rectangle(0, 0, 16, 16);
++				value57 = new System.Drawing.Rectangle(0, 0, 16, 16);
+ 				if (!flag34)
+ 					value57.X += ((num257 * num248 > 0) ? 18 : 72);
+ 				else
+@@ -28170,7 +_,7 @@
+ 				int num264 = (int)(proj.ai[0] / 6f);
+ 				Vector2 spinningpoint3 = new Vector2(0f, 0f - num263);
+ 				for (int num265 = 0; (float)num265 < 10f; num265++) {
+-					Microsoft.Xna.Framework.Rectangle rectangle9 = value58.Frame(1, 5, 0, (num264 + num265) % 5);
++					System.Drawing.Rectangle rectangle9 = value58.Frame(1, 5, 0, (num264 + num265) % 5);
+ 					float num266 = rotation25 + (float)Math.PI / 5f * (float)num265;
+ 					Vector2 vector60 = spinningpoint3.RotatedBy(num266) / 3f + proj.Center;
+ 					Microsoft.Xna.Framework.Color alpha8 = proj.GetAlpha(Lighting.GetColor(vector60.ToTileCoordinates()));
+@@ -28179,7 +_,7 @@
+ 				}
+ 
+ 				for (int num267 = 0; (float)num267 < 20f; num267++) {
+-					Microsoft.Xna.Framework.Rectangle rectangle10 = value58.Frame(1, 5, 0, (num264 + num267) % 5);
++					System.Drawing.Rectangle rectangle10 = value58.Frame(1, 5, 0, (num264 + num267) % 5);
+ 					float num268 = 0f - rotation25 + (float)Math.PI / 10f * (float)num267;
+ 					num268 *= 2f;
+ 					Vector2 vector61 = spinningpoint3.RotatedBy(num268) + proj.Center;
+@@ -28219,7 +_,7 @@
+ 				EntitySpriteDraw(value61, position14, null, projectileColor * num270, rotation26, value61.Size() / 2f, 0.65f, effects2);
+ 				Microsoft.Xna.Framework.Color color73 = new Microsoft.Xna.Framework.Color(255, 189, 163, 127) * num270;
+ 				Microsoft.Xna.Framework.Color color74 = new Microsoft.Xna.Framework.Color(255, 21, 21, 127) * num270;
+-				Microsoft.Xna.Framework.Rectangle rectangle11 = value60.Frame(2);
++				System.Drawing.Rectangle rectangle11 = value60.Frame(2);
+ 				Vector2 origin19 = rectangle11.Bottom();
+ 				EntitySpriteDraw(value60, position14, rectangle11, color73, proj.rotation, origin19, scale5, dir);
+ 				rectangle11 = value60.Frame(2, 1, 1);
+@@ -28230,7 +_,7 @@
+ 			if (proj.type == 688 || proj.type == 689 || proj.type == 690) {
+ 				Texture2D value62 = TextureAssets.Projectile[proj.type].Value;
+ 				Vector2 position15 = proj.Top + Vector2.UnitY * proj.gfxOffY - screenPosition;
+-				Microsoft.Xna.Framework.Rectangle rectangle12 = value62.Frame(1, projFrames[proj.type], 0, proj.frame);
++				System.Drawing.Rectangle rectangle12 = value62.Frame(1, projFrames[proj.type], 0, proj.frame);
+ 				Vector2 origin20 = rectangle12.Size() * new Vector2(0.5f, 0f);
+ 				Microsoft.Xna.Framework.Color color75 = Microsoft.Xna.Framework.Color.Lerp(proj.GetAlpha(projectileColor), Microsoft.Xna.Framework.Color.White, 0.5f);
+ 				Microsoft.Xna.Framework.Color color76 = color75;
+@@ -28270,7 +_,7 @@
+ 			if (proj.type == 694 || proj.type == 695 || proj.type == 696) {
+ 				Texture2D value63 = TextureAssets.Projectile[proj.type].Value;
+ 				Vector2 position17 = proj.Bottom + Vector2.UnitY * proj.gfxOffY - screenPosition;
+-				Microsoft.Xna.Framework.Rectangle rectangle13 = value63.Frame(1, projFrames[proj.type], 0, proj.frame);
++				System.Drawing.Rectangle rectangle13 = value63.Frame(1, projFrames[proj.type], 0, proj.frame);
+ 				Vector2 origin21 = rectangle13.Size() * new Vector2(0.5f, 1f);
+ 				origin21.Y -= 8f;
+ 				int type = proj.type;
+@@ -28296,10 +_,10 @@
+ 					newColor = proj.GetAlpha(newColor);
+ 					newColor *= (float)(num272 - num274) / 15f;
+ 					_ = proj.oldPos[num274] - screenPosition + new Vector2(num153 + (float)num152, (float)(proj.height / 2) + proj.gfxOffY);
+-					EntitySpriteDraw(value64, proj.oldPos[num274] + new Vector2(proj.width, proj.height) / 2f - screenPosition + new Vector2(0f, proj.gfxOffY), new Microsoft.Xna.Framework.Rectangle(0, y13, value64.Width, num271), newColor, proj.rotation, new Vector2((float)value64.Width / 2f, (float)num271 / 2f), MathHelper.Lerp(proj.scale, value65, (float)num274 / 15f), dir);
++					EntitySpriteDraw(value64, proj.oldPos[num274] + new Vector2(proj.width, proj.height) / 2f - screenPosition + new Vector2(0f, proj.gfxOffY), new System.Drawing.Rectangle(0, y13, value64.Width, num271), newColor, proj.rotation, new Vector2((float)value64.Width / 2f, (float)num271 / 2f), MathHelper.Lerp(proj.scale, value65, (float)num274 / 15f), dir);
+ 				}
+ 
+-				EntitySpriteDraw(value64, proj.Center - screenPosition + new Vector2(0f, proj.gfxOffY), new Microsoft.Xna.Framework.Rectangle(0, y13, value64.Width, num271), proj.GetAlpha(projectileColor), proj.rotation, new Vector2((float)value64.Width / 2f, (float)num271 / 2f), proj.scale, dir);
++				EntitySpriteDraw(value64, proj.Center - screenPosition + new Vector2(0f, proj.gfxOffY), new System.Drawing.Rectangle(0, y13, value64.Width, num271), proj.GetAlpha(projectileColor), proj.rotation, new Vector2((float)value64.Width / 2f, (float)num271 / 2f), proj.scale, dir);
+ 				return;
+ 			}
+ 
+@@ -28316,11 +_,11 @@
+ 					newColor2 = proj.GetAlpha(newColor2);
+ 					newColor2 *= (float)(num276 - num278) / 15f;
+ 					_ = proj.oldPos[num278] - screenPosition + new Vector2(num153 + (float)num152, (float)(proj.height / 2) + proj.gfxOffY);
+-					EntitySpriteDraw(value66, proj.oldPos[num278] + new Vector2(proj.width, proj.height) / 2f - screenPosition + new Vector2(0f, proj.gfxOffY), new Microsoft.Xna.Framework.Rectangle(0, y14, value66.Width, num275), newColor2, proj.rotation, new Vector2((float)value66.Width / 2f, (float)num275 / 2f), MathHelper.Lerp(proj.scale, value67, (float)num278 / 15f), dir);
++					EntitySpriteDraw(value66, proj.oldPos[num278] + new Vector2(proj.width, proj.height) / 2f - screenPosition + new Vector2(0f, proj.gfxOffY), new System.Drawing.Rectangle(0, y14, value66.Width, num275), newColor2, proj.rotation, new Vector2((float)value66.Width / 2f, (float)num275 / 2f), MathHelper.Lerp(proj.scale, value67, (float)num278 / 15f), dir);
+ 				}
+ 
+-				EntitySpriteDraw(value66, proj.Center - screenPosition + new Vector2(0f, proj.gfxOffY), new Microsoft.Xna.Framework.Rectangle(0, y14, value66.Width, num275), Microsoft.Xna.Framework.Color.White, proj.rotation, new Vector2((float)value66.Width / 2f, (float)num275 / 2f), proj.scale + 0.2f, dir);
++				EntitySpriteDraw(value66, proj.Center - screenPosition + new Vector2(0f, proj.gfxOffY), new System.Drawing.Rectangle(0, y14, value66.Width, num275), Microsoft.Xna.Framework.Color.White, proj.rotation, new Vector2((float)value66.Width / 2f, (float)num275 / 2f), proj.scale + 0.2f, dir);
+-				EntitySpriteDraw(value66, proj.Center - screenPosition + new Vector2(0f, proj.gfxOffY), new Microsoft.Xna.Framework.Rectangle(0, y14, value66.Width, num275), proj.GetAlpha(Microsoft.Xna.Framework.Color.White), proj.rotation, new Vector2((float)value66.Width / 2f, (float)num275 / 2f), proj.scale + 0.2f, dir);
++				EntitySpriteDraw(value66, proj.Center - screenPosition + new Vector2(0f, proj.gfxOffY), new System.Drawing.Rectangle(0, y14, value66.Width, num275), proj.GetAlpha(Microsoft.Xna.Framework.Color.White), proj.rotation, new Vector2((float)value66.Width / 2f, (float)num275 / 2f), proj.scale + 0.2f, dir);
+ 				return;
+ 			}
+ 
+@@ -28328,7 +_,7 @@
+ 				Texture2D value68 = TextureAssets.Projectile[proj.type].Value;
+ 				int num279 = TextureAssets.Projectile[proj.type].Height() / projFrames[proj.type];
+ 				int y15 = num279 * proj.frame;
+-				EntitySpriteDraw(value68, proj.Center - screenPosition + new Vector2(0f, proj.gfxOffY), new Microsoft.Xna.Framework.Rectangle(0, y15, value68.Width, num279), proj.GetAlpha(projectileColor), proj.rotation, new Vector2((float)value68.Width / 2f, (float)num279 / 2f), proj.scale, dir);
++				EntitySpriteDraw(value68, proj.Center - screenPosition + new Vector2(0f, proj.gfxOffY), new System.Drawing.Rectangle(0, y15, value68.Width, num279), proj.GetAlpha(projectileColor), proj.rotation, new Vector2((float)value68.Width / 2f, (float)num279 / 2f), proj.scale, dir);
+ 				return;
+ 			}
+ 
+@@ -28382,21 +_,21 @@
+ 					value69 = TextureAssets.Item[3930].Value;
+ 				}
+ 
+-				EntitySpriteDraw(value69, vector62, new Microsoft.Xna.Framework.Rectangle(0, y16, value69.Width, num280), proj.GetAlpha(projectileColor), proj.rotation, new Vector2((float)value69.Width / 2f, (float)num280 / 2f), proj.scale, dir);
++				EntitySpriteDraw(value69, vector62, new System.Drawing.Rectangle(0, y16, value69.Width, num280), proj.GetAlpha(projectileColor), proj.rotation, new Vector2((float)value69.Width / 2f, (float)num280 / 2f), proj.scale, dir);
+ 				if (proj.type == 439) {
+-					EntitySpriteDraw(TextureAssets.GlowMask[35].Value, vector62, new Microsoft.Xna.Framework.Rectangle(0, y16, value69.Width, num280), new Microsoft.Xna.Framework.Color(255, 255, 255, 0) * num281, proj.rotation, new Vector2((float)value69.Width / 2f, (float)num280 / 2f), proj.scale, dir);
++					EntitySpriteDraw(TextureAssets.GlowMask[35].Value, vector62, new System.Drawing.Rectangle(0, y16, value69.Width, num280), new Microsoft.Xna.Framework.Color(255, 255, 255, 0) * num281, proj.rotation, new Vector2((float)value69.Width / 2f, (float)num280 / 2f), proj.scale, dir);
+ 				}
+ 				else if (proj.type == 714) {
+ 					y16 = num280 * proj.frame;
+ 					Microsoft.Xna.Framework.Color color78 = hslToRgb(proj.ai[0] / 90f % 1f, 1f, 0.5f);
+ 					color78.A = 120;
+-					EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, vector62, new Microsoft.Xna.Framework.Rectangle(0, y16, value69.Width, num280), color78 * num281, proj.rotation, new Vector2((float)value69.Width / 2f, (float)num280 / 2f), proj.scale, dir);
++					EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, vector62, new System.Drawing.Rectangle(0, y16, value69.Width, num280), color78 * num281, proj.rotation, new Vector2((float)value69.Width / 2f, (float)num280 / 2f), proj.scale, dir);
+ 				}
+ 				else if (proj.type == 615) {
+-					EntitySpriteDraw(TextureAssets.GlowMask[192].Value, vector62, new Microsoft.Xna.Framework.Rectangle(0, y16, value69.Width, num280), new Microsoft.Xna.Framework.Color(255, 255, 255, 127) * num281, proj.rotation, new Vector2((float)value69.Width / 2f, (float)num280 / 2f), proj.scale, dir);
++					EntitySpriteDraw(TextureAssets.GlowMask[192].Value, vector62, new System.Drawing.Rectangle(0, y16, value69.Width, num280), new Microsoft.Xna.Framework.Color(255, 255, 255, 127) * num281, proj.rotation, new Vector2((float)value69.Width / 2f, (float)num280 / 2f), proj.scale, dir);
+ 				}
+ 				else if (proj.type == 630) {
+-					EntitySpriteDraw(TextureAssets.GlowMask[200].Value, vector62, new Microsoft.Xna.Framework.Rectangle(0, y16, value69.Width, num280), new Microsoft.Xna.Framework.Color(255, 255, 255, 127) * num281, proj.rotation, new Vector2((float)value69.Width / 2f, (float)num280 / 2f), proj.scale, dir);
++					EntitySpriteDraw(TextureAssets.GlowMask[200].Value, vector62, new System.Drawing.Rectangle(0, y16, value69.Width, num280), new Microsoft.Xna.Framework.Color(255, 255, 255, 127) * num281, proj.rotation, new Vector2((float)value69.Width / 2f, (float)num280 / 2f), proj.scale, dir);
+ 					if (proj.localAI[0] > 0f) {
+ 						int frameY = 6 - (int)(proj.localAI[0] / 1f);
+ 						value69 = TextureAssets.Extra[65].Value;
+@@ -28406,13 +_,13 @@
+ 				else if (proj.type == 600) {
+ 					Microsoft.Xna.Framework.Color portalColor = PortalHelper.GetPortalColor(proj.owner, (int)proj.ai[1]);
+ 					portalColor.A = 70;
+-					EntitySpriteDraw(TextureAssets.GlowMask[173].Value, vector62, new Microsoft.Xna.Framework.Rectangle(0, y16, value69.Width, num280), portalColor, proj.rotation, new Vector2((float)value69.Width / 2f, (float)num280 / 2f), proj.scale, dir);
++					EntitySpriteDraw(TextureAssets.GlowMask[173].Value, vector62, new System.Drawing.Rectangle(0, y16, value69.Width, num280), portalColor, proj.rotation, new Vector2((float)value69.Width / 2f, (float)num280 / 2f), proj.scale, dir);
+ 				}
+ 				else if (proj.type == 460) {
+ 					if (Math.Abs(proj.rotation - (float)Math.PI / 2f) > (float)Math.PI / 2f)
+ 						dir |= SpriteEffects.FlipVertically;
+ 
+-					EntitySpriteDraw(TextureAssets.GlowMask[102].Value, vector62, new Microsoft.Xna.Framework.Rectangle(0, y16, value69.Width, num280), new Microsoft.Xna.Framework.Color(255, 255, 255, 0), proj.rotation - (float)Math.PI / 2f, new Vector2((float)value69.Width / 2f, (float)num280 / 2f), proj.scale, dir);
++					EntitySpriteDraw(TextureAssets.GlowMask[102].Value, vector62, new System.Drawing.Rectangle(0, y16, value69.Width, num280), new Microsoft.Xna.Framework.Color(255, 255, 255, 0), proj.rotation - (float)Math.PI / 2f, new Vector2((float)value69.Width / 2f, (float)num280 / 2f), proj.scale, dir);
+ 					if (proj.ai[0] > 180f && ((ProjectileKey)proj.ai[1]).TryGetActive(461, out var proj2))
+ 						DrawProj(proj2.whoAmI);
+ 				}
+@@ -28422,7 +_,7 @@
+ 						num284 = 4f;
+ 
+ 					for (float num285 = 0f; num285 < 4f; num285 += 1f) {
+-						EntitySpriteDraw(value69, vector62 + Vector2.UnitY.RotatedBy(num285 * ((float)Math.PI * 2f) / 4f) * num284, new Microsoft.Xna.Framework.Rectangle(0, y16, value69.Width, num280), proj.GetAlpha(projectileColor).MultiplyRGBA(new Microsoft.Xna.Framework.Color(255, 255, 255, 0)) * 0.03f, proj.rotation, new Vector2((float)value69.Width / 2f, (float)num280 / 2f), proj.scale, dir);
++						EntitySpriteDraw(value69, vector62 + Vector2.UnitY.RotatedBy(num285 * ((float)Math.PI * 2f) / 4f) * num284, new System.Drawing.Rectangle(0, y16, value69.Width, num280), proj.GetAlpha(projectileColor).MultiplyRGBA(new Microsoft.Xna.Framework.Color(255, 255, 255, 0)) * 0.03f, proj.rotation, new Vector2((float)value69.Width / 2f, (float)num280 / 2f), proj.scale, dir);
+ 					}
+ 				}
+ 
+@@ -28434,8 +_,8 @@
+ 				int num286 = TextureAssets.Projectile[proj.type].Height() / projFrames[proj.type];
+ 				int y17 = num286 * proj.frame;
+ 				Vector2 position18 = proj.position + new Vector2(proj.width, proj.height) / 2f + Vector2.UnitY * proj.gfxOffY - screenPosition;
+-				EntitySpriteDraw(value70, position18, new Microsoft.Xna.Framework.Rectangle(0, y17, value70.Width, num286), proj.GetAlpha(projectileColor), proj.rotation, new Vector2((float)value70.Width / 2f, (float)num286 / 2f), proj.scale, dir);
++				EntitySpriteDraw(value70, position18, new System.Drawing.Rectangle(0, y17, value70.Width, num286), proj.GetAlpha(projectileColor), proj.rotation, new Vector2((float)value70.Width / 2f, (float)num286 / 2f), proj.scale, dir);
+-				EntitySpriteDraw(TextureAssets.GlowMask[37].Value, position18, new Microsoft.Xna.Framework.Rectangle(0, y17, value70.Width, num286), new Microsoft.Xna.Framework.Color(255, 255, 255, 0) * (1f - (float)proj.alpha / 255f), proj.rotation, new Vector2((float)value70.Width / 2f, (float)num286 / 2f), proj.scale, dir);
++				EntitySpriteDraw(TextureAssets.GlowMask[37].Value, position18, new System.Drawing.Rectangle(0, y17, value70.Width, num286), new Microsoft.Xna.Framework.Color(255, 255, 255, 0) * (1f - (float)proj.alpha / 255f), proj.rotation, new Vector2((float)value70.Width / 2f, (float)num286 / 2f), proj.scale, dir);
+ 				return;
+ 			}
+ 
+@@ -28446,7 +_,7 @@
+ 				int y18 = num287 * proj.frame;
+ 				int num288 = value72.Height / projFrames[proj.type];
+ 				int num289 = num288 * proj.frame;
+-				Microsoft.Xna.Framework.Rectangle value73 = new Microsoft.Xna.Framework.Rectangle(0, num289, value72.Width, num288);
++				System.Drawing.Rectangle value73 = new System.Drawing.Rectangle(0, num289, value72.Width, num288);
+ 				Vector2 vector63 = proj.position + new Vector2(proj.width, 0f) / 2f + Vector2.UnitY * proj.gfxOffY - screenPosition;
+ 				EntitySpriteDraw(TextureAssets.Extra[4].Value, vector63, value73, proj.GetAlpha(projectileColor), proj.rotation, new Vector2(value72.Width / 2, 0f), proj.scale, dir);
+ 				int num290 = proj.height - num287 - 14;
+@@ -28457,7 +_,7 @@
+ 					if (num289 == num288 * 3)
+ 						num289 = num288 * 2;
+ 
+-					EntitySpriteDraw(TextureAssets.Extra[4].Value, vector63 + Vector2.UnitY * (num288 - 1), new Microsoft.Xna.Framework.Rectangle(0, num289 + num288 - 1, value72.Width, 1), proj.GetAlpha(projectileColor), proj.rotation, new Vector2(value72.Width / 2, 0f), new Vector2(1f, num290), dir);
++					EntitySpriteDraw(TextureAssets.Extra[4].Value, vector63 + Vector2.UnitY * (num288 - 1), new System.Drawing.Rectangle(0, num289 + num288 - 1, value72.Width, 1), proj.GetAlpha(projectileColor), proj.rotation, new Vector2(value72.Width / 2, 0f), new Vector2(1f, num290), dir);
+ 				}
+ 
+ 				value73.Width = value71.Width;
+@@ -28481,7 +_,7 @@
+ 				center6 += proj.velocity * proj.scale * value74.Height / 2f;
+ 				if (num291 > 0f) {
+ 					float num292 = 0f;
+-					Microsoft.Xna.Framework.Rectangle value77 = new Microsoft.Xna.Framework.Rectangle(0, 16 * (proj.timeLeft / 3 % 5), value75.Width, 16);
++					System.Drawing.Rectangle value77 = new System.Drawing.Rectangle(0, 16 * (proj.timeLeft / 3 % 5), value75.Width, 16);
+ 					while (num292 + 1f < num291) {
+ 						if (num291 - num292 < (float)value77.Height)
+ 							value77.Height = (int)(num291 - num292);
+@@ -28506,12 +_,12 @@
+ 				Texture2D value78 = TextureAssets.Projectile[proj.type].Value;
+ 				float num293 = proj.localAI[1];
+ 				Microsoft.Xna.Framework.Color color80 = new Microsoft.Xna.Framework.Color(255, 255, 255, 0) * 0.9f;
+-				Microsoft.Xna.Framework.Rectangle rectangle14 = new Microsoft.Xna.Framework.Rectangle(0, 0, value78.Width, 22);
++				System.Drawing.Rectangle rectangle14 = new System.Drawing.Rectangle(0, 0, value78.Width, 22);
+ 				EntitySpriteDraw(value78, proj.Center.Floor() - screenPosition, rectangle14, color80, proj.rotation, rectangle14.Size() / 2f, proj.scale, SpriteEffects.None);
+ 				num293 -= 33f * proj.scale;
+ 				Vector2 vector64 = proj.Center.Floor();
+ 				vector64 += proj.velocity * proj.scale * 10.5f;
+-				rectangle14 = new Microsoft.Xna.Framework.Rectangle(0, 25, value78.Width, 28);
++				rectangle14 = new System.Drawing.Rectangle(0, 25, value78.Width, 28);
+ 				if (num293 > 0f) {
+ 					float num294 = 0f;
+ 					while (num294 + 1f < num293) {
+@@ -28524,7 +_,7 @@
+ 					}
+ 				}
+ 
+-				EntitySpriteDraw(sourceRectangle: new Microsoft.Xna.Framework.Rectangle(0, 56, value78.Width, 22), texture: value78, position: vector64 - screenPosition, color: color80, rotation: proj.rotation, origin: value78.Frame().Top(), scale: proj.scale, effects: SpriteEffects.None);
++				EntitySpriteDraw(sourceRectangle: new System.Drawing.Rectangle(0, 56, value78.Width, 22), texture: value78, position: vector64 - screenPosition, color: color80, rotation: proj.rotation, origin: value78.Frame().Top(), scale: proj.scale, effects: SpriteEffects.None);
+ 				return;
+ 			}
+ 
+@@ -28580,13 +_,13 @@
+ 				float num297 = proj.velocity.Length() + 16f;
+ 				bool flag36 = num297 < 100f;
+ 				Vector2 vector69 = Vector2.Normalize(proj.velocity);
+-				Microsoft.Xna.Framework.Rectangle rectangle15 = new Microsoft.Xna.Framework.Rectangle(0, 2, value81.Width, 40);
++				System.Drawing.Rectangle rectangle15 = new System.Drawing.Rectangle(0, 2, value81.Width, 40);
+ 				float rotation27 = proj.rotation + (float)Math.PI;
+ 				EntitySpriteDraw(value81, proj.Center.Floor() - screenPosition, rectangle15, alpha9, rotation27, rectangle15.Size() / 2f - Vector2.UnitY * 4f, proj.scale, SpriteEffects.None);
+ 				num297 -= 40f * proj.scale;
+ 				Vector2 vector70 = proj.Center.Floor();
+ 				vector70 += vector69 * proj.scale * 24f;
+-				rectangle15 = new Microsoft.Xna.Framework.Rectangle(0, 68, value81.Width, 18);
++				rectangle15 = new System.Drawing.Rectangle(0, 68, value81.Width, 18);
+ 				if (num297 > 0f) {
+ 					float num298 = 0f;
+ 					while (num298 + 1f < num297) {
+@@ -28602,7 +_,7 @@
+ 				Vector2 vector71 = vector70;
+ 				vector70 = proj.Center.Floor();
+ 				vector70 += vector69 * proj.scale * 24f;
+-				rectangle15 = new Microsoft.Xna.Framework.Rectangle(0, 46, value81.Width, 18);
++				rectangle15 = new System.Drawing.Rectangle(0, 46, value81.Width, 18);
+ 				int num299 = 18;
+ 				if (flag36)
+ 					num299 = 9;
+@@ -28624,7 +_,7 @@
+ 					}
+ 				}
+ 
+-				EntitySpriteDraw(sourceRectangle: new Microsoft.Xna.Framework.Rectangle(0, 90, value81.Width, 48), texture: value81, position: vector71 - screenPosition, color: alpha9, rotation: rotation27, origin: value81.Frame().Top(), scale: proj.scale, effects: SpriteEffects.None);
++				EntitySpriteDraw(sourceRectangle: new System.Drawing.Rectangle(0, 90, value81.Width, 48), texture: value81, position: vector71 - screenPosition, color: alpha9, rotation: rotation27, origin: value81.Frame().Top(), scale: proj.scale, effects: SpriteEffects.None);
+ 				return;
+ 			}
+ 
+@@ -28638,13 +_,13 @@
+ 				float toMax = 1.5f;
+ 				float num306 = Utils.Remap(fromValue2, 0f, 1f, 0.25f, toMax);
+ 				Microsoft.Xna.Framework.Color color82 = new Microsoft.Xna.Framework.Color(255, 255, 255, 0) * 0.9f;
+-				Microsoft.Xna.Framework.Rectangle rectangle16 = new Microsoft.Xna.Framework.Rectangle(0, 0, value82.Width, 22);
++				System.Drawing.Rectangle rectangle16 = new System.Drawing.Rectangle(0, 0, value82.Width, 22);
+ 				Vector2 vector72 = new Vector2(0f, npc[(int)proj.ai[1]].gfxOffY);
+ 				EntitySpriteDraw(value82, proj.Center.Floor() - screenPosition + vector72, rectangle16, color82, proj.rotation, rectangle16.Size() / 2f, num306, SpriteEffects.None);
+ 				num305 -= 33f * proj.scale;
+ 				Vector2 vector73 = proj.Center.Floor();
+ 				vector73 += proj.velocity * num306 * 10.5f;
+-				rectangle16 = new Microsoft.Xna.Framework.Rectangle(0, 25, value82.Width, 28);
++				rectangle16 = new System.Drawing.Rectangle(0, 25, value82.Width, 28);
+ 				if (num305 > 0f) {
+ 					float num307 = 0f;
+ 					while (num307 + 1f < num305) {
+@@ -28657,7 +_,7 @@
+ 					}
+ 				}
+ 
+-				EntitySpriteDraw(sourceRectangle: new Microsoft.Xna.Framework.Rectangle(0, 56, value82.Width, 22), texture: value82, position: vector73 - screenPosition + vector72, color: color82, rotation: proj.rotation, origin: value82.Frame().Top(), scale: num306, effects: SpriteEffects.None);
++				EntitySpriteDraw(sourceRectangle: new System.Drawing.Rectangle(0, 56, value82.Width, 22), texture: value82, position: vector73 - screenPosition + vector72, color: color82, rotation: proj.rotation, origin: value82.Frame().Top(), scale: num306, effects: SpriteEffects.None);
+ 				return;
+ 			}
+ 
+@@ -28669,7 +_,7 @@
+ 				Vector2 value86 = npc[(int)Math.Abs(proj.ai[0]) - 1].Center - proj.Center + vector74;
+ 				float num308 = value86.Length();
+ 				Vector2 vector75 = Vector2.Normalize(value86);
+-				Microsoft.Xna.Framework.Rectangle rectangle17 = value83.Frame();
++				System.Drawing.Rectangle rectangle17 = value83.Frame();
+ 				rectangle17.Height /= 4;
+ 				rectangle17.Y += proj.frame * rectangle17.Height;
+ 				EntitySpriteDraw(color: proj.GetAlpha(Microsoft.Xna.Framework.Color.Lerp(projectileColor, Microsoft.Xna.Framework.Color.White, 0.3f)), texture: value83, position: proj.Center - screenPosition, sourceRectangle: rectangle17, rotation: proj.rotation, origin: rectangle17.Size() / 2f, scale: proj.scale, effects: SpriteEffects.None);
+@@ -28678,12 +_,12 @@
+ 				center7 += vector75 * proj.scale * rectangle17.Height / 2f;
+ 				if (num308 > 0f) {
+ 					float num309 = 0f;
+-					Microsoft.Xna.Framework.Rectangle rectangle18 = new Microsoft.Xna.Framework.Rectangle(0, 0, value84.Width, value84.Height);
++					System.Drawing.Rectangle rectangle18 = new System.Drawing.Rectangle(0, 0, value84.Width, value84.Height);
+ 					while (num309 + 1f < num308) {
+ 						if (num308 - num309 < (float)rectangle18.Height)
+ 							rectangle18.Height = (int)(num308 - num309);
+ 
+-						Microsoft.Xna.Framework.Point point3 = center7.ToTileCoordinates();
++						System.Drawing.Point point3 = center7.ToTileCoordinates();
+ 						Microsoft.Xna.Framework.Color color83 = Lighting.GetColor(point3.X, point3.Y);
+ 						color83 = Microsoft.Xna.Framework.Color.Lerp(color83, Microsoft.Xna.Framework.Color.White, 0.3f);
+ 						EntitySpriteDraw(value84, center7 - screenPosition, rectangle18, proj.GetAlpha(color83), proj.rotation, rectangle18.Bottom(), proj.scale, SpriteEffects.None);
+@@ -28692,10 +_,10 @@
+ 					}
+ 				}
+ 
+-				Microsoft.Xna.Framework.Point point4 = center7.ToTileCoordinates();
++				System.Drawing.Point point4 = center7.ToTileCoordinates();
+ 				Microsoft.Xna.Framework.Color color84 = Lighting.GetColor(point4.X, point4.Y);
+ 				color84 = Microsoft.Xna.Framework.Color.Lerp(color84, Microsoft.Xna.Framework.Color.White, 0.3f);
+-				Microsoft.Xna.Framework.Rectangle value87 = value85.Frame();
++				System.Drawing.Rectangle value87 = value85.Frame();
+ 				if (num308 < 0f)
+ 					value87.Height += (int)num308;
+ 
+@@ -28715,8 +_,8 @@
+ 				int num314 = TextureAssets.Projectile[proj.type].Height() / projFrames[proj.type];
+ 				int y19 = num314 * proj.frame;
+ 				Vector2 position19 = proj.position + new Vector2(proj.width, proj.height) / 2f + Vector2.UnitY * proj.gfxOffY - screenPosition;
+-				EntitySpriteDraw(value88, position19, new Microsoft.Xna.Framework.Rectangle(0, y19, value88.Width, num314), proj.GetAlpha(projectileColor), proj.rotation + num313, new Vector2((float)value88.Width / 2f, (float)num314 / 2f), scale6, dir);
++				EntitySpriteDraw(value88, position19, new System.Drawing.Rectangle(0, y19, value88.Width, num314), proj.GetAlpha(projectileColor), proj.rotation + num313, new Vector2((float)value88.Width / 2f, (float)num314 / 2f), scale6, dir);
+-				EntitySpriteDraw(value88, position19, new Microsoft.Xna.Framework.Rectangle(0, y19, value88.Width, num314), proj.GetAlpha(projectileColor), proj.rotation + ((float)Math.PI * 2f - num313), new Vector2((float)value88.Width / 2f, (float)num314 / 2f), scale7, dir);
++				EntitySpriteDraw(value88, position19, new System.Drawing.Rectangle(0, y19, value88.Width, num314), proj.GetAlpha(projectileColor), proj.rotation + ((float)Math.PI * 2f - num313), new Vector2((float)value88.Width / 2f, (float)num314 / 2f), scale7, dir);
+ 				return;
+ 			}
+ 
+@@ -28732,7 +_,7 @@
+ 				if (num318 > num315 - 60f)
+ 					num319 = MathHelper.Lerp(1f, 0f, (num318 - (num315 - 60f)) / 60f);
+ 
+-				Microsoft.Xna.Framework.Point point5 = proj.Center.ToTileCoordinates();
++				System.Drawing.Point point5 = proj.Center.ToTileCoordinates();
+ 				Collision.ExpandVertically(point5.X, point5.Y, out var topY, out var bottomY, (int)num316, (int)num317);
+ 				topY++;
+ 				bottomY--;
+@@ -28744,7 +_,7 @@
+ 				vector77.X = vector77.Y * num320;
+ 				new Vector2(value89.X - vector77.X / 2f, value89.Y);
+ 				Texture2D value91 = TextureAssets.Projectile[proj.type].Value;
+-				Microsoft.Xna.Framework.Rectangle rectangle19 = value91.Frame();
++				System.Drawing.Rectangle rectangle19 = value91.Frame();
+ 				Vector2 origin22 = rectangle19.Size() / 2f;
+ 				float num321 = -(float)Math.PI / 50f * num318;
+ 				Vector2 spinningpoint4 = Vector2.UnitY.RotatedBy(num318 * 0.1f);
+@@ -28790,7 +_,7 @@
+ 				vector79.X = vector79.Y * num331;
+ 				new Vector2(top2.X - vector79.X / 2f, top2.Y);
+ 				Texture2D value93 = TextureAssets.Projectile[proj.type].Value;
+-				Microsoft.Xna.Framework.Rectangle rectangle20 = value93.Frame();
++				System.Drawing.Rectangle rectangle20 = value93.Frame();
+ 				Vector2 origin23 = rectangle20.Size() / 2f;
+ 				float num332 = -(float)Math.PI / 20f * num329 * (float)((!(proj.velocity.X > 0f)) ? 1 : (-1));
+ 				SpriteEffects effects3 = ((proj.velocity.X > 0f) ? SpriteEffects.FlipVertically : SpriteEffects.None);
+@@ -28854,7 +_,7 @@
+ 				Vector2 origin24 = new Vector2(value95.Width, value95.Height) / 2f;
+ 				float num340 = proj.rotation;
+ 				Vector2 vector82 = Vector2.One * proj.scale;
+-				Microsoft.Xna.Framework.Rectangle? sourceRectangle5 = null;
++				System.Drawing.Rectangle? sourceRectangle5 = null;
+ 				if (proj.type == 1056)
+ 					vector81.Y += 2f;
+ 
+@@ -29062,7 +_,7 @@
+ 								if (num358 < 0)
+ 									num358 += 4;
+ 
+-								Microsoft.Xna.Framework.Rectangle value101 = value100.Frame(1, 4, 0, num358);
++								System.Drawing.Rectangle value101 = value100.Frame(1, 4, 0, num358);
+ 								EntitySpriteDraw(value100, vector92 - screenPosition, value101, white5, proj.velocity.ToRotation() + num356, origin28, MathHelper.Lerp(0.1f, 0.8f, (10f - (float)num357) / 10f) * num350, SpriteEffects.None);
+ 							}
+ 						}
+@@ -29172,7 +_,7 @@
+ 					float num366 = proj.Opacity * proj.Opacity;
+ 					Microsoft.Xna.Framework.Color color102 = new Microsoft.Xna.Framework.Color(65, 217, 0, 0) * 0.5f * num366;
+ 					float rotation32 = proj.rotation;
+-					Microsoft.Xna.Framework.Rectangle value105 = value104.Frame();
++					System.Drawing.Rectangle value105 = value104.Frame();
+ 					float num367 = 1f;
+ 					if (proj.ai[1] != 0f)
+ 						num367 = proj.ai[1];
+@@ -29202,7 +_,7 @@
+ 
+ 				if (proj.type == 464 && proj.ai[1] != 1f) {
+ 					value95 = TextureAssets.Extra[35].Value;
+-					Microsoft.Xna.Framework.Rectangle rectangle21 = value95.Frame(1, 3);
++					System.Drawing.Rectangle rectangle21 = value95.Frame(1, 3);
+ 					origin24 = rectangle21.Size() / 2f;
+ 					Vector2 vector97 = new Vector2(0f, -720f).RotatedBy(proj.velocity.ToRotation());
+ 					float num374 = proj.ai[0] % 45f / 45f;
+@@ -29223,8 +_,8 @@
+ 				}
+ 				else if (proj.type == 1023) {
+ 					Texture2D value108 = TextureAssets.GlowMask[356].Value;
+-					Microsoft.Xna.Framework.Rectangle rectangle22 = value108.Frame();
++					System.Drawing.Rectangle rectangle22 = value108.Frame();
+-					EntitySpriteDraw(origin: rectangle22.Center(), color: new Microsoft.Xna.Framework.Color(255, 255, 255, 100) * proj.Opacity, texture: value108, position: vector81, sourceRectangle: rectangle22, rotation: num340, scale: vector82, effects: dir);
++					EntitySpriteDraw(origin: rectangle22.Center.ToVector2(), color: new Microsoft.Xna.Framework.Color(255, 255, 255, 100) * proj.Opacity, texture: value108, position: vector81, sourceRectangle: rectangle22, rotation: num340, scale: vector82, effects: dir);
+ 					if (proj.localAI[1] == 1f) {
+ 						Microsoft.Xna.Framework.Color shineColor = new Microsoft.Xna.Framework.Color(120, 190, 255, 100);
+ 						float num377 = (float)proj.timeLeft / 60f % 0.125f / 0.125f;
+@@ -29247,7 +_,7 @@
+ 				else if (proj.type == 707 || proj.type == 708) {
+ 					float num378 = 0.5f;
+ 					value95 = TextureAssets.GlowMask[232].Value;
+-					Microsoft.Xna.Framework.Rectangle value109 = value95.Frame(1, 3, 0, (int)(proj.ai[0] % 9f) / 3);
++					System.Drawing.Rectangle value109 = value95.Frame(1, 3, 0, (int)(proj.ai[0] % 9f) / 3);
+ 					if (proj.type == 708) {
+ 						value109 = value95.Frame(1, 3, 0, player.itemAnimation % 9 / 3);
+ 						num378 = 0.75f;
+@@ -29322,7 +_,7 @@
+ 			if (proj.type == 465 || proj.type == 467 || proj.type == 468 || proj.type == 500 || proj.type == 518 || proj.type == 535 || proj.type == 539 || proj.type == 575 || proj.type == 574 || proj.type == 589 || proj.type == 590 || proj.type == 593 || proj.type == 602 || proj.type == 596 || proj.type == 612 || proj.type == 953 || proj.type == 613 || proj.type == 614 || proj.type == 623 || proj.type == 625 || proj.type == 626 || proj.type == 627 || proj.type == 628 || proj.type == 634 || proj.type == 635 || proj.type == 643 || proj.type == 644 || proj.type == 645 || proj.type == 650 || proj.type == 652 || proj.type == 658 || proj.type == 659 || proj.type == 663 || proj.type == 665 || proj.type == 667 || proj.type == 677 || proj.type == 678 || proj.type == 679 || proj.type == 691 || proj.type == 692 || proj.type == 693 || proj.type == 702 || proj.type == 703 || proj.type == 701 || proj.type == 712 || proj.type == 715 || proj.type == 716 || proj.type == 717 || proj.type == 718 || proj.type == 758 || proj.type == 759 || proj.type == 764 || proj.type == 779 || proj.type == 783 || proj.type == 773 || proj.type == 820 || proj.type == 831 || proj.type == 970 || proj.type == 836 || proj.type == 851 || proj.type == 855 || proj.type == 856 || proj.type == 857 || proj.type == 861 || proj.type == 862 || proj.type == 863 || proj.type == 866 || proj.type == 870 || proj.type == 882 || proj.type == 885 || proj.type == 889 || proj.type == 895 || proj.type == 896 || proj.type == 898 || proj.type == 903 || proj.type == 904 || proj.type == 905 || proj.type == 906 || proj.type == 908 || proj.type == 910 || proj.type == 911 || proj.type == 951 || proj.type == 957 || proj.type == 962 || proj.type == 963 || proj.type == 967 || proj.type == 968 || proj.type == 978 || proj.type == 995 || proj.type == 886 || proj.type == 892 || proj.type == 1024 || proj.type == 1044 || proj.type == 1038 || proj.type == 1050 || proj.type == 1086 || proj.type == 1087 || proj.type == 1088 || proj.type == 1092 || proj.type == 1098 || proj.type == 1123 || proj.type == 1105 || proj.type == 1094 || proj.type == 1113 || proj.type == 1119 || proj.type == 1116 || proj.type == 1124 || proj.type == 1115 || proj.type == 1130 || proj.type == 1135) {
+ 				Vector2 vector99 = proj.position + new Vector2(proj.width, proj.height) / 2f + Vector2.UnitY * proj.gfxOffY - screenPosition;
+ 				Texture2D texture2D4 = TextureAssets.Projectile[proj.type].Value;
+-				Microsoft.Xna.Framework.Rectangle rectangle23 = texture2D4.Frame(1, projFrames[proj.type], 0, proj.frame);
++				System.Drawing.Rectangle rectangle23 = texture2D4.Frame(1, projFrames[proj.type], 0, proj.frame);
+ 				if (proj.type == 1130) {
+ 					instance.LoadNPC(4);
+ 					texture2D4 = TextureAssets.Npc[4].Value;
+@@ -29359,7 +_,7 @@
+ 					int num388 = 9;
+ 					int num389 = proj.frame / num388;
+ 					int num390 = proj.frame % num388;
+-					rectangle23 = new Microsoft.Xna.Framework.Rectangle(num389 * 64, num390 * 46, 62, 44);
++					rectangle23 = new System.Drawing.Rectangle(num389 * 64, num390 * 46, 62, 44);
+ 					if (proj.ai[0] >= 1000f)
+ 						dir ^= SpriteEffects.FlipHorizontally;
+ 
+@@ -29591,7 +_,7 @@
+ 					Microsoft.Xna.Framework.Color celeb2Color = proj.GetCeleb2Color();
+ 					celeb2Color.A = 127;
+ 					celeb2Color *= 0.8f;
+-					Microsoft.Xna.Framework.Rectangle value112 = rectangle23;
++					System.Drawing.Rectangle value112 = rectangle23;
+ 					value112.X += value112.Width * 2;
+ 					for (int num411 = proj.oldPos.Length - 1; num411 > 0; num411--) {
+ 						Vector2 vector102 = proj.oldPos[num411] + vector101;
+@@ -29817,7 +_,7 @@
+ 							int num420 = 7 + num418;
+ 							float num421 = 100f;
+ 							bool flag41 = num420 == 8;
+-							Microsoft.Xna.Framework.Rectangle value119 = texture2D4.Frame(1, projFrames[proj.type], 0, num420);
++							System.Drawing.Rectangle value119 = texture2D4.Frame(1, projFrames[proj.type], 0, num420);
+ 							Vector2 value120 = vector99;
+ 							Vector2 vector106 = vector99;
+ 							SpriteEffects effects4 = SpriteEffects.None;
+@@ -29898,7 +_,7 @@
+ 							num429 = 2 - num429;
+ 
+ 						num429 += 7;
+-						Microsoft.Xna.Framework.Rectangle value121 = texture2D4.Frame(1, projFrames[proj.type], 0, num429);
++						System.Drawing.Rectangle value121 = texture2D4.Frame(1, projFrames[proj.type], 0, num429);
+ 						Vector2 position26 = vector99 + new Vector2(num428, 0f);
+ 						Vector2 vector108 = (GlobalTimeWrappedHourly * 2f).ToRotationVector2() * 4f;
+ 						vector108 += proj.velocity * -1.5f;
+@@ -30078,7 +_,7 @@
+ 				}
+ 
+ 				if (proj.type == 1094 || proj.type == 1113) {
+-					Microsoft.Xna.Framework.Rectangle value126 = rectangle23;
++					System.Drawing.Rectangle value126 = rectangle23;
+ 					int num448 = 414;
+ 					if (proj.ai[0] >= 1000f)
+ 						num448 = rectangle23.Height + 2;
+@@ -30097,7 +_,7 @@
+ 						Microsoft.Xna.Framework.Color value127 = new Microsoft.Xna.Framework.Color(255, 255, 255, 127);
+ 						value127 = Microsoft.Xna.Framework.Color.Lerp(value127, new Microsoft.Xna.Framework.Color(100, 210, 255, 127), Utils.Remap(proj.Opacity, 0f, 0.7f, 0f, 1f));
+ 						value127 *= Utils.Remap(proj.Opacity, 0f, 0.7f, 0f, 1f) * Utils.Remap(proj.Opacity, 0.7f, 1f, 1f, 0f);
+-						Microsoft.Xna.Framework.Rectangle value128 = rectangle23;
++						System.Drawing.Rectangle value128 = rectangle23;
+ 						value128.Offset(0, num448);
+ 						EntitySpriteDraw(texture2D4, vector99, value128, value127, proj.rotation, origin33, proj.scale, dir);
+ 					}
+@@ -30231,7 +_,7 @@
+ 						}
+ 
+ 						Vector2 vector122 = new Vector2(array7[num462].X, 0f).RotatedBy(num459) * 4f;
+-						EntitySpriteDraw(TextureAssets.MagicPixel.Value, vector120 - screenPosition + vector122, new Microsoft.Xna.Framework.Rectangle(0, 0, 1, 1), white6, num459, Vector2.One / 2f, new Vector2(2f, num458 - num461), dir);
++						EntitySpriteDraw(TextureAssets.MagicPixel.Value, vector120 - screenPosition + vector122, new System.Drawing.Rectangle(0, 0, 1, 1), white6, num459, Vector2.One / 2f, new Vector2(2f, num458 - num461), dir);
+ 					}
+ 				}
+ 
+@@ -30256,7 +_,7 @@
+ 						}
+ 
+ 						Vector2 vector123 = new Vector2(array7[num463].X, 0f).RotatedBy(num459) * 4f;
+-						EntitySpriteDraw(TextureAssets.MagicPixel.Value, vector120 - screenPosition + vector123, new Microsoft.Xna.Framework.Rectangle(0, 0, 1, 1), white7, num459, Vector2.One / 2f, new Vector2(2f, num458 - num461), dir);
++						EntitySpriteDraw(TextureAssets.MagicPixel.Value, vector120 - screenPosition + vector123, new System.Drawing.Rectangle(0, 0, 1, 1), white7, num459, Vector2.One / 2f, new Vector2(2f, num458 - num461), dir);
+ 					}
+ 				}
+ 
+@@ -30283,15 +_,15 @@
+ 				if (proj.type == 1118)
+ 					num467 = 9;
+ 
+-				EntitySpriteDraw(value133, proj.Center - screenPosition + new Vector2(0f, proj.gfxOffY - (float)num467), new Microsoft.Xna.Framework.Rectangle(0, num466, value133.Width, num465), proj.GetAlpha(projectileColor), proj.rotation, new Vector2((float)value133.Width / 2f, (float)num465 / 2f + (float)num151), proj.scale, dir);
++				EntitySpriteDraw(value133, proj.Center - screenPosition + new Vector2(0f, proj.gfxOffY - (float)num467), new System.Drawing.Rectangle(0, num466, value133.Width, num465), proj.GetAlpha(projectileColor), proj.rotation, new Vector2((float)value133.Width / 2f, (float)num465 / 2f + (float)num151), proj.scale, dir);
+ 				if (proj.type == 423) {
+ 					value133 = TextureAssets.GlowMask[0].Value;
+-					EntitySpriteDraw(value133, proj.Center - screenPosition + new Vector2(0f, proj.gfxOffY - (float)num467), new Microsoft.Xna.Framework.Rectangle(0, num466, value133.Width, num465), new Microsoft.Xna.Framework.Color(250, 250, 250, proj.alpha), proj.rotation, new Vector2((float)value133.Width / 2f, (float)num465 / 2f + (float)num151), proj.scale, dir);
++					EntitySpriteDraw(value133, proj.Center - screenPosition + new Vector2(0f, proj.gfxOffY - (float)num467), new System.Drawing.Rectangle(0, num466, value133.Width, num465), new Microsoft.Xna.Framework.Color(250, 250, 250, proj.alpha), proj.rotation, new Vector2((float)value133.Width / 2f, (float)num465 / 2f + (float)num151), proj.scale, dir);
+ 				}
+ 
+ 				if (proj.type == 1022) {
+ 					value133 = TextureAssets.GlowMask[354].Value;
+-					EntitySpriteDraw(value133, proj.Center - screenPosition + new Vector2(0f, proj.gfxOffY - (float)num467), new Microsoft.Xna.Framework.Rectangle(0, num466, value133.Width, num465), new Microsoft.Xna.Framework.Color(250, 250, 250, proj.alpha), proj.rotation, new Vector2((float)value133.Width / 2f, (float)num465 / 2f + (float)num151), proj.scale, dir);
++					EntitySpriteDraw(value133, proj.Center - screenPosition + new Vector2(0f, proj.gfxOffY - (float)num467), new System.Drawing.Rectangle(0, num466, value133.Width, num465), new Microsoft.Xna.Framework.Color(250, 250, 250, proj.alpha), proj.rotation, new Vector2((float)value133.Width / 2f, (float)num465 / 2f + (float)num151), proj.scale, dir);
+ 				}
+ 
+ 				if (proj.type != 1093 && proj.type != 1112 && proj.type != 1118)
+@@ -30314,14 +_,14 @@
+ 					Microsoft.Xna.Framework.Color value134 = new Microsoft.Xna.Framework.Color(255, 255, 255, 127);
+ 					value134 = Microsoft.Xna.Framework.Color.Lerp(value134, new Microsoft.Xna.Framework.Color(100, 210, 255, 127), Utils.Remap(proj.Opacity, 0f, 0.7f, 0f, 1f));
+ 					value134 *= Utils.Remap(proj.Opacity, 0f, 0.7f, 0f, 1f) * Utils.Remap(proj.Opacity, 0.7f, 1f, 1f, 0f);
+-					EntitySpriteDraw(value133, proj.Center - screenPosition + new Vector2(0f, proj.gfxOffY - (float)num467), new Microsoft.Xna.Framework.Rectangle(0, num466 + 13 * num465, value133.Width, num465), value134, proj.rotation, new Vector2((float)value133.Width / 2f, (float)num465 / 2f + (float)num151), proj.scale, dir);
++					EntitySpriteDraw(value133, proj.Center - screenPosition + new Vector2(0f, proj.gfxOffY - (float)num467), new System.Drawing.Rectangle(0, num466 + 13 * num465, value133.Width, num465), value134, proj.rotation, new Vector2((float)value133.Width / 2f, (float)num465 / 2f + (float)num151), proj.scale, dir);
+ 				}
+ 
+ 				int head = player.head;
+ 				if (head == 12) {
+ 					LoadArmorHead(head);
+ 					Texture2D value135 = TextureAssets.ArmorHead[head].Value;
+-					Microsoft.Xna.Framework.Rectangle value136 = value135.Frame(1, 21);
++					System.Drawing.Rectangle value136 = value135.Frame(1, 21);
+ 					int num470 = 4;
+ 					int num471 = -4;
+ 					if (proj.spriteDirection == 1)
+@@ -30359,10 +_,10 @@
+ 					newColor3 *= (float)(num474 - num476) / 15f;
+ 					Microsoft.Xna.Framework.Color alpha12 = proj.GetAlpha(projectileColor);
+ 					_ = proj.oldPos[num476] - screenPosition + new Vector2(num153 + (float)num152, (float)(proj.height / 2) + proj.gfxOffY);
+-					EntitySpriteDraw(value137, proj.oldPos[num476] + new Vector2(proj.width, proj.height) / 2f - screenPosition + new Vector2(0f, proj.gfxOffY), new Microsoft.Xna.Framework.Rectangle(0, y23, value137.Width, num473), Microsoft.Xna.Framework.Color.Lerp(alpha12, newColor3, 0.3f), proj.rotation, new Vector2((float)value137.Width / 2f, (float)num473 / 2f), MathHelper.Lerp(proj.scale, value138, (float)num476 / 15f), dir);
++					EntitySpriteDraw(value137, proj.oldPos[num476] + new Vector2(proj.width, proj.height) / 2f - screenPosition + new Vector2(0f, proj.gfxOffY), new System.Drawing.Rectangle(0, y23, value137.Width, num473), Microsoft.Xna.Framework.Color.Lerp(alpha12, newColor3, 0.3f), proj.rotation, new Vector2((float)value137.Width / 2f, (float)num473 / 2f), MathHelper.Lerp(proj.scale, value138, (float)num476 / 15f), dir);
+ 				}
+ 
+-				EntitySpriteDraw(value137, proj.Center - screenPosition + new Vector2(0f, proj.gfxOffY), new Microsoft.Xna.Framework.Rectangle(0, y23, value137.Width, num473), proj.GetAlpha(projectileColor), proj.rotation, new Vector2((float)value137.Width / 2f, (float)num473 / 2f), proj.scale, dir);
++				EntitySpriteDraw(value137, proj.Center - screenPosition + new Vector2(0f, proj.gfxOffY), new System.Drawing.Rectangle(0, y23, value137.Width, num473), proj.GetAlpha(projectileColor), proj.rotation, new Vector2((float)value137.Width / 2f, (float)num473 / 2f), proj.scale, dir);
+ 				return;
+ 			}
+ 
+@@ -30387,10 +_,10 @@
+ 					newColor4 = proj.GetAlpha(newColor4);
+ 					newColor4 *= (float)(num478 - num480) / 15f;
+ 					Vector2 position27 = proj.oldPos[num480] - screenPosition + new Vector2(num153 + (float)num152, (float)(proj.height / 2) + proj.gfxOffY);
+-					EntitySpriteDraw(value139, position27, new Microsoft.Xna.Framework.Rectangle(0, y24, value139.Width, num477), newColor4, proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale, dir);
++					EntitySpriteDraw(value139, position27, new System.Drawing.Rectangle(0, y24, value139.Width, num477), newColor4, proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale, dir);
+ 				}
+ 
+-				EntitySpriteDraw(value139, proj.position - screenPosition + new Vector2(num153 + (float)num152, (float)(proj.height / 2) + proj.gfxOffY), new Microsoft.Xna.Framework.Rectangle(0, y24, value139.Width, num477), proj.GetAlpha(projectileColor), proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale, dir);
++				EntitySpriteDraw(value139, proj.position - screenPosition + new Vector2(num153 + (float)num152, (float)(proj.height / 2) + proj.gfxOffY), new System.Drawing.Rectangle(0, y24, value139.Width, num477), proj.GetAlpha(projectileColor), proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale, dir);
+ 				return;
+ 			}
+ 
+@@ -30451,7 +_,7 @@
+ 							}
+ 
+ 							int num488 = num487;
+-							Microsoft.Xna.Framework.Rectangle value142 = value141.Frame(8, 1, 1 + num488);
++							System.Drawing.Rectangle value142 = value141.Frame(8, 1, 1 + num488);
+ 							Vector2 origin38 = new Vector2((float)value142.Width / 2f, (float)value142.Height + (float)(num151 - 22));
+ 							float num489;
+ 							switch (num486) {
+@@ -30474,7 +_,7 @@
+ 						}
+ 					}
+ 
+-					EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY + num483), new Microsoft.Xna.Framework.Rectangle(0, y25, num481, num482 - 1), alpha13, proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale, dir);
++					EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY + num483), new System.Drawing.Rectangle(0, y25, num481, num482 - 1), alpha13, proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale, dir);
+ 					return;
+ 				}
+ 
+@@ -30483,7 +_,7 @@
+ 					int g = player.shirtColor.G;
+ 					int b = player.shirtColor.B;
+ 					projectileColor = Lighting.GetColor(oldColor: new Microsoft.Xna.Framework.Color((byte)r, (byte)g, (byte)b), x: (int)((double)proj.position.X + (double)proj.width * 0.5) / 16, y: (int)(((double)proj.position.Y + (double)proj.height * 0.5) / 16.0));
+-					EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new Microsoft.Xna.Framework.Rectangle(0, y25, num481, num482), proj.GetAlpha(projectileColor), proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale, dir);
++					EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new System.Drawing.Rectangle(0, y25, num481, num482), proj.GetAlpha(projectileColor), proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale, dir);
+ 					return;
+ 				}
+ 
+@@ -30495,14 +_,14 @@
+ 					float num492 = MathHelper.Min(60f, proj.ai[0]) / 2f;
+ 					for (float num493 = 0.9f; num493 > 0f; num493 -= 0.25f) {
+ 						Vector2 vector125 = num493 * (proj.velocity * 0.33f) * num492;
+-						EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY) - vector125, new Microsoft.Xna.Framework.Rectangle(0, y25, num481, num482 - 1), alpha14 * (1f - num493) * 0.75f, proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale * (0.4f + (1f - num493) * 0.6f), dir);
++						EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY) - vector125, new System.Drawing.Rectangle(0, y25, num481, num482 - 1), alpha14 * (1f - num493) * 0.75f, proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale * (0.4f + (1f - num493) * 0.6f), dir);
+ 					}
+ 				}
+ 
+ 				if (proj.type == 920 || proj.type == 921) {
+ 					for (float num494 = 0.25f; num494 < 1f; num494 += 0.5f) {
+ 						Vector2 vector126 = num494 * proj.velocity * 4f;
+-						EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY) - vector126, new Microsoft.Xna.Framework.Rectangle(0, y25, num481, num482 - 1), alpha14 * (1f - num494) * 0.75f, proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale, dir);
++						EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY) - vector126, new System.Drawing.Rectangle(0, y25, num481, num482 - 1), alpha14 * (1f - num494) * 0.75f, proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale, dir);
+ 					}
+ 				}
+ 
+@@ -30521,7 +_,7 @@
+ 				}
+ 
+ 				if (!flag43)
+-					EntitySpriteDraw(value140, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new Microsoft.Xna.Framework.Rectangle(x15, y25, num481, num482 - 1), alpha14, proj.rotation, origin39, proj.scale, dir);
++					EntitySpriteDraw(value140, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new System.Drawing.Rectangle(x15, y25, num481, num482 - 1), alpha14, proj.rotation, origin39, proj.scale, dir);
+ 
+ 				if (proj.type == 966) {
+ 					Vector2 vector127 = new Vector2(0f, -30f);
+@@ -30544,24 +_,24 @@
+ 					}
+ 
+ 					vector128 += (vector130 - vector129).SafeNormalize(Vector2.Zero) * num495;
+-					EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY) + vector127, new Microsoft.Xna.Framework.Rectangle(0, num482, num481, num482 - 1), alpha14, proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale, dir);
++					EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY) + vector127, new System.Drawing.Rectangle(0, num482, num481, num482 - 1), alpha14, proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale, dir);
+-					EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY) + vector127 + vector128, new Microsoft.Xna.Framework.Rectangle(0, num482 * 2, num481, num482 - 1), alpha14, proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale, dir);
++					EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY) + vector127 + vector128, new System.Drawing.Rectangle(0, num482 * 2, num481, num482 - 1), alpha14, proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale, dir);
+ 				}
+ 
+ 				if (proj.type == 335)
+-					EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new Microsoft.Xna.Framework.Rectangle(0, y25, num481, num482 - 1), new Microsoft.Xna.Framework.Color(100, 100, 100, 0), proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale, dir);
++					EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new System.Drawing.Rectangle(0, y25, num481, num482 - 1), new Microsoft.Xna.Framework.Color(100, 100, 100, 0), proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale, dir);
+ 
+ 				if (proj.type == 897 || proj.type == 899) {
+ 					int num497 = 279;
+ 					if (proj.type == 899)
+ 						num497 = 281;
+ 
+-					EntitySpriteDraw(TextureAssets.GlowMask[num497].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new Microsoft.Xna.Framework.Rectangle(0, y25, num481, num482 - 1), Microsoft.Xna.Framework.Color.White, proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale, dir);
++					EntitySpriteDraw(TextureAssets.GlowMask[num497].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new System.Drawing.Rectangle(0, y25, num481, num482 - 1), Microsoft.Xna.Framework.Color.White, proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale, dir);
+ 				}
+ 
+ 				if (proj.type == 891) {
+ 					float num498 = Utils.WrappedLerp(0.6f, 1f, (float)((int)timeForVisualEffects % 100) / 100f);
+-					EntitySpriteDraw(color: new Microsoft.Xna.Framework.Color(num498, num498, num498, 150f), texture: TextureAssets.GlowMask[277].Value, position: new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), sourceRectangle: new Microsoft.Xna.Framework.Rectangle(0, y25, num481, num482 - 1), rotation: proj.rotation, origin: new Vector2(num153, proj.height / 2 + num151), scale: proj.scale, effects: dir);
++					EntitySpriteDraw(color: new Microsoft.Xna.Framework.Color(num498, num498, num498, 150f), texture: TextureAssets.GlowMask[277].Value, position: new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), sourceRectangle: new System.Drawing.Rectangle(0, y25, num481, num482 - 1), rotation: proj.rotation, origin: new Vector2(num153, proj.height / 2 + num151), scale: proj.scale, effects: dir);
+ 				}
+ 
+ 				if (proj.type == 595) {
+@@ -30570,13 +_,13 @@
+ 						for (float num499 = 0f; num499 <= 1f; num499 += 0.2f) {
+ 							Microsoft.Xna.Framework.Color underShirtColor = player7.underShirtColor;
+ 							underShirtColor.A = (byte)(120f * (1f - num499 * 0.5f));
+-							EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new Microsoft.Xna.Framework.Rectangle(0, y25, num481, num482 - 1), underShirtColor, proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale * MathHelper.Lerp(0.8f, 1.3f, num499), dir);
++							EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new System.Drawing.Rectangle(0, y25, num481, num482 - 1), underShirtColor, proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale * MathHelper.Lerp(0.8f, 1.3f, num499), dir);
+ 						}
+ 					}
+ 				}
+ 
+ 				if (proj.type == 387)
+-					EntitySpriteDraw(TextureAssets.EyeLaserSmall.Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new Microsoft.Xna.Framework.Rectangle(0, y25, num481, num482), new Microsoft.Xna.Framework.Color(255, 255, 255, 0), proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale, dir);
++					EntitySpriteDraw(TextureAssets.EyeLaserSmall.Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new System.Drawing.Rectangle(0, y25, num481, num482), new Microsoft.Xna.Framework.Color(255, 255, 255, 0), proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale, dir);
+ 
+ 				if (proj.type != 525 && proj.type != 960)
+ 					return;
+@@ -30592,7 +_,7 @@
+ 						num502 = 244;
+ 
+ 					Microsoft.Xna.Framework.Color selectionGlowColor = Colors.GetSelectionGlowColor(num500 == 2, num501);
+-					EntitySpriteDraw(TextureAssets.Extra[num502].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new Microsoft.Xna.Framework.Rectangle(0, y25, num481, num482 - 1), selectionGlowColor, proj.rotation, new Vector2(num153, proj.height / 2 + num151), 1f, dir);
++					EntitySpriteDraw(TextureAssets.Extra[num502].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new System.Drawing.Rectangle(0, y25, num481, num482 - 1), selectionGlowColor, proj.rotation, new Vector2(num153, proj.height / 2 + num151), 1f, dir);
+ 				}
+ 
+ 				return;
 @@ -30605,22 +_,22 @@
  			}
  
@@ -1090,10 +2481,222 @@
  				return;
  			}
  
+@@ -30647,9 +_,9 @@
+ 				red *= proj.localAI[0];
+ 				white8 *= proj.localAI[0];
+ 				float num504 = (float)Math.Sqrt(proj.damage / 50);
+-				EntitySpriteDraw(TextureAssets.MagicPixel.Value, vector132 - screenPosition, new Microsoft.Xna.Framework.Rectangle(0, 0, 1, 1), red, rotation34, Vector2.One / 2f, new Vector2(2f * num504, num503 + 8f), dir);
++				EntitySpriteDraw(TextureAssets.MagicPixel.Value, vector132 - screenPosition, new System.Drawing.Rectangle(0, 0, 1, 1), red, rotation34, Vector2.One / 2f, new Vector2(2f * num504, num503 + 8f), dir);
+-				EntitySpriteDraw(TextureAssets.MagicPixel.Value, vector132 - screenPosition, new Microsoft.Xna.Framework.Rectangle(0, 0, 1, 1), red, rotation34, Vector2.One / 2f, new Vector2(4f * num504, num503), dir);
++				EntitySpriteDraw(TextureAssets.MagicPixel.Value, vector132 - screenPosition, new System.Drawing.Rectangle(0, 0, 1, 1), red, rotation34, Vector2.One / 2f, new Vector2(4f * num504, num503), dir);
+-				EntitySpriteDraw(TextureAssets.MagicPixel.Value, vector132 - screenPosition, new Microsoft.Xna.Framework.Rectangle(0, 0, 1, 1), white8, rotation34, Vector2.One / 2f, new Vector2(2f * num504, num503), dir);
++				EntitySpriteDraw(TextureAssets.MagicPixel.Value, vector132 - screenPosition, new System.Drawing.Rectangle(0, 0, 1, 1), white8, rotation34, Vector2.One / 2f, new Vector2(2f * num504, num503), dir);
+ 				return;
+ 			}
+ 
+@@ -30680,8 +_,8 @@
+ 
+ 						float num508 = proj.rotation + (float)proj.direction * (-(float)Math.PI / 10f) * (float)(num505 + 1);
+ 						Vector2 vector134 = (num508 - (float)Math.PI / 4f).ToRotationVector2() * 4f * proj.scale * num507;
+-						EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, vector134 + proj.velocity * -num505 * 0.45f + new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), alpha15 * 0.5f, num508, origin40, num507 * proj.scale, dir);
++						EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, vector134 + proj.velocity * -num505 * 0.45f + new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new System.Drawing.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), alpha15 * 0.5f, num508, origin40, num507 * proj.scale, dir);
+-						EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, -vector134 + new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), alpha15 * 0.05f, num508 + (float)Math.PI, origin40, num507 * proj.scale * 0.8f, dir);
++						EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, -vector134 + new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new System.Drawing.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), alpha15 * 0.05f, num508 + (float)Math.PI, origin40, num507 * proj.scale * 0.8f, dir);
+ 					}
+ 				}
+ 
+@@ -30693,11 +_,11 @@
+ 				}
+ 
+ 				if (!flag)
+-					EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, -vector133 + new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), proj.GetAlpha(projectileColor) * 0.1f, proj.rotation + (float)Math.PI, origin40, proj.scale * 0.8f, dir);
++					EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, -vector133 + new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new System.Drawing.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), proj.GetAlpha(projectileColor) * 0.1f, proj.rotation + (float)Math.PI, origin40, proj.scale * 0.8f, dir);
+ 
+-				EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, vector133 + new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), proj.GetAlpha(projectileColor), proj.rotation, origin40, proj.scale, dir);
++				EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, vector133 + new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new System.Drawing.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), proj.GetAlpha(projectileColor), proj.rotation, origin40, proj.scale, dir);
+ 				if (!flag && proj.ai[0] == 0f && proj.ai[1] < 30f)
+-					EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, vector133 + new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), new Microsoft.Xna.Framework.Color(255, 255, 255, 64), proj.rotation, origin40, proj.scale, dir);
++					EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, vector133 + new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new System.Drawing.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), new Microsoft.Xna.Framework.Color(255, 255, 255, 64), proj.rotation, origin40, proj.scale, dir);
+ 
+ 				return;
+ 			}
+@@ -30711,7 +_,7 @@
+ 					alpha16.B = (byte)((float)(int)alpha16.B * num510);
+ 					alpha16.A = (byte)((float)(int)alpha16.A * num510);
+ 					float num511 = (float)(9 - num509) / 9f;
+-					EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.oldPos[num509].X - screenPosition.X + num153 + (float)num152, proj.oldPos[num509].Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), alpha16, proj.rotation, new Vector2(num153, proj.height / 2 + num151), num511 * proj.scale, dir);
++					EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.oldPos[num509].X - screenPosition.X + num153 + (float)num152, proj.oldPos[num509].Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new System.Drawing.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), alpha16, proj.rotation, new Vector2(num153, proj.height / 2 + num151), num511 * proj.scale, dir);
+ 				}
+ 			}
+ 
+@@ -30730,8 +_,8 @@
+ 				for (int num517 = 0; num517 <= 4; num517++) {
+ 					float num518 = proj.velocity.X * (float)num517 * 0.5f;
+ 					float num519 = proj.velocity.Y * (float)num517 * 0.5f;
+-					EntitySpriteDraw(value144, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152 - num518, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY - num519), new Microsoft.Xna.Framework.Rectangle(0, 0, value144.Width, value144.Height), new Microsoft.Xna.Framework.Color(40, 40, 127) * 0.5f * num516 * num512 * (0.5f - (float)num517 * 0.1f), proj.rotation, new Vector2(value144.Width / 2, value144.Height / 2), proj.scale * num513 * (1f - (float)num517 * 0.05f), dir);
++					EntitySpriteDraw(value144, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152 - num518, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY - num519), new System.Drawing.Rectangle(0, 0, value144.Width, value144.Height), new Microsoft.Xna.Framework.Color(40, 40, 127) * 0.5f * num516 * num512 * (0.5f - (float)num517 * 0.1f), proj.rotation, new Vector2(value144.Width / 2, value144.Height / 2), proj.scale * num513 * (1f - (float)num517 * 0.05f), dir);
+-					EntitySpriteDraw(value144, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152 - num518, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY - num519), new Microsoft.Xna.Framework.Rectangle(0, 0, value144.Width, value144.Height), new Microsoft.Xna.Framework.Color(120, 120, 255) * num516 * num512 * (0.5f - (float)num517 * 0.1f), 0f - proj.rotation, new Vector2(value144.Width / 2, value144.Height / 2), proj.scale * 0.75f * num513 * (1f - (float)num517 * 0.05f), dir ^ SpriteEffects.FlipHorizontally);
++					EntitySpriteDraw(value144, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152 - num518, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY - num519), new System.Drawing.Rectangle(0, 0, value144.Width, value144.Height), new Microsoft.Xna.Framework.Color(120, 120, 255) * num516 * num512 * (0.5f - (float)num517 * 0.1f), 0f - proj.rotation, new Vector2(value144.Width / 2, value144.Height / 2), proj.scale * 0.75f * num513 * (1f - (float)num517 * 0.05f), dir ^ SpriteEffects.FlipHorizontally);
+ 				}
+ 			}
+ 
+@@ -30745,8 +_,8 @@
+ 					originalColor.A = 127;
+ 					originalColor *= (1f - num522) * (1f - num522);
+ 					originalColor *= 0.65f;
+-					EntitySpriteDraw(value145, proj.oldPos[num521] + new Vector2(0f - screenPosition.X + num153 + (float)num152, 0f - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new Microsoft.Xna.Framework.Rectangle(0, 0, value145.Width, value145.Height), originalColor, proj.rotation, new Vector2(value145.Width / 2, value145.Height / 2), proj.scale, dir);
++					EntitySpriteDraw(value145, proj.oldPos[num521] + new Vector2(0f - screenPosition.X + num153 + (float)num152, 0f - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new System.Drawing.Rectangle(0, 0, value145.Width, value145.Height), originalColor, proj.rotation, new Vector2(value145.Width / 2, value145.Height / 2), proj.scale, dir);
+-					EntitySpriteDraw(value145, Vector2.Lerp(proj.oldPos[num521], proj.oldPos[num521 - 1], 0.5f) + new Vector2(0f - screenPosition.X + num153 + (float)num152, 0f - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new Microsoft.Xna.Framework.Rectangle(0, 0, value145.Width, value145.Height), originalColor, proj.rotation, new Vector2(value145.Width / 2, value145.Height / 2), proj.scale, dir);
++					EntitySpriteDraw(value145, Vector2.Lerp(proj.oldPos[num521], proj.oldPos[num521 - 1], 0.5f) + new Vector2(0f - screenPosition.X + num153 + (float)num152, 0f - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new System.Drawing.Rectangle(0, 0, value145.Width, value145.Height), originalColor, proj.rotation, new Vector2(value145.Width / 2, value145.Height / 2), proj.scale, dir);
+ 				}
+ 			}
+ 
+@@ -30759,7 +_,7 @@
+ 					alpha17.B = (byte)((float)(int)alpha17.B * num524);
+ 					alpha17.A = (byte)((float)(int)alpha17.A * num524);
+ 					float num525 = (float)(9 - num523) / 9f;
+-					EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.oldPos[num523].X - screenPosition.X + num153 + (float)num152, proj.oldPos[num523].Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), alpha17, proj.rotation, new Vector2(num153, proj.height / 2 + num151), num525 * proj.scale, dir);
++					EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.oldPos[num523].X - screenPosition.X + num153 + (float)num152, proj.oldPos[num523].Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new System.Drawing.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), alpha17, proj.rotation, new Vector2(num153, proj.height / 2 + num151), num525 * proj.scale, dir);
+ 				}
+ 			}
+ 
+@@ -30794,7 +_,7 @@
+ 					alpha18.G = (byte)((float)(int)alpha18.G * num529);
+ 					alpha18.B = (byte)((float)(int)alpha18.B * num529);
+ 					alpha18.A = (byte)((float)(int)alpha18.A * num529);
+-					EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152 - num527, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY - num528), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), alpha18, proj.rotation, new Vector2(num153, proj.height / 2 + num151), num529 + 0.2f, dir);
++					EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152 - num527, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY - num528), new System.Drawing.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), alpha18, proj.rotation, new Vector2(num153, proj.height / 2 + num151), num529 + 0.2f, dir);
+ 				}
+ 			}
+ 
+@@ -30820,7 +_,7 @@
+ 					alpha19.G = (byte)((float)(int)alpha19.G * num533);
+ 					alpha19.B = (byte)((float)(int)alpha19.B * num533);
+ 					alpha19.A = (byte)((float)(int)alpha19.A * num533);
+-					EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152 - num531, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY - num532), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), alpha19, proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale, dir);
++					EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152 - num531, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY - num532), new System.Drawing.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), alpha19, proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale, dir);
+ 				}
+ 			}
+ 
+@@ -30850,21 +_,21 @@
+ 
+ 					instance.LoadItem(num534);
+ 					Texture2D value146 = TextureAssets.Item[num534].Value;
+-					Microsoft.Xna.Framework.Rectangle value147 = value146.Frame();
++					System.Drawing.Rectangle value147 = value146.Frame();
+ 					if (ItemID.Sets.IsFood[num534] && itemAnimations[num534] != null)
+ 						value147 = itemAnimations[num534].GetFrame(value146, 0);
+ 
+ 					EntitySpriteDraw(value146, new Vector2(center8.X - screenPosition.X, center8.Y - screenPosition.Y), value147, projectileColor, rotation35, new Vector2(value147.Width / 2, value147.Height / 2), proj.scale, dir);
+ 				}
+ 				else if (proj.ai[0] <= 1f) {
+-					EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), proj.GetAlpha(projectileColor), proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale, dir);
++					EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new System.Drawing.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), proj.GetAlpha(projectileColor), proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale, dir);
+ 					if (proj.glowMask != -1) {
+ 						Texture2D value148 = TextureAssets.GlowMask[proj.glowMask].Value;
+ 						Microsoft.Xna.Framework.Color newColor5 = Microsoft.Xna.Framework.Color.White;
+ 						if (proj.type == 993)
+ 							newColor5 = new Microsoft.Xna.Framework.Color(DiscoR, DiscoG, DiscoB);
+ 
+-						EntitySpriteDraw(value148, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new Microsoft.Xna.Framework.Rectangle(0, 0, value148.Width, value148.Height), proj.GetAlpha(newColor5), proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale, dir);
++						EntitySpriteDraw(value148, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new System.Drawing.Rectangle(0, 0, value148.Width, value148.Height), proj.GetAlpha(newColor5), proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale, dir);
+ 					}
+ 				}
+ 			}
+@@ -30909,29 +_,29 @@
+ 					}
+ 				}
+ 
+-				EntitySpriteDraw(value149, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), proj.GetAlpha(projectileColor), proj.rotation, origin41, proj.scale, dir);
++				EntitySpriteDraw(value149, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new System.Drawing.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), proj.GetAlpha(projectileColor), proj.rotation, origin41, proj.scale, dir);
+ 				if (proj.glowMask != -1) {
+ 					Microsoft.Xna.Framework.Color color127 = new Microsoft.Xna.Framework.Color(250, 250, 250, proj.alpha);
+ 					if (proj.type == 1101 || proj.type == 1102) {
+ 						color127 = Item.GetPhaseColor(proj.type);
+-						EntitySpriteDraw(TextureAssets.GlowMask[proj.glowMask].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), color127, proj.rotation, origin41, proj.scale, dir);
++						EntitySpriteDraw(TextureAssets.GlowMask[proj.glowMask].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new System.Drawing.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), color127, proj.rotation, origin41, proj.scale, dir);
+ 						color127 = Item.GetPhaseColor(proj.type, drawColor: true);
+ 					}
+ 
+-					EntitySpriteDraw(TextureAssets.GlowMask[proj.glowMask].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), color127, proj.rotation, origin41, proj.scale, dir);
++					EntitySpriteDraw(TextureAssets.GlowMask[proj.glowMask].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new System.Drawing.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), color127, proj.rotation, origin41, proj.scale, dir);
+ 				}
+ 
+ 				if (proj.type == 473)
+-					EntitySpriteDraw(value149, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), new Microsoft.Xna.Framework.Color(255, 255, 0, 0), proj.rotation, origin41, proj.scale, dir);
++					EntitySpriteDraw(value149, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new System.Drawing.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), new Microsoft.Xna.Framework.Color(255, 255, 0, 0), proj.rotation, origin41, proj.scale, dir);
+ 
+ 				if (proj.type >= 511 && proj.type <= 513)
+-					EntitySpriteDraw(value149, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), proj.GetAlpha(projectileColor) * 0.25f, proj.rotation, origin41, proj.scale * (1f + proj.Opacity * 1.75f), dir);
++					EntitySpriteDraw(value149, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY), new System.Drawing.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), proj.GetAlpha(projectileColor) * 0.25f, proj.rotation, origin41, proj.scale * (1f + proj.Opacity * 1.75f), dir);
+ 
+ 				if (proj.type == 312) {
+ 					ulong seed4 = TileFrameSeed;
+ 					for (int num537 = 0; num537 < 4; num537++) {
+ 						Vector2 vector136 = new Vector2(Utils.RandomInt(ref seed4, -2, 3), Utils.RandomInt(ref seed4, -2, 3));
+-						EntitySpriteDraw(TextureAssets.GlowMask[proj.glowMask].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY) + vector136, new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), new Microsoft.Xna.Framework.Color(255, 255, 255, 255) * 0.2f, proj.rotation, origin41, proj.scale, dir);
++						EntitySpriteDraw(TextureAssets.GlowMask[proj.glowMask].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY) + vector136, new System.Drawing.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), new Microsoft.Xna.Framework.Color(255, 255, 255, 255) * 0.2f, proj.rotation, origin41, proj.scale, dir);
+ 					}
+ 				}
+ 			}
+@@ -30939,7 +_,7 @@
+ 			if (proj.type == 106) {
+ 				Texture2D value150 = TextureAssets.LightDisc.Value;
+ 				Vector2 position29 = new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2));
+-				Microsoft.Xna.Framework.Rectangle value151 = value150.Frame();
++				System.Drawing.Rectangle value151 = value150.Frame();
+ 				EntitySpriteDraw(value150, position29, value151, new Microsoft.Xna.Framework.Color(200, 200, 200, 0), proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale, dir);
+ 			}
+ 
+@@ -30947,7 +_,7 @@
+ 				ulong seed5 = TileFrameSeed;
+ 				for (int num538 = 0; num538 < 4; num538++) {
+ 					Vector2 vector137 = new Vector2(Utils.RandomInt(ref seed5, -2, 3), Utils.RandomInt(ref seed5, -2, 3));
+-					EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2)) + vector137 - proj.velocity * 0.25f * num538, new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), new Microsoft.Xna.Framework.Color(120, 120, 120, 60) * 1f, proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale - (float)num538 * 0.2f, dir);
++					EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152, proj.position.Y - screenPosition.Y + (float)(proj.height / 2)) + vector137 - proj.velocity * 0.25f * num538, new System.Drawing.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), new Microsoft.Xna.Framework.Color(120, 120, 120, 60) * 1f, proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale - (float)num538 * 0.2f, dir);
+ 				}
+ 			}
+ 
+@@ -30973,7 +_,7 @@
+ 					alpha20.G = (byte)((float)(int)alpha20.G * num542);
+ 					alpha20.B = (byte)((float)(int)alpha20.B * num542);
+ 					alpha20.A = (byte)((float)(int)alpha20.A * num542);
+-					EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152 - num540, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY - num541), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), alpha20, proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale, dir);
++					EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152 - num540, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY - num541), new System.Drawing.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), alpha20, proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale, dir);
+ 				}
+ 			}
+ 			else if (proj.type == 604) {
+@@ -31006,7 +_,7 @@
+ 					alpha21.A = (byte)((float)(int)alpha21.A * num547 / 2f);
+ 					float scale19 = proj.scale;
+ 					scale19 -= (float)num544 * 0.1f;
+-					EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152 - num545, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY - num546), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), alpha21, proj.rotation, new Vector2(num153, proj.height / 2 + num151), scale19, dir);
++					EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152 - num545, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY - num546), new System.Drawing.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), alpha21, proj.rotation, new Vector2(num153, proj.height / 2 + num151), scale19, dir);
+ 				}
+ 			}
+ 			else {
+@@ -31034,7 +_,7 @@
+ 					alpha22.G = (byte)((float)(int)alpha22.G * num551);
+ 					alpha22.B = (byte)((float)(int)alpha22.B * num551);
+ 					alpha22.A = (byte)((float)(int)alpha22.A * num551);
+-					EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152 - num549, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY - num550), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), alpha22, proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale, dir);
++					EntitySpriteDraw(TextureAssets.Projectile[proj.type].Value, new Vector2(proj.position.X - screenPosition.X + num153 + (float)num152 - num549, proj.position.Y - screenPosition.Y + (float)(proj.height / 2) + proj.gfxOffY - num550), new System.Drawing.Rectangle(0, 0, TextureAssets.Projectile[proj.type].Width(), TextureAssets.Projectile[proj.type].Height()), alpha22, proj.rotation, new Vector2(num153, proj.height / 2 + num151), proj.scale, dir);
+ 				}
+ 			}
+ 		}
 @@ -31070,7 +_,7 @@
  		float num10 = Math.Min(proj.localAI[0], 20f);
  		float num11 = Utils.Remap(proj.localAI[0], 0f, fromMax, 0f, 1f);
  		float num12 = Utils.Remap(num11, 0.2f, 0.5f, 0.25f, 1f);
+-		Microsoft.Xna.Framework.Rectangle rectangle = ((!flag) ? value.Frame(1, verticalFrames, 0, 3) : value.Frame(1, verticalFrames, 0, (int)Utils.Remap(num11, 0.5f, 1f, 3f, 5f)));
++		System.Drawing.Rectangle rectangle = ((!flag) ? value.Frame(1, verticalFrames, 0, 3) : value.Frame(1, verticalFrames, 0, (int)Utils.Remap(num11, 0.5f, 1f, 3f, 5f)));
+ 		if (!(num11 < 1f))
+ 			return;
+ 
+@@ -31139,7 +_,7 @@
+ 		if (flag2)
+ 			num12 *= 1.5f;
+ 
 -		Microsoft.Xna.Framework.Rectangle rectangle = ((!flag) ? value.Frame(1, verticalFrames, 0, 3) : value.Frame(1, verticalFrames, 0, (int)Utils.Remap(num11, 0.5f, 1f, 3f, 5f)));
 +		System.Drawing.Rectangle rectangle = ((!flag) ? value.Frame(1, verticalFrames, 0, 3) : value.Frame(1, verticalFrames, 0, (int)Utils.Remap(num11, 0.5f, 1f, 3f, 5f)));
  		if (!(num11 < 1f))
@@ -1110,6 +2713,15 @@
  		Vector2 vector = Vector2.Zero;
  		if (theOwner.direction > 0) {
  			dir = SpriteEffects.FlipHorizontally;
+@@ -31282,7 +_,7 @@
+ 	{
+ 		Vector2 armPosition = theOwner.GetArmPosition();
+ 		Asset<Texture2D> asset = null;
+-		Microsoft.Xna.Framework.Rectangle? sourceRectangle = null;
++		System.Drawing.Rectangle? sourceRectangle = null;
+ 		float num = 0f;
+ 		switch (proj.type) {
+ 			default:
 @@ -31391,27 +_,27 @@
  				num2 = mountedCenter.Y - vector.Y;
  				Microsoft.Xna.Framework.Color color = Lighting.GetColor((int)vector.X / 16, (int)(vector.Y / 16f));
@@ -1392,6 +3004,48 @@
  			EntitySpriteDraw(origin: rectangle.Size() / 2f, texture: value4, position: position, sourceRectangle: rectangle, color: color, rotation: rotation, scale: proj.scale, effects: SpriteEffects.None);
  		}
  	}
+@@ -33537,7 +_,7 @@
+ 
+ 		bool flag = !SmartCursorIsUsed && !PlayerInput.UsingGamepad;
+ 		Player localPlayer = LocalPlayer;
+-		Microsoft.Xna.Framework.Point point = proj.Center.ToTileCoordinates();
++		System.Drawing.Point point = proj.Center.ToTileCoordinates();
+ 		if (!localPlayer.IsProjectileInteractableAndInInteractionRange(proj, localPlayer.Center))
+ 			return 0;
+ 
+@@ -33602,7 +_,7 @@
+ 
+ 		bool flag = !SmartCursorIsUsed && !PlayerInput.UsingGamepad;
+ 		Player localPlayer = LocalPlayer;
+-		Microsoft.Xna.Framework.Point point = proj.Center.ToTileCoordinates();
++		System.Drawing.Point point = proj.Center.ToTileCoordinates();
+ 		if (!localPlayer.IsProjectileInteractableAndInInteractionRange(proj, localPlayer.Center))
+ 			return 0;
+ 
+@@ -33672,12 +_,12 @@
+ 
+ 		Player localPlayer = LocalPlayer;
+ 		Vector2 center = localPlayer.Center;
+-		Microsoft.Xna.Framework.Point point = proj.Hitbox.ClosestPointInRect(center).ToTileCoordinates();
++		System.Drawing.Point point = proj.Hitbox.ClosestPointInRect(center).ToTileCoordinates();
+ 		if (!localPlayer.IsInTileInteractionRange(point.X, point.Y, TileReachCheckSettings.Simple))
+ 			return 0;
+ 
+ 		Vector2 v = ReverseGravitySupport(MouseScreen) + screenPosition;
+-		Microsoft.Xna.Framework.Rectangle hitbox = proj.Hitbox;
++		System.Drawing.Rectangle hitbox = proj.Hitbox;
+ 		int num = 20;
+ 		if (hitbox.Width < num)
+ 			hitbox.Inflate((num - hitbox.Width) / 2, 0);
+@@ -33758,7 +_,7 @@
+ 			return 0;
+ 
+ 		Vector2 v = ReverseGravitySupport(MouseScreen) + screenPosition;
+-		Microsoft.Xna.Framework.Rectangle hitbox = proj.Hitbox;
++		System.Drawing.Rectangle hitbox = proj.Hitbox;
+ 		if (proj.type == 1094 || proj.type == 1113)
+ 			hitbox.Inflate(6, 6);
+ 
 @@ -33848,12 +_,12 @@
  		CurrentDrawnEntityShader = intendedShader;
  	}
@@ -1777,6 +3431,40 @@
  		bool flag2 = false;
  		if (mouseX > pivotTopLeftX && (float)mouseX < (float)pivotTopLeftX + (float)rectangle.Width * num2 && mouseY > num && (float)mouseY < (float)num + (float)rectangle.Height * num2 && !PlayerInput.IgnoreMouseInterface) {
  			flag2 = true;
+@@ -38029,8 +_,8 @@
+ 			}
+ 
+ 			Asset<Texture2D> asset = TextureAssets.Pvp[0];
+-			Microsoft.Xna.Framework.Rectangle rectangle = asset.Frame(2, 7);
++			System.Drawing.Rectangle rectangle = asset.Frame(2, 7);
+-			rectangle.Location = new Microsoft.Xna.Framework.Point(rectangle.Width * num5, rectangle.Height * player[myPlayer].team);
++			rectangle.Location = new System.Drawing.Point(rectangle.Width * num5, rectangle.Height * player[myPlayer].team);
+ 			Vector2 position = new Vector2(num2 - 10, num3);
+ 			spriteBatch.Draw(asset.Value, position, rectangle, Microsoft.Xna.Framework.Color.White * num4, 0f, Vector2.Zero, Vector2.One, SpriteEffects.None, 0f);
+ 			if (flag) {
+@@ -38046,10 +_,10 @@
+ 		if (!ShouldTeamSelectDraw)
+ 			return;
+ 
+-		Microsoft.Xna.Framework.Rectangle rectangle2 = TextureAssets.Pvp[1].Frame(6);
++		System.Drawing.Rectangle rectangle2 = TextureAssets.Pvp[1].Frame(6);
+-		Microsoft.Xna.Framework.Rectangle r = rectangle2;
++		System.Drawing.Rectangle r = rectangle2;
+ 		for (int i = 0; i < 6; i++) {
+-			r.Location = new Microsoft.Xna.Framework.Point(num2 + i % 2 * 20, num3 + i / 2 * 20);
++			r.Location = new System.Drawing.Point(num2 + i % 2 * 20, num3 + i / 2 * 20);
+ 			rectangle2.X = rectangle2.Width * i;
+ 			bool flag2 = false;
+ 			if (r.Contains(MouseScreen.ToPoint()) && !PlayerInput.IgnoreMouseInterface) {
+@@ -38101,7 +_,7 @@
+ 			if (flag2)
+ 				spriteBatch.Draw(TextureAssets.Pvp[2].Value, r.Location.ToVector2() + new Vector2(-2f), Microsoft.Xna.Framework.Color.White);
+ 
+-			Microsoft.Xna.Framework.Rectangle value = rectangle2;
++			System.Drawing.Rectangle value = rectangle2;
+ 			value.Width -= 2;
+ 			spriteBatch.Draw(TextureAssets.Pvp[1].Value, r.Location.ToVector2(), value, Microsoft.Xna.Framework.Color.White * num4);
+ 			UILinkPointNavigator.SetPosition(1550 + i + 1, r.Location.ToVector2() + r.Size() * 0.75f);
 @@ -38181,7 +_,7 @@
  	{
  		PlayerInput.SetZoom_World();
@@ -1786,6 +3474,18 @@
  		PlayerInput.SetZoom_UI();
  		if (!LocalPlayer.ghost && LocalPlayer.spectating < 0)
  			ResourceSetsManager.TryToHoverOverResources();
+@@ -38195,9 +_,9 @@
+ 					continue;
+ 
+ 				Item inner = item[i].inner;
+-				Microsoft.Xna.Framework.Rectangle drawHitbox = Item.GetDrawHitbox(inner.type, null);
++				System.Drawing.Rectangle drawHitbox = Item.GetDrawHitbox(inner.type, null);
+ 				Vector2 bottom = item[i].Bottom;
+-				Microsoft.Xna.Framework.Rectangle value = new Microsoft.Xna.Framework.Rectangle((int)(bottom.X - (float)drawHitbox.Width * 0.5f), (int)(bottom.Y - (float)drawHitbox.Height), drawHitbox.Width, drawHitbox.Height);
++				System.Drawing.Rectangle value = new System.Drawing.Rectangle((int)(bottom.X - (float)drawHitbox.Width * 0.5f), (int)(bottom.Y - (float)drawHitbox.Height), drawHitbox.Width, drawHitbox.Height);
+ 				if (mouseRectangle.Intersects(value)) {
+ 					player[myPlayer].cursorItemIconEnabled = false;
+ 					string text = inner.AffixName();
 @@ -38219,7 +_,7 @@
  			if (!player[j].active || myPlayer == j || player[j].dead || player[j].ShouldNotDraw || !((double)player[j].stealth > 0.5))
  				continue;
@@ -2257,6 +3957,38 @@
  				float scale = cursorScale * 1.1f;
  				if (showGamepadCursor) {
  					if (smart && !flag) {
+@@ -43012,16 +_,16 @@
+ 			boulderLogo = true;
+ 
+ 		if (playOldTile) {
+-			spriteBatch.Draw(TextureAssets.Logo3.Value, new Vector2(screenWidth / 2, 100f), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Logo.Width(), TextureAssets.Logo.Height()), color2, logoRotation, new Vector2(TextureAssets.Logo.Width() / 2, TextureAssets.Logo.Height() / 2), logoScale, SpriteEffects.None, 0f);
++			spriteBatch.Draw(TextureAssets.Logo3.Value, new Vector2(screenWidth / 2, 100f), new System.Drawing.Rectangle(0, 0, TextureAssets.Logo.Width(), TextureAssets.Logo.Height()), color2, logoRotation, new Vector2(TextureAssets.Logo.Width() / 2, TextureAssets.Logo.Height() / 2), logoScale, SpriteEffects.None, 0f);
+-			spriteBatch.Draw(TextureAssets.Logo4.Value, new Vector2(screenWidth / 2, 100f), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Logo.Width(), TextureAssets.Logo.Height()), color3, logoRotation, new Vector2(TextureAssets.Logo.Width() / 2, TextureAssets.Logo.Height() / 2), logoScale, SpriteEffects.None, 0f);
++			spriteBatch.Draw(TextureAssets.Logo4.Value, new Vector2(screenWidth / 2, 100f), new System.Drawing.Rectangle(0, 0, TextureAssets.Logo.Width(), TextureAssets.Logo.Height()), color3, logoRotation, new Vector2(TextureAssets.Logo.Width() / 2, TextureAssets.Logo.Height() / 2), logoScale, SpriteEffects.None, 0f);
+ 		}
+ 		else if (boulderLogo) {
+-			spriteBatch.Draw(TextureAssets.Logo5.Value, new Vector2(screenWidth / 2, 100f), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Logo.Width(), TextureAssets.Logo.Height()), color2, logoRotation, new Vector2(TextureAssets.Logo.Width() / 2, TextureAssets.Logo.Height() / 2), logoScale, SpriteEffects.None, 0f);
++			spriteBatch.Draw(TextureAssets.Logo5.Value, new Vector2(screenWidth / 2, 100f), new System.Drawing.Rectangle(0, 0, TextureAssets.Logo.Width(), TextureAssets.Logo.Height()), color2, logoRotation, new Vector2(TextureAssets.Logo.Width() / 2, TextureAssets.Logo.Height() / 2), logoScale, SpriteEffects.None, 0f);
+-			spriteBatch.Draw(TextureAssets.Logo6.Value, new Vector2(screenWidth / 2, 100f), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Logo.Width(), TextureAssets.Logo.Height()), color3, logoRotation, new Vector2(TextureAssets.Logo.Width() / 2, TextureAssets.Logo.Height() / 2), logoScale, SpriteEffects.None, 0f);
++			spriteBatch.Draw(TextureAssets.Logo6.Value, new Vector2(screenWidth / 2, 100f), new System.Drawing.Rectangle(0, 0, TextureAssets.Logo.Width(), TextureAssets.Logo.Height()), color3, logoRotation, new Vector2(TextureAssets.Logo.Width() / 2, TextureAssets.Logo.Height() / 2), logoScale, SpriteEffects.None, 0f);
+ 		}
+ 		else {
+-			spriteBatch.Draw(TextureAssets.Logo.Value, new Vector2(screenWidth / 2, 100f), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Logo.Width(), TextureAssets.Logo.Height()), color2, logoRotation, new Vector2(TextureAssets.Logo.Width() / 2, TextureAssets.Logo.Height() / 2), logoScale, SpriteEffects.None, 0f);
++			spriteBatch.Draw(TextureAssets.Logo.Value, new Vector2(screenWidth / 2, 100f), new System.Drawing.Rectangle(0, 0, TextureAssets.Logo.Width(), TextureAssets.Logo.Height()), color2, logoRotation, new Vector2(TextureAssets.Logo.Width() / 2, TextureAssets.Logo.Height() / 2), logoScale, SpriteEffects.None, 0f);
+-			spriteBatch.Draw(TextureAssets.Logo2.Value, new Vector2(screenWidth / 2, 100f), new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.Logo.Width(), TextureAssets.Logo.Height()), color3, logoRotation, new Vector2(TextureAssets.Logo.Width() / 2, TextureAssets.Logo.Height() / 2), logoScale, SpriteEffects.None, 0f);
++			spriteBatch.Draw(TextureAssets.Logo2.Value, new Vector2(screenWidth / 2, 100f), new System.Drawing.Rectangle(0, 0, TextureAssets.Logo.Width(), TextureAssets.Logo.Height()), color3, logoRotation, new Vector2(TextureAssets.Logo.Width() / 2, TextureAssets.Logo.Height() / 2), logoScale, SpriteEffects.None, 0f);
+ 		}
+ 
+ 		if (dayTime && !WorldGen.remixWorldGen) {
+@@ -46133,7 +_,7 @@
+ 
+ 			b2 = (byte)num113;
+ 			white = new Microsoft.Xna.Framework.Color(b2, b2, b2, b2);
+-			spriteBatch.Draw(TextureAssets.Fade.Value, new Microsoft.Xna.Framework.Rectangle(-5, -5, screenWidth + 10, screenHeight + 10), white);
++			spriteBatch.Draw(TextureAssets.Fade.Value, new System.Drawing.Rectangle(-5, -5, screenWidth + 10, screenHeight + 10), white);
+ 		}
+ 
+ 		spriteBatch.End();
 @@ -46209,6 +_,8 @@
  		Netplay.HostToken = NewToken();
  		text = text + " -hosttoken " + Netplay.HostToken;
@@ -2307,19 +4039,22 @@
  	}
  
  	private static void DrawVersionNumber(Microsoft.Xna.Framework.Color menuColor, float upBump)
-@@ -46318,6 +_,12 @@
- 				num2 = 2;
- 
- 			spriteBatch.DrawString(FontAssets.MouseText.Value, text, new Vector2(origin.X + (float)num + 10f, (float)screenHeight - origin.Y + (float)num2 - 2f - upBump), color, 0f, origin, 1f, SpriteEffects.None, 0f);
-+
-+			if (!UnifiedBranding)
-+				continue;
-+
-+			spriteBatch.DrawString(FontAssets.MouseText.Value, $"Terraria Unified v{UnifiedVersion}", new Vector2(origin.X + num + 10f, origin.Y * 2f + num2 - 2f), color, 0f, origin, 1f, SpriteEffects.None, 0f);
-+			spriteBatch.DrawString(FontAssets.MouseText.Value, $".NET {Environment.Version} / x{(Environment.Is64BitProcess ? "64" : "86")}", new Vector2(origin.X + num + 10f, origin.Y * 2f + num2 - 2f + 26f), color, 0f, origin, 1f, SpriteEffects.None, 0f);
- 		}
+@@ -46459,13 +_,13 @@
+ 		noLightningSeed = false;
  	}
  
+-	private static void PostDrawMenu(Microsoft.Xna.Framework.Point screenSizeCache, Microsoft.Xna.Framework.Point screenSizeCacheAfterScaling)
++	private static void PostDrawMenu(System.Drawing.Point screenSizeCache, System.Drawing.Point screenSizeCacheAfterScaling)
+ 	{
+ 		if (ScreenSize == screenSizeCacheAfterScaling)
+ 			screenPosition.Y -= screenSizeCache.Y - screenHeight;
+ 	}
+ 
+-	private void PreDrawMenu(out Microsoft.Xna.Framework.Point screenSizeCache, out Microsoft.Xna.Framework.Point screenSizeCacheAfterScaling)
++	private void PreDrawMenu(out System.Drawing.Point screenSizeCache, out System.Drawing.Point screenSizeCacheAfterScaling)
+ 	{
+ 		float uiScaleWanted = _uiScaleWanted;
+ 		float num = (float)screenHeight / 900f;
 @@ -46794,7 +_,7 @@
  		if (num4 >= num3)
  			num4 = 0;
@@ -2545,6 +4280,25 @@
  	}
  
  	private void DrawBackground_DirtBackground(float localShimmerAlpha, int q1, int q2, ref Vector2 drawOffset, ref Vector3 backgroundColor)
+@@ -47513,15 +_,17 @@
+ 						if (!WorldGen.InWorld(num4, num5))
+ 							continue;
+ 
++						/*
+ 						if (tile[num4, num5] == null)
+ 							tile[num4, num5] = new Tile();
++						*/
+ 
+ 						if (localShimmerAlpha == 0f && (color.R > 0 || color.G > 0 || color.B > 0)) {
+ 							if (!drawToScreen) {
+ 								Lighting.GetCornerColors(num4, num5, out var vertices);
+ 								vertices.BottomLeftColor = new Microsoft.Xna.Framework.Color(vertices.BottomLeftColor.ToVector3() * backgroundColor);
+ 								vertices.BottomRightColor = new Microsoft.Xna.Framework.Color(vertices.BottomRightColor.ToVector3() * backgroundColor);
+-								tileBatch.Draw(TextureAssets.Background[_drawBackground_backTexture[1]].Value, new Vector2(bgStartX + num * i + 16 * k + num2, bgStartY + backgroundHeight[_drawBackground_backTexture[1]] * j + 16 * l) + drawOffset, new Microsoft.Xna.Framework.Rectangle(16 * k + num2 + 16, 16 * l, 16, 16), vertices, Vector2.Zero);
++								tileBatch.Draw(TextureAssets.Background[_drawBackground_backTexture[1]].Value, new Vector2(bgStartX + num * i + 16 * k + num2, bgStartY + backgroundHeight[_drawBackground_backTexture[1]] * j + 16 * l) + drawOffset, new System.Drawing.Rectangle(16 * k + num2 + 16, 16 * l, 16, 16), vertices, Vector2.Zero);
+ 							}
+ 							else if ((color.R > q1 || (double)(int)color.G > (double)q1 * 1.1 || (double)(int)color.B > (double)q1 * 1.2) && !tile[num4, num5].active() && WallLightAt(num4, num5) && ugBackTransition == 0f) {
+ 								Lighting.GetColor9Slice(num4, num5, ref _drawbackground_colorSlices);
 @@ -47595,14 +_,14 @@
  										color2.R = (byte)((float)(int)color2.R * x);
  										color2.G = (byte)((float)(int)color2.G * y);
@@ -2625,6 +4379,15 @@
  
  								if (color9.R > 0 || color9.G > 0 || color9.B > 0) {
  									Lighting.GetCornerColors(num15, num16, out var vertices2, ugBackTransition);
+@@ -47706,7 +_,7 @@
+ 									vertices2.BottomRightColor.A = a;
+ 									vertices2.TopLeftColor.A = a;
+ 									vertices2.TopRightColor.A = a;
+-									tileBatch.Draw(TextureAssets.Background[_drawBackground_oldBackTexture[1]].Value, new Vector2(bgStartX + num * num10 + 16 * num12 + num2, bgStartY + backgroundHeight[_drawBackground_oldBackTexture[1]] * num11 + 16 * num13) + drawOffset, new Microsoft.Xna.Framework.Rectangle(16 * num12 + num2 + 16, 16 * num13, 16, 16), vertices2, Vector2.Zero);
++									tileBatch.Draw(TextureAssets.Background[_drawBackground_oldBackTexture[1]].Value, new Vector2(bgStartX + num * num10 + 16 * num12 + num2, bgStartY + backgroundHeight[_drawBackground_oldBackTexture[1]] * num11 + 16 * num13) + drawOffset, new System.Drawing.Rectangle(16 * num12 + num2 + 16, 16 * num13, 16, 16), vertices2, Vector2.Zero);
+ 								}
+ 							}
+ 						}
 @@ -47737,14 +_,14 @@
  				if (localShimmerAlpha > 0f)
  					color10 *= 1f - localShimmerAlpha;
@@ -2677,6 +4440,23 @@
  				}
  			}
  		}
+@@ -48373,13 +_,15 @@
+ 							int num23 = (int)(((float)(bgStartX + num3 * n + num20 * 16 + 8) + screenPosition.X) / 16f);
+ 							int num24 = (int)((num22 + screenPosition.Y) / 16f);
+ 							Microsoft.Xna.Framework.Color color3 = Lighting.GetColor(num23, num24);
++							/*
+ 							if (tile[num23, num24] == null)
+ 								tile[num23, num24] = new Tile();
++							*/
+ 
+ 							if (color3.R > 0 || color3.G > 0 || color3.B > 0) {
+ 								if (!drawToScreen) {
+ 									Lighting.GetCornerColors(num23, num24, out var vertices);
+-									tileBatch.Draw(TextureAssets.Background[array[1]].Value, new Vector2(bgStartX + num3 * n + 16 * num20 + num18, bgStartY + backgroundHeight[array[1]] * num19 + 16 * num21) + vector, new Microsoft.Xna.Framework.Rectangle(16 * num20 + num18 + 16, 16 * num21, 16, 16), vertices, Vector2.Zero);
++									tileBatch.Draw(TextureAssets.Background[array[1]].Value, new Vector2(bgStartX + num3 * n + 16 * num20 + num18, bgStartY + backgroundHeight[array[1]] * num19 + 16 * num21) + vector, new System.Drawing.Rectangle(16 * num20 + num18 + 16, 16 * num21, 16, 16), vertices, Vector2.Zero);
+ 								}
+ 								else if ((color3.R > num || (double)(int)color3.G > (double)num * 1.1 || (double)(int)color3.B > (double)num * 1.2) && !tile[num23, num24].active() && WallLightAt(num23, num24) && ugBackTransition == 0f) {
+ 									Lighting.GetColor9Slice(num23, num24, ref slices);
 @@ -48453,14 +_,14 @@
  											color4.R = (byte)((float)(int)color4.R * num4);
  											color4.G = (byte)((float)(int)color4.G * num5);
@@ -2757,6 +4537,15 @@
  
  								if (color11.R > 0 || color11.G > 0 || color11.B > 0) {
  									Lighting.GetCornerColors(num36, num37, out var vertices2, ugBackTransition);
+@@ -48553,7 +_,7 @@
+ 									vertices2.BottomRightColor.A = a;
+ 									vertices2.TopLeftColor.A = a;
+ 									vertices2.TopRightColor.A = a;
+-									tileBatch.Draw(TextureAssets.Background[array2[1]].Value, new Vector2(bgStartX + num3 * num31 + 16 * num33 + num18, bgStartY + backgroundHeight[array2[1]] * num32 + 16 * num34) + vector, new Microsoft.Xna.Framework.Rectangle(16 * num33 + num18 + 16, 16 * num34, 16, 16), vertices2, Vector2.Zero);
++									tileBatch.Draw(TextureAssets.Background[array2[1]].Value, new Vector2(bgStartX + num3 * num31 + 16 * num33 + num18, bgStartY + backgroundHeight[array2[1]] * num32 + 16 * num34) + vector, new System.Drawing.Rectangle(16 * num33 + num18 + 16, 16 * num34, 16, 16), vertices2, Vector2.Zero);
+ 								}
+ 							}
+ 						}
 @@ -48575,14 +_,14 @@
  							color12.R = (byte)((float)(int)color12.R * num4);
  							color12.G = (byte)((float)(int)color12.G * num5);
@@ -2923,7 +4712,7 @@
  			if (maxTilesX == 8400) {
  				num26 *= 0.999f;
  				num27 -= 40.6f * num26;
-@@ -49270,13 +_,35 @@
+@@ -49270,13 +_,36 @@
  				num30 -= 8.31f;
  				num30 *= num26;
  			}
@@ -2957,6 +4746,7 @@
 +				destinationRectangle2 = new System.Drawing.Rectangle(num31 + num33, num32 - num36, num35, num34 + 2 * num36);
 +				spriteBatch.Draw(TextureAssets.Map.Value, destinationRectangle2, new System.Drawing.Rectangle(888, 0, 40, 248), Microsoft.Xna.Framework.Color.White);
 +			}
++
  			if (mouseLeft && mouseLeftRelease) {
  				double totalSeconds = gameTime.TotalGameTime.TotalSeconds;
  				if (totalSeconds - _lastPingMouseDownTime < 0.5 && Vector2.Distance(MouseScreen, _lastPingMousePosition) < 2f)
@@ -3169,6 +4959,42 @@
  				int y2 = MaxWorldViewSize.Y;
  				int num16 = Utils.Clamp(rectangle2.Center.Y * 16, value.Top * 16 + y2 / 2, value.Bottom * 16 - y2 / 2);
  				screenPosition.Y = num16 - y2 / 2;
+@@ -50730,7 +_,7 @@
+ 	public static void DrawProjectileHitbox(Projectile proj)
+ 	{
+ 		CollisionVisualizer.enabled = true;
+-		Microsoft.Xna.Framework.Rectangle targetRect = Utils.CenteredRectangle(MouseWorld, new Vector2(10f, 10f));
++		System.Drawing.Rectangle targetRect = Utils.CenteredRectangle(MouseWorld, new Vector2(10f, 10f));
+ 		if (proj.hostile && proj.friendly)
+ 			CollisionVisualizer.colorSelf = OurFavoriteColor;
+ 		else if (proj.hostile)
+@@ -50751,7 +_,7 @@
+ 			return;
+ 
+ 		CollisionVisualizer.enabled = true;
+-		Microsoft.Xna.Framework.Rectangle hitbox = LocalPlayer.Hitbox;
++		System.Drawing.Rectangle hitbox = LocalPlayer.Hitbox;
+ 		for (int i = 0; i < maxNPCs; i++) {
+ 			NPC nPC = npc[i];
+ 			if (nPC.active) {
+@@ -50761,7 +_,7 @@
+ 					CollisionVisualizer.colorSelf = Microsoft.Xna.Framework.Color.Cyan;
+ 
+ 				CollisionVisualizer.colorSelf *= 0.5f;
+-				Microsoft.Xna.Framework.Rectangle npcRect = nPC.getRect();
++				System.Drawing.Rectangle npcRect = nPC.getRect();
+ 				int specialHitSetter = 1;
+ 				float damageMultiplier = 1f;
+ 				NPC.GetMeleeCollisionData(hitbox, i, ref specialHitSetter, ref damageMultiplier, ref npcRect);
+@@ -50777,7 +_,7 @@
+ 				CollisionVisualizer.VisualizeRects(player.Hitbox, hitbox, needsCanHitCheck: false);
+ 				Item heldItem = player.HeldItem;
+ 				if (((heldItem.damage >= 0 && heldItem.type > 0 && !heldItem.noMelee) || heldItem.type == 1991 || heldItem.type == 3183 || heldItem.type == 4821) && player.itemAnimation > 0) {
+-					Microsoft.Xna.Framework.Rectangle heldItemFrame = player.AnimatePlayerAndGetItemFrame(player.HeightOffsetHitboxCenter, heldItem);
++					System.Drawing.Rectangle heldItemFrame = player.AnimatePlayerAndGetItemFrame(player.HeightOffsetHitboxCenter, heldItem);
+ 					player.ItemCheck_GetMeleeHitbox(heldItem, heldItemFrame, out var _, out var itemRectangle);
+ 					CollisionVisualizer.colorSelf = Microsoft.Xna.Framework.Color.LimeGreen;
+ 					CollisionVisualizer.colorSelf *= 0.5f;
 @@ -51069,7 +_,7 @@
  
  		if (!drawToScreen && !isBackground) {
@@ -3318,141 +5144,18 @@
  				}
  			}
  		}
-@@ -51457,8 +_,125 @@
- 		drewLava = true;
- 	}
+@@ -51501,8 +_,10 @@
+ 					if (!WorldGen.InWorld(j, i))
+ 						return;
  
-+	private static byte[] blackMask = [];
-+	private static byte[] lightingCache = [];
-+	private static int blackMaskWidth = 0;
-+
-+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-+	private static int GetBlackMaskIndex(int x, int y)
-+	{
-+		return y * blackMaskWidth + x;
-+	}
-+
-+	private static void BuildLightingBrightnessCache(int startX, int endX, int startY, int endY)
-+	{
-+		/*
-+		for (int y = startY; y < endY; y++) {
-+			for (int x = startX; x < endX; x++) {
-+				lightingCache[GetBlackMaskIndex(x, y)] = (byte)MathF.Floor(Lighting.Brightness(x, y) * 255f);
-+			}
-+		}
-+		*/
-+
-+		Parallel.For(startX, endX, x => {
-+			for (int y = startY; y < endY; y++) {
-+				lightingCache[GetBlackMaskIndex(x - startX, y - startY)] = (byte)Math.Clamp(MathF.Floor(Lighting.Brightness(x, y) * 255f), 0, 255);
-+			}
-+		});
-+	}
-+
-+	private const byte underworld_threshold = (byte)(0.2f * 255f);
-+
-+	private static void BuildBlackMask(int startX, int endX, int startY, int endY, byte baseThreshold, bool force)
-+	{
-+		bool showInvisible = ShouldShowInvisibleBlocksAndWalls();
-+		bool liquidSlopeFix = LiquidEdgeRenderer.Active;
-+
-+		Parallel.For(startY, endY, y => {
-+			bool underworld = y >= UnderworldLayer;
-+			byte threshold = underworld ? underworld_threshold : baseThreshold;
-+
-+			for (int x = startX; x < endX; x++) {
-+				var idx = GetBlackMaskIndex(x - startX, y - startY);
-+
-+				/*
-+				if (!WorldGen.InWorld(x, y)) {
-+					blackMask[idx] = 0;
-+					continue;
-+				}
-+				*/
-+
-+				var t = tile[x, y];
-+				byte brightness = lightingCache[idx];
-+
-+				bool hasFullWater = LiquidRenderer.Instance.HasFullWater(x, y);
-+				if (liquidSlopeFix && hasFullWater && ((t.Slope != SlopeType.Solid || t.IsHalfBlock) ? brightness >= 5 : brightness > 5)) {
-+					blackMask[idx] = 0;
-+					continue;
-+				}
-+
-+				byte liquid = t.LiquidAmount;
-+				bool darkEnough = brightness <= threshold && ((!underworld && liquid < 250) || WorldGen.SolidTile(t) || (liquid >= 200 && brightness == 0));
-+				if (!darkEnough) {
-+					blackMask[idx] = 0;
-+					continue;
-+				}
-+
-+				bool blocksLight = t.HasTile && tileBlockLight[t.TileType] && (!t.IsTileInvisible || showInvisible);
-+				bool wallBlocks = !WallID.Sets.Transparent[t.WallType] && (!t.IsWallInvisible || showInvisible);
-+				if (!blocksLight && !wallBlocks) {
-+					blackMask[idx] = 0;
-+					continue;
-+				}
-+
-+				if (!drawToScreen && hasFullWater && t.WallType == 0 && !t.IsHalfBlock && y <= worldSurface) {
-+					blackMask[idx] = 0;
-+					continue;
-+				}
-+
-+				blackMask[idx] = 1;
-+			}
-+		});
-+	}
-+
-+	private static void DrawBlackMask(int startX, int endX, int startY, int endY, Vector2 drawOffset)
-+	{
-+		for (int y = startY; y < endY; y++) {
-+			int runStart = -1;
-+
-+			for (int x = startX; x < endX; x++) {
-+				bool black = blackMask[GetBlackMaskIndex(x - startX, y - startY)] != 0;
-+
-+				if (black) {
-+					if (runStart < 0) {
-+						runStart = x;
-+					}
-+				}
-+				else if (runStart >= 0) {
-+					spriteBatch.Draw(
-+						TextureAssets.BlackTile.Value,
-+						new Vector2(runStart << 4, y << 4) - screenPosition + drawOffset,
-+						new Rectangle(0, 0, (x - runStart) << 4, 16),
-+						Color.Black
-+					);
-+					runStart = -1;
-+				}
-+			}
-+
-+			if (runStart >= 0) {
-+				spriteBatch.Draw(
-+					TextureAssets.BlackTile.Value,
-+					new Vector2(runStart << 4, y << 4) - screenPosition + drawOffset,
-+					new Rectangle(0, 0, (endX - runStart) << 4, 16),
-+					Color.Black
-+				);
-+			}
-+		}
-+	}
-+
- 	protected void DrawBlack(bool intoRenderTargets = false, bool force = false)
- 	{
-+		/*
- 		if (shimmerAlpha == 1f || TileDrawingBase.DrawOwnBlacks)
- 			return;
++					/*
+ 					if (Main.tile[j, i] == null)
+ 						Main.tile[j, i] = new Tile();
++					*/
  
-@@ -51507,6 +_,7 @@
  					Tile tile = Main.tile[j, i];
  					float num4 = Lighting.Brightness(j, i);
- 					num4 = (float)Math.Floor(num4 * 255f) / 255f;
-+
- 					byte b = tile.liquid;
- 					bool num5 = num4 <= num2 && ((!flag2 && b < 250) || WorldGen.SolidTile(tile) || (b >= 200 && num4 == 0f));
- 					bool flag3 = tile.active() && tileBlockLight[tile.type] && (!tile.invisibleBlock() || flag);
-@@ -51516,12 +_,79 @@
+@@ -51516,7 +_,7 @@
  				}
  
  				if (j - num3 > 0)
@@ -3461,78 +5164,6 @@
  			}
  		}
  
- 		spriteBatch.End();
- 		TimeLogger.DrawBlackTiles.AddTime(fromTimestamp);
-+		*/
-+
-+		if (shimmerAlpha == 1f || TileDrawingBase.DrawOwnBlacks) {
-+			return;
-+		}
-+
-+		var totalDrawTs = TimeLogger.Start();
-+
-+		// Already guarantees the coordinates will be within max bounds.
-+		TileDrawing.GetScreenDrawArea(
-+			!drawToScreen,
-+			out var drawOffset,
-+			out int startX,
-+			out int endX,
-+			out int startY,
-+			out int endY
-+		);
-+
-+		if (!force) {
-+			if (startY < maxTilesY / 2) {
-+				startY = Math.Min(startY, (int)worldSurface + 1);
-+				endY = Math.Min(endY, (int)worldSurface + 1);
-+			}
-+			else {
-+				startY = Math.Max(startY, UnderworldLayer);
-+				endY = Math.Max(endY, UnderworldLayer);
-+			}
-+		}
-+
-+		int size = (blackMaskWidth = endX - startX) * (endY - startY);
-+		if (blackMask.Length < size) {
-+			blackMask = new byte[size];
-+		}
-+
-+		if (lightingCache.Length < size) {
-+			lightingCache = new byte[size];
-+		}
-+
-+		int avg = (tileColor.R + tileColor.G + tileColor.B) / 3;
-+		byte threshold = Lighting.Mode switch {
-+			LightMode.Retro => (byte)MathF.Max(tileColor.R - 55, 0),
-+			LightMode.Trippy => (byte)MathF.Max(avg - 55, 0),
-+			_ => (byte)(avg * 0.4f),
-+		};
-+
-+		var buildMaskTs = TimeLogger.Start();
-+		BuildLightingBrightnessCache(startX, endX, startY, endY);
-+		BuildBlackMask(startX, endX, startY, endY, threshold, force);
-+		TimeLogger.BuildBlackMask.AddTime(buildMaskTs);
-+
-+		var drawMaskTs = TimeLogger.Start();
-+		spriteBatch.Begin(
-+			SpriteSortMode.Deferred,
-+			BlendState.AlphaBlend,
-+			DefaultSamplerState,
-+			DepthStencilState.None,
-+			intoRenderTargets ? RasterizerState.CullCounterClockwise : Rasterizer,
-+			null,
-+			intoRenderTargets ? Matrix.Identity : Transform
-+		);
-+
-+		DrawBlackMask(startX, endX, startY, endY, drawOffset);
-+
-+		spriteBatch.End();
-+		TimeLogger.DrawBlackMask.AddTime(drawMaskTs);
-+
-+		TimeLogger.DrawBlackTiles.AddTime(totalDrawTs);
- 	}
- 
- 	public static bool ShouldShowInvisibleBlocksAndWalls()
 @@ -51645,7 +_,7 @@
  		int val = MaxWorldViewSize.X;
  		_ = MaxWorldViewSize;
@@ -3912,19 +5543,21 @@
  			}
  		}
  	}
-@@ -58711,8 +_,15 @@
+@@ -58711,10 +_,17 @@
  			Console.WriteLine(Language.GetTextValue("Misc.ResolutionChanged", width, height));
  		}
  
 +		/*
  		if (!graphics.SynchronizeWithVerticalRetrace) {
  			graphics.SynchronizeWithVerticalRetrace = true;
-+			graphics.ApplyChanges();
-+		}
+ 			graphics.ApplyChanges();
+ 		}
 +		*/
 +
 +		if (graphics.SynchronizeWithVerticalRetrace != Vsync) {
 +			graphics.SynchronizeWithVerticalRetrace = Vsync;
- 			graphics.ApplyChanges();
- 		}
++ 			graphics.ApplyChanges();
++ 		}
  	}
+ 
+ 	public static void FixUIScale()

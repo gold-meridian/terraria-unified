@@ -1721,6 +1721,17 @@
  
  				if (!Main.tile[k, l].active() || Main.tile[k, l].type != type || Main.tile[k, l].frameX != (k - num4) * 18 + num5 || Main.tile[k, l].frameY != (l - num2) * 18 + num6 * 54)
  					flag = true;
+@@ -45070,8 +_,10 @@
+ 
+ 		if (type == 753) {
+ 			for (int m = num; m < num + 3; m++) {
++				/*
+ 				if (Main.tile[m, num2 + 3] == null)
+ 					Main.tile[m, num2 + 3] = new Tile();
++				*/
+ 
+ 				if (!SolidTileAllowBottomSlope(m, num2 + 3) && (!Main.tile[m, num2 + 3].nactive() || Main.tile[m, num2 + 3].type != 753)) {
+ 					flag = true;
 @@ -45081,8 +_,10 @@
  		}
  		else if (type == 106 || type == 212 || type == 219 || type == 220 || type == 228 || type == 231 || type == 243 || type == 247 || type == 283 || (type >= 300 && type <= 308) || type == 354 || type == 355 || type == 499 || type == 406 || type == 412 || type == 452 || type == 455 || type == 491 || type == 642 || type == 733) {
