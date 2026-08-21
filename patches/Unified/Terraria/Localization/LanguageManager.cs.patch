@@ -1,0 +1,11 @@
+--- src/TerrariaNetCore/Terraria/Localization/LanguageManager.cs
++++ src/Unified/Terraria/Localization/LanguageManager.cs
+@@ -176,7 +_,7 @@
+ 		string name = ActiveCulture.Name;
+ 		string assetNameStart = ("Localization" + Path.DirectorySeparatorChar + name).ToLower();
+ 		foreach (IContentSource contentSource in _contentSources) {
+-			foreach (string item in contentSource.GetAllAssetsStartingWith(assetNameStart)) {
++			foreach (string item in contentSource.GetAllAssetsStartingWith(assetNameStart, ignoreCase: true)) {
+ 				string extension = contentSource.GetExtension(item);
+ 				if (!(extension == ".json") && !(extension == ".csv"))
+ 					continue;
