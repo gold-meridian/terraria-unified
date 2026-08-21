@@ -1,10 +1,18 @@
 --- src/TerrariaNetCore/Terraria/Audio/SoundInstanceGarbageCollector.cs
 +++ src/Unified/Terraria/Audio/SoundInstanceGarbageCollector.cs
-@@ -9,6 +_,7 @@
+@@ -9,8 +_,15 @@
  
  	public static void Track(SoundEffectInstance sound)
  	{
-+		return;
++		// TODO: Determine whether this actually creates notable overhead,
++		// since FNA does its own ref-counting too.  This causes issues because
++		// it manually diposes sounds before calling Stop on them in vanilla,
++		// which is invalid.
++
++		/*
  		if (Program.IsFna)
  			_activeSounds.Add(sound);
++		*/
  	}
+ 
+ 	public static void Update()
