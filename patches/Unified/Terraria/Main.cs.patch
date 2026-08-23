@@ -4031,7 +4031,7 @@
 +			return;
 +		}
 +
-+		anchorPosition = new Vector2(18f, 26f * 3f);
++		anchorPosition = new Vector2(18f, (26f * 3f) + (showFrameRate ? 25f : 0f));
 +		for (int i = 0; i < UnifiedLinks.Count; i++) {
 +			UnifiedLinks[i].Draw(spriteBatch, anchorPosition);
 +			anchorPosition.X += 30f;
@@ -4047,8 +4047,8 @@
 +			if (!UnifiedBranding)
 +				continue;
 +
-+			spriteBatch.DrawString(FontAssets.MouseText.Value, $"Terraria Unified v{UnifiedVersion}", new Vector2(origin.X + num + 10f, origin.Y * 2f + num2 - 2f), color, 0f, origin, 1f, SpriteEffects.None, 0f);
-+			spriteBatch.DrawString(FontAssets.MouseText.Value, $".NET {Environment.Version} / x{(Environment.Is64BitProcess ? "64" : "86")}", new Vector2(origin.X + num + 10f, origin.Y * 2f + num2 - 2f + 26f), color, 0f, origin, 1f, SpriteEffects.None, 0f);
++			spriteBatch.DrawString(FontAssets.MouseText.Value, $"Terraria Unified v{UnifiedVersion}", new Vector2(origin.X + num + 10f, origin.Y * 2f + num2 - 2f + (showFrameRate ? 25f : 0f)), color, 0f, origin, 1f, SpriteEffects.None, 0f);
++			spriteBatch.DrawString(FontAssets.MouseText.Value, $".NET {Environment.Version} / x{(Environment.Is64BitProcess ? "64" : "86")}", new Vector2(origin.X + num + 10f, origin.Y * 2f + num2 - 2f + 26f  + (showFrameRate ? 25f : 0f)), color, 0f, origin, 1f, SpriteEffects.None, 0f);
  		}
  	}
  
