@@ -14,7 +14,7 @@ public abstract class ContentSource : IContentSource
 	public abstract string FileWatcherPath { get; }
 
 	protected string[] assetPaths;
-	protected Dictionary<string, string> assetExtensions = new();
+	protected Dictionary<string, string> assetExtensions = new(StringComparer.OrdinalIgnoreCase);
 
 	protected void SetAssetNames(IEnumerable<string> paths)
 	{

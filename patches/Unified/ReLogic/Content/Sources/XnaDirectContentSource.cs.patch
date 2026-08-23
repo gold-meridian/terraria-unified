@@ -1,10 +1,11 @@
 --- src/TerrariaNetCore/ReLogic/Content/Sources/XnaDirectContentSource.cs
 +++ src/Unified/ReLogic/Content/Sources/XnaDirectContentSource.cs
-@@ -1,9 +_,43 @@
+@@ -1,9 +_,64 @@
  using System;
  using System.Collections.Generic;
  using System.IO;
 +using System.Linq;
++using ReLogic.Utilities;
  
  namespace ReLogic.Content.Sources;
  
@@ -12,18 +13,38 @@
 +{
 +	private readonly string[] _rootDirectories;
 +
++	private readonly Dictionary<string, CaseInsensitiveFileLookup> _fileLookups = new(StringComparer.OrdinalIgnoreCase);
++
 +	public override string FileWatcherPath => null;
 +
 +	public XnaDirectContentSource(IEnumerable<string> rootDirectories)
 +	{
 +		_rootDirectories = rootDirectories.Select(AssetPathHelper.CleanPath).ToArray();
++		foreach (string rootDir in _rootDirectories)
++		{
++			var lookup = new CaseInsensitiveFileLookup(
++				rootDir,
++				CaseInsensitiveFileLookup.LookupKeyMode.RelativePath,
++				true);
++
++			_fileLookups.TryAdd(rootDir, lookup);
++		}
 +		Refresh();
 +	}
 +
 +	public override Stream OpenStream(string assetName)
 +	{
 +		try {
-+			return File.OpenRead(_rootDirectories.Select(rootDir => Path.Combine(rootDir, assetName)).First(File.Exists));
++			//return File.OpenRead(_rootDirectories.Select(rootDir => Path.Combine(rootDir, assetName)).First(File.Exists));
++			foreach (var (_, fileLookup) in _fileLookups)
++			{
++				if (!fileLookup.TryGetFile(assetName, out string assetPath))
++					continue;
++
++				return File.OpenRead(assetPath);
++			}
++
++			throw new FileNotFoundException(assetName);
 +		}
 +		catch (Exception innerException) {
 +			throw AssetLoadException.FromMissingAsset(assetName, innerException);

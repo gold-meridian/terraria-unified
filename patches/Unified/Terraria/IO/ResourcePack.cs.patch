@@ -1,9 +1,51 @@
 --- src/TerrariaNetCore/Terraria/IO/ResourcePack.cs
 +++ src/Unified/Terraria/IO/ResourcePack.cs
-@@ -87,7 +_,10 @@
+@@ -1,5 +_,6 @@
+ using System;
+ using System.IO;
++using System.Linq;
+ using Ionic.Zip;
+ using Microsoft.Xna.Framework.Graphics;
+ using Newtonsoft.Json.Linq;
+@@ -50,6 +_,8 @@
+ 
+ 	public int SortingOrder { get; set; }
+ 
++	private CaseInsensitiveFileLookup FileLookup { get; }
++
+ 	public ResourcePack(IServiceProvider services, string path, BrandingType branding = BrandingType.None)
+ 	{
+ 		if (File.Exists(path))
+@@ -61,8 +_,18 @@
+ 		_services = services;
+ 		FullPath = path;
+ 		Branding = branding;
+-		if (IsCompressed)
++
++		if (IsCompressed) {
+ 			_zipFile = ZipFile.Read(path);
++			var files = _zipFile.Entries
++				.Where(e => !e.IsDirectory)
++				.Select(e => e.FileName);
++
++			FileLookup = new(files, CaseInsensitiveFileLookup.LookupKeyMode.AbsolutePath);
++		}
++		else {
++			FileLookup = new(path, CaseInsensitiveFileLookup.LookupKeyMode.RelativePath, true);
++		}
+ 
+ 		LoadManifest();
+ 	}
+@@ -83,20 +_,23 @@
+ 
+ 	private Texture2D CreateIcon()
+ 	{
+-		if (!HasFile("icon.png"))
++		if (!FileLookup.TryGetFile(ICON_FILE_NAME, out string iconPath))
  			return _services.Get<IAssetRepository>().Request<Texture2D>("Images/UI/DefaultResourcePackIcon").Value;
  
- 		using Stream stream = OpenStream("icon.png");
+-		using Stream stream = OpenStream("icon.png");
++		using Stream stream = OpenStream(iconPath);
 +		/*
  		return _services.Get<AssetReaderCollection>().Read<Texture2D>(stream, ".png");
 +		*/
@@ -11,3 +53,28 @@
  	}
  
  	private void LoadManifest()
+ 	{
+-		if (!HasFile("pack.json"))
++		if (!FileLookup.TryGetFile(PACK_FILE_NAME, out string packPath))
+ 			throw new FileNotFoundException(string.Format("Resource Pack at \"{0}\" must contain a {1} file.", FullPath, "pack.json"));
+ 
+ 		JObject jObject;
+-		using (Stream stream = OpenStream("pack.json")) {
++		using (Stream stream = OpenStream(packPath)) {
+ 			using StreamReader streamReader = new StreamReader(stream);
+ 			jObject = JObject.Parse(streamReader.ReadToEnd());
+ 		}
+@@ -119,6 +_,7 @@
+ 		return memoryStream;
+ 	}
+ 
++	/*
+ 	private bool HasFile(string fileName)
+ 	{
+ 		if (!IsCompressed)
+@@ -126,4 +_,5 @@
+ 
+ 		return _zipFile.ContainsEntry(fileName);
+ 	}
++	*/
+ }
