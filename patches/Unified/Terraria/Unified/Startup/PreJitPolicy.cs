@@ -73,12 +73,10 @@ internal sealed class DefaultPreJitPolicy(ILogger<DefaultPreJitPolicy> logger) :
 			methodsToJit.AsParallel().AsUnordered().ForAll(ForceJitOnMethod);
 		}
 		else {
-
-		}
-
-		foreach (var method in methodsToJit) {
-			foreach (MethodInfo methodInfo in methodsToJit) {
-				ForceJitOnMethod(methodInfo);
+			foreach (var method in methodsToJit) {
+				foreach (MethodInfo methodInfo in methodsToJit) {
+					ForceJitOnMethod(methodInfo);
+				}
 			}
 		}
 	}

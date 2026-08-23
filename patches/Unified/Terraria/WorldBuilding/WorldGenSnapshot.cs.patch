@@ -1,7 +1,7 @@
 --- src/TerrariaNetCore/Terraria/WorldBuilding/WorldGenSnapshot.cs
 +++ src/Unified/Terraria/WorldBuilding/WorldGenSnapshot.cs
 @@ -26,6 +_,8 @@
- 		private static Dictionary<string, MemberInfo> fieldsAndProperties = (from m in ((IEnumerable<MemberInfo>)typeof(GenVars).GetFields(BindingFlags.Static | BindingFlags.Public)).Concat((IEnumerable<MemberInfo>)typeof(GenVars).GetProperties(BindingFlags.Static | BindingFlags.Public))
+ 		private static Dictionary<string, MemberInfo> fieldsAndProperties = (from m in ((IEnumerable<MemberInfo>)typeof(GenVars).GetFields(BindingFlags.Public | BindingFlags.Static)).Concat((IEnumerable<MemberInfo>)typeof(GenVars).GetProperties(BindingFlags.Public | BindingFlags.Static))
  																			 where !(m is PropertyInfo) || ((PropertyInfo)m).CanWrite
  																			 where !(m is FieldInfo) || !((FieldInfo)m).IsInitOnly
 +																			 // Unified: Need to patch this in for .NET core.
