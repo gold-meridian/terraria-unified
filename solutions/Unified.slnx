@@ -1,6 +1,6 @@
 <Solution>
   <Project Path="../FNA2/src/FNA/FNA.csproj" />
-  <Project Path="../src/unified/GoldMeridian.Tomoko/GoldMeridian.Tomoko.csproj" />
+  <Project Path="../src/Unified/GoldMeridian.Tomoko/GoldMeridian.Tomoko.csproj" />
   <Project Path="../src/Unified/ReLogic/ReLogic.csproj" />
   <Project Path="../src/Unified/Terraria/Terraria.csproj" />
   <Project Path="../tModBuildTasks/tModLoader.BuildTasks.csproj" />
