@@ -10,7 +10,8 @@
 +public class ZipContentSource : ContentSource, IDisposable
  {
  	private readonly ZipFile _zipFile;
- 	private readonly Dictionary<string, ZipEntry> _entries = new Dictionary<string, ZipEntry>();
+-	private readonly Dictionary<string, ZipEntry> _entries = new Dictionary<string, ZipEntry>();
++	private readonly Dictionary<string, ZipEntry> _entries = new Dictionary<string, ZipEntry>(StringComparer.OrdinalIgnoreCase);
  	private readonly string _basePath;
  	private bool _isDisposed;
 +	/*
@@ -66,7 +67,8 @@
 +	public override void Refresh()
  	{
  		_entries.Clear();
- 		foreach (ZipEntry item in _zipFile.Entries.Where((ZipEntry entry) => !entry.IsDirectory && entry.FileName.StartsWith(_basePath))) {
+-		foreach (ZipEntry item in _zipFile.Entries.Where((ZipEntry entry) => !entry.IsDirectory && entry.FileName.StartsWith(_basePath))) {
++		foreach (ZipEntry item in _zipFile.Entries.Where((ZipEntry entry) => !entry.IsDirectory && entry.FileName.StartsWith(_basePath, StringComparison.OrdinalIgnoreCase))) {
  			string fileName = item.FileName;
 +			/*
  			string text = Path.GetExtension(fileName) ?? "";
